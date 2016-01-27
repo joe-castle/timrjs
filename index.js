@@ -2,25 +2,27 @@
 
 const errors = require('./lib/errors');
 
-const defaultOptions = {
-  timrType: 'timer',
-  startTimer: 10
-}
-
 class Timr {
   constructor(options) {
-    this.options = options || defaultOptions;
+    this.options = options;
+    this.currentTime = options.startTime;
+    this.timer = null;
+    this.ticker = options.ticker;
   }
   start() {
     this.timer = setInterval(() => {
-      this.options.action(this.startTime)
+      this.ticker(this.currentTime)
+      this.currentTime += 1;
     }, 1000);
     return this;
   }
   pause() {
+    this.clear();
     return this;
   }
-  reset() {
+  stop() {
+    this.clear();
+    this.currentTime = this.options.startTime;
     return this;
   }
   clear() {
@@ -29,11 +31,24 @@ class Timr {
   }
 }
 
-const buildOptions = (options) => {
-  if (options.type !== undefined && typeof options.type !== 'string') {
-    throw new errors.
+const checkOption = (option, value) => {
+  switch(option) {
+    case 'startTime':
+      if(typeof value !== 'number' || value < 0) {
+        throw errors.startTime;
+      }
   }
-  return finalOptions;
+}
+
+const defaultOptions = {
+  startTime: 0
+}
+
+const buildOptions = (options) => {
+  for (let option in options) {
+    checkOption(option, options[option]);
+  }
+  return Object.assign({}, defaultOptions, options);
 }
 
 const timer = (options) => {
@@ -43,14 +58,23 @@ const timer = (options) => {
   if (typeof options !== 'object') {
     throw errors.wrongOptionsType;
   }
-  if (options.action === undefined) {
+  if (!options.hasOwnProperty('ticker')) {
     throw errors.noTickerMethod;
   }
-  if (typeof options.action !== 'function') {
+  if (typeof options.ticker !== 'function') {
     throw errors.wrongTickerType;
   }
-  const finalOptions = buildOptions(options);
-  return new Timr(finalOptions);
+  return new Timr(buildOptions(options));
 }
 
-timer({});
+const bob = timer({
+  ticker(currentTime) {
+    console.log(currentTime);
+  }
+});
+
+bob.start();
+setTimeout(bob.pause.bind(bob), 2000);
+setTimeout(bob.start.bind(bob), 4000);
+setTimeout(bob.stop.bind(bob), 6000);
+setTimeout(bob.start.bind(bob), 8000);
