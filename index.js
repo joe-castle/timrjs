@@ -1,27 +1,56 @@
 'use strict';
 
+const EventEmitter = require('events');
 const errors = require('./lib/errors');
 
-class Timr {
+// inherit from event emitter?
+
+const countdown = () => {
+  if (this.currentTime >= 0) {
+    this.ticker(this.currentTime);
+    this.currentTime -= 1;
+  } else {
+
+  }
+};
+
+const stopwatch = () => {
+  this.ticker(this.currentTime);
+  this.currentTime += 1;
+};
+
+class Timr extends EventEmitter {
   constructor(options) {
+    super();
     this.options = options;
-    this.currentTime = options.startTime;
     this.timer = null;
+    this.running = false;
     this.ticker = options.ticker;
+    this.currentTime = options.startTime;
   }
   start() {
-    this.timer = setInterval(() => {
-      this.ticker(this.currentTime)
-      this.currentTime += 1;
-    }, 1000);
+    if (!this.running) {
+      this.running = true;
+      this.timer = setInterval(() => {
+        this.ticker(this.currentTime)
+        this.options.startTime > 0 ?
+          this.currentTime -= 1
+          :
+          this.currentTime += 1
+      }, 1000);
+    } else {
+      // timer already running
+    }
     return this;
   }
   pause() {
     this.clear();
+    this.running = false;
     return this;
   }
   stop() {
     this.clear();
+    this.running = false;
     this.currentTime = this.options.startTime;
     return this;
   }
@@ -29,7 +58,10 @@ class Timr {
     clearInterval(this.timer);
     return this;
   }
-}
+  getCurrentTime() {
+    return this.currentTime;
+  }
+};
 
 const checkOption = (option, value) => {
   switch(option) {
@@ -38,20 +70,19 @@ const checkOption = (option, value) => {
         throw errors.startTime;
       }
   }
-}
-
-const defaultOptions = {
-  startTime: 0
-}
+};
 
 const buildOptions = (options) => {
+  const defaultOptions = {
+    startTime: 0
+  };
   for (let option in options) {
     checkOption(option, options[option]);
   }
   return Object.assign({}, defaultOptions, options);
-}
+};
 
-const timer = (options) => {
+const timr = (options) => {
   if (!options) {
     throw errors.noTickerMethod;
   }
@@ -65,9 +96,10 @@ const timer = (options) => {
     throw errors.wrongTickerType;
   }
   return new Timr(buildOptions(options));
-}
+};
 
-const bob = timer({
+const bob = timr({
+  startTime: 10,
   ticker(currentTime) {
     console.log(currentTime);
   }
