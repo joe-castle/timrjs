@@ -17,7 +17,7 @@ class Timr extends EventEmitter {
       this.timer = this.options.startTime > 0 ?
         setInterval(this.countdown.bind(this), 1000)
         :
-        setInterval(this.topwatch.bind(this), 1000);
+        setInterval(this.stopwatch.bind(this), 1000);
     } else {
       console.warn('Timer already running');
     }
@@ -40,13 +40,16 @@ class Timr extends EventEmitter {
   }
   ticker(fn) {
     this.on('ticker', fn);
+    return this;
   }
   finish(fn) {
     this.on('finish', fn);
+    return this;
   }
   stopwatch() {
     this.emit('ticker', this.currentTime);
     this.currentTime += 1;
+    return this;
   }
   countdown() {
     this.emit('ticker', this.currentTime);
@@ -55,6 +58,7 @@ class Timr extends EventEmitter {
       this.emit('finish');
       this.stop();
     }
+    return this;
   }
   getCurrentTime() {
     return this.currentTime;
@@ -84,7 +88,7 @@ const timr = (options) => {
   return new Timr(buildOptions(options));
 };
 
-const bob = timr({startTime: 5});
+const bob = timr({startTime: '10:00'});
 
 bob.ticker((time) => console.log(time));
 bob.finish(() => console.log('Timer finished'));
