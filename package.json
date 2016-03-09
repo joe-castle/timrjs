@@ -1,15 +1,19 @@
 {
   "name": "timr",
   "version": "0.1.0",
-  "description": "Utility to create a timer object.",
+  "description": "Easy to use utility for creating one or more timers.",
   "main": "lib/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha --watch"
   },
   "keywords": [
     "timer",
     "utility"
   ],
   "author": "Joe Smith <joesmith0488@gmail.com>",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "mocha": "^2.4.5"
+  }
 }
