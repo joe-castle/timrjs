@@ -4,7 +4,7 @@
   "description": "Easy to use utility for creating one or more timers.",
   "main": "lib/index.js",
   "scripts": {
-    "test": "mocha --watch"
+    "test": "mocha --watch --timeout 5000"
   },
   "keywords": [
     "timer",
