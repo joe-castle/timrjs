@@ -5,6 +5,7 @@
   "main": "lib/init.js",
   "scripts": {
     "test": "mocha --watch --timeout 5000"
+    "deploy" "git push origin master"
   },
   "keywords": [
     "timer",
