@@ -4,7 +4,7 @@
   "description": "Easy to use utility for creating timers.",
   "main": "lib/init.js",
   "scripts": {
-    "test": "mocha --watch --timeout 5000"
+    "test": "mocha --watch --timeout 5000",
     "deploy" "git push origin master"
   },
   "keywords": [
