@@ -9,7 +9,7 @@ Otherwise it works with most modern browsers and the latest versions of Node.
 npm install timr --save
 ```
 ### Usage
-```
+```js
 import Timr from 'timr';
 
 const timer = Timr('10:00');
@@ -43,7 +43,7 @@ timer.finish(() => {
 });
 ```
 Because Timr inherits from EventEmitter, you can declare as many unique ticker/finish methods as you want.
-```
+```js
 /**
  * To start the timer, simply call .start() on the newly
  * created Timr object.
