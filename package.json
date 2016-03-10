@@ -1,5 +1,5 @@
 {
-  "name": "timr",
+  "name": "timrjs",
   "version": "0.1.0",
   "description": "Easy to use utility for creating timers.",
   "main": "lib/init.js",

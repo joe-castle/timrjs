@@ -1,4 +1,4 @@
-# Timr
+# TimrJS
 Timr is a simple utility for creating timers in JavaScript.
 
 Timr makes use of some ES6 features, so if your project needs to support environments that don't have ES6 support, it's recommended to use a transplier like babel.
