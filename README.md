@@ -6,7 +6,7 @@ Timr makes use of some ES6 features, so if your project needs to support environ
 Otherwise it works with most modern browsers and the latest versions of Node.
 ### Installation
 ```
-npm install timr --save
+npm install timrjs --save
 ```
 ### Usage
 ```js
