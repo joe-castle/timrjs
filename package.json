@@ -1,8 +1,8 @@
 {
   "name": "timr",
   "version": "0.1.0",
-  "description": "Easy to use utility for creating one or more timers.",
-  "main": "lib/index.js",
+  "description": "Easy to use utility for creating timers.",
+  "main": "lib/init.js",
   "scripts": {
     "test": "mocha --watch --timeout 5000"
   },
