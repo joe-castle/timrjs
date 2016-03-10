@@ -10,7 +10,7 @@ npm install timrjs --save
 ```
 ### Usage
 ```js
-import Timr from 'timr';
+import Timr from 'timrjs';
 
 const timer = Timr('10:00');
 
