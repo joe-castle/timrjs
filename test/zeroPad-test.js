@@ -9,6 +9,6 @@ describe('Zero Pad function', () => {
     expect(zeroPad(5)).to.equal('05');
   });
   it('Returns the provided number if its 2 digits or more', () => {
-    expect(zeroPad(14)).to.equal(14);
+    expect(zeroPad(14)).to.equal('14');
   })
 });
