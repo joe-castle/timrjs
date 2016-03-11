@@ -6,7 +6,7 @@
   "scripts": {
     "test": "mocha --watch --timeout 5000",
     "deploy:github": "git push origin master",
-    "deploy": "npm run deploy:npm && npm publish"
+    "deploy": "npm run deploy:github && npm publish"
   },
   "keywords": [
     "timr",
