@@ -1,15 +1,20 @@
 {
   "name": "timrjs",
   "version": "0.1.2",
-  "description": "Easy to use utility for creating timers.",
+  "description": "Timr is a simple utility for creating timers in JavaScript.",
   "main": "lib/init.js",
   "scripts": {
     "test": "mocha --watch --timeout 5000",
-    "deploy": "git push origin master"
+    "deploy:github": "git push origin master",
+    "deploy": "npm run deploy:npm && npm publish"
   },
   "keywords": [
+    "timr",
     "timer",
-    "utility"
+    "timrjs",
+    "utility",
+    "countdown",
+    "stopwatch"
   ],
   "author": "Joe Smith <joesmith0488@gmail.com>",
   "license": "MIT",
