@@ -3,11 +3,31 @@ Timr is a simple utility for creating timers in JavaScript.
 
 Timr makes use of some ES6 features, so if your project needs to support environments that don't have ES6 support, it's recommended to use a transplier like babel.
 
-Otherwise it works the latest versions Node and with browsers using a module bundler like browserify or webpack.
+Otherwise it works the latest versions of Node and with browsers using a module bundler like browserify or webpack.
 ### Installation
 ```
 npm install timrjs --save
 ```
+### Syntax
+> Timr([startTime[, options]]);
+
+#### Parameters
+**startTime**
+
+The time at which to start the timer. Accepts time as a string, e.g. '10:00' or the time in seconds, e.g. 600.
+
+If the time is omitted - or set to 0 - the timer will act as a stopwatch and count up rather than down.
+
+Note: The stopwatch feature isn't fully tested yet so is considered unstable.
+
+**options**
+
+An optional options object which accepts:
+ - _outputFormat_, specify the output of the currentTime string (defaults to MM:SS):
+   - _HH:MM:SS_ - 01:00:00 - 00:43:23 - 00:00:25.
+   - _MM:SS_ - 01:00:00 - 43:23 - 00:25.
+   - _SS_ - 01:00:00 - 43:23 - 25.
+
 ### Usage
 ```js
 import Timr from 'timrjs';
@@ -17,16 +37,21 @@ const timer = Timr('10:00');
 /**
  * The ticker function is the main way to interact with the timer.
  *
- * Every second this will be called and will be provided with:
- * currentTime (Formatted to - HH:MM:SS).
- * currentSeconds (The time in seconds)
- * startTime (The initial starting time in seconds)
+ * Every second this will be called and will be provided with the
+ * following arguments:
+ *  - currentTime (The time in time format).
+ *  - currentSeconds (The time in seconds).
+ *  - startTime (The initial starting time in seconds).
+ *
+ * Note: The first time ticker is called will be 1 second after the
+ * timer starts. So if you have a 10 minute timer, the first call will
+ * be 9:59.
  */
 
 timer.ticker((currentTime, currentSeconds, startTime) => {
   console.log(currentTime)
   // '09:59'
-  console.log(seconds)
+  console.log(currentSeconds)
   // 599
   console.log(startTime)
   // 600
@@ -51,7 +76,9 @@ Because Timr inherits from EventEmitter, you can declare as many unique ticker/f
 
 timer.start();
 
-// pause() and stop() are also available.
+/**
+ * pause() and stop() are also available.
+ */
 
 timer.pause();
 timer.stop();
@@ -91,16 +118,12 @@ That's all there is to it! As simple as you get.
 ### Bugs
 This is my first contribution to the Open Source community and really my first proper project so I fully expect there to be bugs.
 
-If you find any and fancy helping me out, send one of those fancy Pull Requests and I'll do my best to merge it into the project.
+If you find any and fancy helping me out, go [here](https://github.com/joesmith100/timrjs/issues) to create an issue, or send one of those fancy pull requests.
 ### Future Plans
 I have some ideas to improve Timr.
  - Option to customise time format separator, e.g. HH-MM-SS.
- - Additionally, to be able to specify the output:
-   - HH:MM:SS - 01:00:00 or 00:43:23 or 00:00:25.
-   - MM:SS    - 01:00:00 or 43:23    or 00:25.
-   - SS       - 01:00:00 or 43:23    or 25.
  - To provide an optional 100 millisecond counter: 01:40:20:24.
- - Create a single file for browser scripts.
+ - Create a single file with global variable for browser scripts.
  - Refactor, I suspect some of my code is quite verbose.
 
 ### License

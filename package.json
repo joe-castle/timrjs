@@ -1,6 +1,6 @@
 {
   "name": "timrjs",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "description": "Timr is a simple utility for creating timers in JavaScript.",
   "main": "lib/init.js",
   "scripts": {
