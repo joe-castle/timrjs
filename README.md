@@ -4,6 +4,8 @@ Timr is a simple utility for creating timers in JavaScript.
 Timr makes use of some ES6 features, so if your project needs to support environments that don't have ES6 support, it's recommended to use a transplier like babel.
 
 Otherwise it works the latest versions of Node and with browsers using a module bundler like browserify or webpack.
+
+Note: The compiled versions are ES5 friendly, so no need to transpile.
 ### Installation
 ```
 npm install timrjs --save
