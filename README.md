@@ -8,6 +8,17 @@ Otherwise it works the latest versions of Node and with browsers using a module 
 ```
 npm install timrjs --save
 ```
+Alternatively you can download the compiled versions:
+```
+https://github.com/joesmith100/timrjs/blob/master/dist/timr.js
+https://github.com/joesmith100/timrjs/blob/master/dist/timr.min.js
+```
+Or include the following CDN:
+```
+https://cdn.rawgit.com/joesmith100/timrjs/master/dist/timr.js
+https://cdn.rawgit.com/joesmith100/timrjs/master/dist/timr.min.js
+```
+Both of these will expose a single global variable: `Timr`.
 ### Syntax
 > Timr([startTime[, options]]);
 
@@ -123,7 +134,6 @@ If you find any and fancy helping me out, go [here](https://github.com/joesmith1
 I have some ideas to improve Timr.
  - Option to customise time format separator, e.g. HH-MM-SS.
  - To provide an optional 100 millisecond counter: 01:40:20:24.
- - Create a single file with global variable for browser scripts.
  - Refactor, I suspect some of my code is quite verbose.
 
 ### License
