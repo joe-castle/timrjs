@@ -5,9 +5,10 @@
   "main": "lib/init.js",
   "scripts": {
     "test": "mocha --watch --timeout 5000",
-    "uglify" : "uglifyjs dist/timr.js",
+    "clean": "rimraf dist/timr.min.js",
+    "uglify": "npm run clean && uglifyjs dist/timr.js -m -o dist/timr.min.js",
     "deploy:github": "git push origin master",
-    "deploy": "npm run deploy:github && npm publish"
+    "deploy": "npm run uglify && npm run deploy:github && npm publish"
   },
   "keywords": [
     "timr",
@@ -29,6 +30,7 @@
   "devDependencies": {
     "chai": "^3.5.0",
     "mocha": "^2.4.5",
+    "rimraf": "^2.5.2",
     "uglify-js": "^2.6.2"
   }
 }

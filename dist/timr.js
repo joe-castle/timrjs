@@ -30,7 +30,8 @@
   var errors = {
     startTime: new TypeError('Warning! the starting time needs to be a number (seconds) or a string representation of the time, e.g. 10:00. Will accept HH:MM:SS / MM:SS / SS.'),
     incorrectFormat: new Error('Provided time is not in the correct format. Expected HH:MM:SS / MM:SS / SS'),
-    outputFormat: new Error('Incorrect outputFormat, expected - HH:MM:SS, MM:SS or SS')
+    outputFormat: new Error('Incorrect outputFormat, expected - HH:MM:SS, MM:SS or SS'),
+    eventFunctions: new TypeError('Ticker/finish require functions as their argument')
   };
 
   /**
@@ -239,11 +240,14 @@
    * multiple times with different functions and each one will
    * be called when the event is emitted.
    *
+   * @throws If the argument is not of type function.
+   *
    * @param {Function} Function to be called every second.
    * @return {Object} Returns the instance of Timr.
    * For possible method chaining.
    */
   Timr.prototype.ticker = function(fn) {
+    if (typeof fn !== 'function') { throw errors.eventFunctions; }
     this.on('ticker', fn);
     return this;
   }
@@ -256,11 +260,14 @@
    * multiple times with different functions and each one will
    * be called when the event is emitted.
    *
+   * @throws If the argument is not of type function.
+   *
    * @param {Function} Function to be called when finished.
    * @return {Object} Returns the instance of Timr.
    * For possible method chaining.
    */
   Timr.prototype.finish = function(fn) {
+    if (typeof fn !== 'function') { throw errors.eventFunctions; }
     this.on('finish', fn);
     return this;
   }
