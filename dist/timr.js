@@ -27,11 +27,13 @@
     })();
   }
 
-  var errors = {
-    startTime: new TypeError('Warning! the starting time needs to be a number (seconds) or a string representation of the time, e.g. 10:00. Will accept HH:MM:SS / MM:SS / SS.'),
-    incorrectFormat: new Error('Provided time is not in the correct format. Expected HH:MM:SS / MM:SS / SS'),
-    outputFormat: new Error('Incorrect outputFormat, expected - HH:MM:SS, MM:SS or SS'),
-    eventFunctions: new TypeError('Ticker/finish require functions as their argument')
+  var errors = function(value) {
+    return {
+      startTime: new TypeError('The starting time needs to be a number (seconds) or a string representation of the time, e.g. 10:00. Instead got: ' + value),
+      incorrectFormat: new Error('Provided time is not in the correct format. Expected HH:MM:SS / MM:SS / SS, got: ' + value),
+      outputFormat: new Error('Incorrect outputFormat, expected a string: HH:MM:SS, MM:SS or SS. Instead got: ' + value),
+      eventFunctions: new TypeError('Ticker/finish requires a function, instead got: ' + value)
+    }
   };
 
   /**
@@ -44,11 +46,14 @@
   function checkOption(option, value) {
     switch(option) {
       case 'outputFormat':
+        if (typeof value !== 'string') {
+          throw errors(typeof value).outputFormat;
+        }
         if (
           value !== 'HH:MM:SS' &&
           value !== 'MM:SS' &&
           value !== 'SS'
-        ) { throw errors.outputFormat }
+        ) { throw errors(value).outputFormat }
     }
   }
 
@@ -247,7 +252,7 @@
    * For possible method chaining.
    */
   Timr.prototype.ticker = function(fn) {
-    if (typeof fn !== 'function') { throw errors.eventFunctions; }
+    if (typeof fn !== 'function') { throw errors(typeof fn).eventFunctions; }
     this.on('ticker', fn);
     return this;
   }
@@ -267,7 +272,7 @@
    * For possible method chaining.
    */
   Timr.prototype.finish = function(fn) {
-    if (typeof fn !== 'function') { throw errors.eventFunctions; }
+    if (typeof fn !== 'function') { throw errors(typeof fn).eventFunctions; }
     this.on('finish', fn);
     return this;
   }
@@ -358,10 +363,14 @@
   function init(startTime, options) {
     startTime = startTime || 0;
     if (typeof startTime === 'string') {
-      if (incorrectFormat(startTime)) { throw errors.incorrectFormat; }
+      if (incorrectFormat(startTime)) {
+        throw errors(startTime).incorrectFormat;
+      }
       return new Timr(timeToSeconds(startTime), buildOptions(options));
     }
-    if (typeof startTime !== 'number') { throw errors.startTime; }
+    if (typeof startTime !== 'number') {
+      throw errors(typeof startTime).startTime;
+    }
     return new Timr(startTime, buildOptions(options));
   };
 
