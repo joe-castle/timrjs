@@ -8,7 +8,7 @@
     "clean": "rimraf dist/timr.min.js",
     "uglify": "npm run clean && uglifyjs dist/timr.js -m -o dist/timr.min.js",
     "deploy:github": "git push origin master",
-    "deploy": "npm run uglify && npm run deploy:github && npm publish"
+    "deploy": "npm run deploy:github && npm publish"
   },
   "keywords": [
     "timr",
