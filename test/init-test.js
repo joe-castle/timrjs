@@ -13,7 +13,7 @@ describe('Init function', () => {
   });
   it('Throws an error if the provided argument is not a number or a string', () => {
     expect(init.bind(init, {})).to.throw(TypeError);
-    expect(init.bind(init, {})).to.throw('the starting time needs to be a number');
+    expect(init.bind(init, {})).to.throw('The starting time needs to be a number');
   });
   it('Throws an error if the provided argument is not correct time format', () => {
     expect(init.bind(init, '10:80')).to.throw(Error);

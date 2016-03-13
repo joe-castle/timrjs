@@ -13,9 +13,17 @@ describe('Timr Class', () => {
   });
   describe('formatTime method', () => {
     it('Returns 24hr human readble time', () => {
-      expect(new Timr(600, {}).formatTime()).to.equal('10:00');
-      expect(new Timr(9600, {}).formatTime()).to.equal('02:40:00');
+      expect(new Timr(600, {separator: ':'}).formatTime()).to.equal('10:00');
+      expect(new Timr(9600, {separator: ':'}).formatTime()).to.equal('02:40:00');
     });
+    it('Returns 24hr human readable time with a modified outputFormat', () => {
+      expect(new Timr(600, {outputFormat: 'HH:MM:SS', separator: ':'}).formatTime()).to.equal('00:10:00');
+      expect(new Timr(50, {outputFormat: 'SS', separator: ':'}).formatTime()).to.equal('50');
+    })
+    it('Returns 24hr human readable time with a modifided separator', () => {
+      expect(new Timr(600, {separator: '-'}).formatTime()).to.equal('10-00');
+      expect(new Timr(600, {separator: 'boop'}).formatTime()).to.equal('10boop00');
+    })
   });
   describe('getCurrentTime method', () => {
     it('Returns the currentTime in seconds', () => {
@@ -34,7 +42,7 @@ describe('Timr Class', () => {
   });
   describe('start method', () => {
     it('Starts the timer', (done) => {
-      const timr = new Timr(600, {}).start()
+      const timr = new Timr(600, {separator: ':'}).start()
         .ticker(currentTime => {
           expect(currentTime).to.equal('09:59')
           timr.stop();
@@ -42,7 +50,7 @@ describe('Timr Class', () => {
         });
     });
     it('Pauses the timer', (done) => {
-      const timr = new Timr(600, {}).start()
+      const timr = new Timr(600, {separator: ':'}).start()
         .ticker(() => {
           expect(timr.isRunning()).to.equal(true);
           timr.pause();
@@ -51,7 +59,7 @@ describe('Timr Class', () => {
         })
     })
     it('Stops the timer', (done) => {
-      const timr = new Timr(600, {}).start();
+      const timr = new Timr(600, {separator: ':'}).start();
       timr.ticker(currentTime => {
         expect(currentTime).to.equal('09:59')
         timr.stop();
@@ -65,7 +73,7 @@ describe('Timr Class', () => {
     })
     it(`Fires the ticker function every second the timer runs, and
       returns the formattedTime, time and startTime in seconds`, (done) => {
-      const timr = new Timr(600, {}).start()
+      const timr = new Timr(600, {separator: ':'}).start()
         .ticker((currentTime, seconds, startTime) => {
           expect(currentTime).to.equal('09:59');
           expect(seconds).to.equal(599);
