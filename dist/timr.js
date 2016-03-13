@@ -5,34 +5,32 @@
    * @description Object.assign polyfill
    */
   if (typeof Object.assign != 'function') {
-    (function () {
-      Object.assign = function (target) {
-        'use strict';
-        if (target === undefined || target === null) {
-          throw new TypeError('Cannot convert undefined or null to object');
-        }
-        var output = Object(target);
-        for (var index = 1; index < arguments.length; index++) {
-          var source = arguments[index];
-          if (source !== undefined && source !== null) {
-            for (var nextKey in source) {
-              if (source.hasOwnProperty(nextKey)) {
-                output[nextKey] = source[nextKey];
-              }
+    Object.assign = function (target) {
+      if (target === undefined || target === null) {
+        throw new TypeError('Cannot convert undefined or null to object');
+      }
+      var output = Object(target);
+      for (var index = 1; index < arguments.length; index++) {
+        var source = arguments[index];
+        if (source !== undefined && source !== null) {
+          for (var nextKey in source) {
+            if (source.hasOwnProperty(nextKey)) {
+              output[nextKey] = source[nextKey];
             }
           }
         }
-        return output;
-      };
-    })();
+      }
+      return output;
+    };
   }
 
-  var errors = function(value) {
+  function errors(value) {
     return {
       startTime: new TypeError('The starting time needs to be a number (seconds) or a string representation of the time, e.g. 10:00. Instead got: ' + value),
       incorrectFormat: new Error('Provided time is not in the correct format. Expected HH:MM:SS / MM:SS / SS, got: ' + value),
+      eventFunctions: new TypeError('Ticker/finish requires a function, instead got: ' + value),
       outputFormat: new Error('Incorrect outputFormat, expected a string: HH:MM:SS, MM:SS or SS. Instead got: ' + value),
-      eventFunctions: new TypeError('Ticker/finish requires a function, instead got: ' + value)
+      separator: new TypeError('Expected separator to be a string, instead got: ' + value)
     }
   };
 
@@ -54,6 +52,10 @@
           value !== 'MM:SS' &&
           value !== 'SS'
         ) { throw errors(value).outputFormat }
+      case 'separator':
+        if (typeof value !== 'string') {
+          throw errors(typeof value).separator;
+        }
     }
   }
 
@@ -66,7 +68,8 @@
    */
   function buildOptions(options) {
     var defaultOptions = {
-      outputFormat: 'MM:SS'
+      outputFormat: 'MM:SS',
+      separator: ':'
     };
     for (var option in options) {
       checkOption(option, options[option]);
@@ -320,11 +323,11 @@
       minutes = Math.floor(minutes);
       if (hours >= 1) {
         hours = Math.floor(hours);
-        return zeroPad(hours) + ':' + zeroPad(minutes - hours * 60) + ':' + zeroPad(seconds - minutes * 60);
+        return zeroPad(hours) + this.options.separator + zeroPad(minutes - hours * 60) + this.options.separator + zeroPad(seconds - minutes * 60);
       }
-      return (this.options.outputFormat === 'HH:MM:SS' ? '00:' : '') + zeroPad(minutes) + ':' + zeroPad(seconds - minutes * 60);
+      return (this.options.outputFormat === 'HH:MM:SS' ? '00' + this.options.separator : '') + zeroPad(minutes) + this.options.separator + zeroPad(seconds - minutes * 60);
     }
-    return (this.options.outputFormat === 'HH:MM:SS' ? '00:00:' : this.options.outputFormat === 'MM:SS' ? '00:' : '') + zeroPad(seconds);
+    return (this.options.outputFormat === 'HH:MM:SS' ? '00' + this.options.separator + '00' + this.options.separator : this.options.outputFormat === 'MM:SS' ? '00' + this.options.separator : '') + zeroPad(seconds);
   }
 
   /**

@@ -36,10 +36,13 @@ Note: The stopwatch feature isn't fully tested yet so is considered unstable.
 **options**
 
 An optional options object which accepts:
- - _outputFormat_, specify the output of the currentTime string (defaults to MM:SS):
+ - _outputFormat_ - Specify the output of the currentTime string. **_Defaults to ( MM:SS )_**
+   - _Accepts the following values:_
    - _HH:MM:SS_ - 01:00:00 - 00:43:23 - 00:00:25.
    - _MM:SS_ - 01:00:00 - 43:23 - 00:25.
    - _SS_ - 01:00:00 - 43:23 - 25.
+ - _separator_ - Specify how the time output is separated, e.g. 10:00 or 10-00. **_Defaults to a colon ( : )_**
+  - Accepts any string value, so you could have 10foobar00 if you really want to.
 
 ### Usage
 ```js
@@ -134,8 +137,8 @@ This is my first contribution to the Open Source community and really my first p
 If you find any and fancy helping me out, go [here](https://github.com/joesmith100/timrjs/issues) to create an issue, or send one of those fancy pull requests.
 ### Future Plans
 I have some ideas to improve Timr.
- - Option to customise time format separator, e.g. HH-MM-SS.
- - To provide an optional 100 millisecond counter: 01:40:20:24.
+ - Flesh out the stopwatch feature.
+ - Provide an optional 100 millisecond counter: 01:40:20:24.
  - Refactor, I suspect some of my code is quite verbose.
 
 ### License
