@@ -1,4 +1,8 @@
-(function(){
+/**
+ * TimrJS v0.3.0
+ */
+ 
+;(function(){
   'use strict';
 
   /**
@@ -377,5 +381,8 @@
     return new Timr(startTime, buildOptions(options));
   };
 
+  /**
+   * Exposes Timr to global scope.
+   */
   window.Timr = init;
-}())
+}());

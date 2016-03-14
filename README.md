@@ -11,18 +11,19 @@ Note: The compiled versions are ES5 friendly, so no need to transpile.
 npm install timrjs --save
 ```
 Alternatively you can download the compiled versions:
-```
-https://github.com/joesmith100/timrjs/blob/master/dist/timr.js
-https://github.com/joesmith100/timrjs/blob/master/dist/timr.min.js
-```
+
+> https://github.com/joesmith100/timrjs/blob/master/dist/timr.js
+> https://github.com/joesmith100/timrjs/blob/master/dist/timr.min.js
+
 Or include the following CDN:
-```
-https://cdn.rawgit.com/joesmith100/timrjs/master/dist/timr.js
-https://cdn.rawgit.com/joesmith100/timrjs/master/dist/timr.min.js
-```
+> https://cdn.rawgit.com/joesmith100/timrjs/master/dist/timr.js
+> https://cdn.rawgit.com/joesmith100/timrjs/master/dist/timr.min.js
+
 Both of these will expose a single global variable: `Timr`.
 ### Syntax
-> Timr([startTime[, options]]);
+```
+Timr([startTime[, options]]);
+```
 
 #### Parameters
 **startTime**
@@ -36,13 +37,13 @@ Note: The stopwatch feature isn't fully tested yet so is considered unstable.
 **options**
 
 An optional options object which accepts:
- - _outputFormat_ - Specify the output of the currentTime string. **_Defaults to ( MM:SS )_**
+ - _outputFormat_ - Specify the output of the currentTime string. **_Defaults to ( MM:SS )_**.
    - _Accepts the following values:_
    - _HH:MM:SS_ - 01:00:00 - 00:43:23 - 00:00:25.
    - _MM:SS_ - 01:00:00 - 43:23 - 00:25.
    - _SS_ - 01:00:00 - 43:23 - 25.
- - _separator_ - Specify how the time output is separated, e.g. 10:00 or 10-00. **_Defaults to a colon ( : )_**
-  - Accepts any string value, so you could have 10foobar00 if you really want to.
+ - _separator_ - Specify how the time output is separated, e.g. 10:00 or 10-00. **_Defaults to ( : )_**.
+   - Accepts any string value, so you could have 10foobar00 if you really want to.
 
 ### Usage
 ```js
