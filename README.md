@@ -22,7 +22,7 @@ Or include the following CDN:
 Both of these will expose a single global variable: `Timr`.
 ### Syntax
 ```
-Timr([startTime[, options]]);
+Timr(startTime[, options]]);
 ```
 
 #### Parameters
@@ -30,7 +30,7 @@ Timr([startTime[, options]]);
 
 The time at which to start the timer. Accepts time as a string, e.g. '10:00' or the time in seconds, e.g. 600.
 
-If the time is omitted - or set to 0 - the timer will act as a stopwatch and count up rather than down.
+If the time is set to 0, the timer will act as a stopwatch and count up rather than down.
 
 Note: The stopwatch feature isn't fully tested yet so is considered unstable.
 
