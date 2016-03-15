@@ -12,9 +12,13 @@ describe('Build Options Function', () => {
     expect(buildOptions({outputFormat: 'SS'})).to.deep.equal({outputFormat: 'SS', separator: ':'})
     expect(buildOptions({outputFormat: 'HH:MM:SS'})).to.deep.equal({outputFormat: 'HH:MM:SS', separator: ':'})
   });
+  it('Throws an error when outputFormat is not of type string', () => {
+    expect(buildOptions.bind(buildOptions, {outputFormat: {}})).to.throw(TypeError)
+    expect(buildOptions.bind(buildOptions, {outputFormat: {}})).to.throw('Warning! outputFormat needs to be of type string, instead got: object')
+  });
   it('Throws an error when outputFormat is invalid', () => {
     expect(buildOptions.bind(buildOptions, {outputFormat: 'invalid'})).to.throw(Error)
-    expect(buildOptions.bind(buildOptions, {outputFormat: 'invalid'})).to.throw('Incorrect outputFormat, expected a string: HH:MM:SS, MM:SS or SS. Instead got: invalid')
+    expect(buildOptions.bind(buildOptions, {outputFormat: 'invalid'})).to.throw('Warning! outputFormat only accepts the following: HH:MM:SS, MM:SS (default) and SS, instead got: invalid')
   });
   it('Returns an object with amended separator option', () => {
     expect(buildOptions({separator: '-'})).to.deep.equal({outputFormat: 'MM:SS', separator: '-'})
@@ -22,6 +26,6 @@ describe('Build Options Function', () => {
   });
   it('Throws an error if value provided to separator is not of type string', () => {
     expect(buildOptions.bind(buildOptions, {separator: () => {}})).to.throw(TypeError)
-    expect(buildOptions.bind(buildOptions, {separator: () => {}})).to.throw('Expected separator to be a string, instead got: function')
+    expect(buildOptions.bind(buildOptions, {separator: () => {}})).to.throw('Warning! separator needs to be of type string, instead got: function')
   })
 });
