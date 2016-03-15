@@ -11,7 +11,6 @@ Note: The compiled versions are ES5 friendly, so no need to transpile.
 npm install timrjs --save
 ```
 Alternatively you can download the compiled versions:
-
 > https://github.com/joesmith100/timrjs/blob/master/dist/timr.js
 > https://github.com/joesmith100/timrjs/blob/master/dist/timr.min.js
 

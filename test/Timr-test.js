@@ -11,9 +11,9 @@ describe('Timr Class', () => {
       expect(new Timr(600).currentTime).to.equal(600);
     });
     it('Throws an error if startTime is not of type string or number', () => {
-      expect(new Timr({})).to.throw(TypeError);
-      expect(new Timr({})).to.throw('Warning! Expected starting time to be of type string or number, instead got: object');
-    })
+      expect(() => new Timr).to.throw(TypeError);
+      expect(() => new Timr).to.throw('Warning! Expected starting time to be of type string or number, instead got: undefined');
+    });
   });
   describe('formatTime method', () => {
     it('Returns 24hr human readble time', () => {
@@ -28,7 +28,7 @@ describe('Timr Class', () => {
     it('Returns 24hr human readable time with a modifided separator', () => {
       expect(new Timr(600, {separator: '-'}).formatTime()).to.equal('10-00');
       expect(new Timr(600, {separator: 'boop'}).formatTime()).to.equal('10boop00');
-    })
+    });
   });
   describe('getCurrentTime method', () => {
     it('Returns the currentTime in seconds', () => {
@@ -43,7 +43,7 @@ describe('Timr Class', () => {
       const timr = new Timr(600).start();
       expect(timr.isRunning()).to.equal(true);
       timr.stop();
-    })
+    });
   });
   describe('start method', () => {
     it('Starts the timer', (done) => {
@@ -64,7 +64,7 @@ describe('Timr Class', () => {
           expect(timr.isRunning()).to.equal(false);
           done();
         })
-    })
+    });
   });
   describe('stop method', () => {
     it('Stops the timer', (done) => {
