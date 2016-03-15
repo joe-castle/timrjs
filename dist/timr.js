@@ -1,99 +1,87 @@
 /**
- * TimrJS v0.3.0
+ * TimrJS v0.4.0
  * https://github.com/joesmith100/timrjs
  * https://www.npmjs.com/package/timrjs
+ *
+ * Compatible with Browsers and NodeJS.
  *
  * Copyright (c) 2016 Joe Smith
  * Released under the MIT license
  * https://github.com/joesmith100/timrjs/blob/master/LICENSE
- *
- * Date: 15-04-2016 11:20
  */
 
-;(function(global){
+;(function(global) {
   'use strict';
 
-  /**
-  * @description Object.assign polyfill
-  */
-  if (typeof Object.assign != 'function') {
-   Object.assign = function (target) {
-     if (target === undefined || target === null) {
-       throw new TypeError('Cannot convert undefined or null to object');
-     }
-     var output = Object(target);
-     for (var index = 1; index < arguments.length; index++) {
-       var source = arguments[index];
-       if (source !== undefined && source !== null) {
-         for (var nextKey in source) {
-           if (source.hasOwnProperty(nextKey)) {
-             output[nextKey] = source[nextKey];
-           }
-         }
-       }
-     }
-     return output;
-   };
-  }
-
   var
-    errors = function(value) {
-      return {
-        startTime: new TypeError('The starting time needs to be a number (seconds) or a string representation of the time, e.g. 10:00. Instead got: ' + value),
-        incorrectFormat: new Error('Provided time is not in the correct format. Expected HH:MM:SS / MM:SS / SS, got: ' + value),
-        eventFunctions: new TypeError('Ticker/finish requires a function, instead got: ' + value),
-        outputFormat: new Error('Incorrect outputFormat, expected a string: HH:MM:SS, MM:SS or SS. Instead got: ' + value),
-        separator: new TypeError('Expected separator to be a string, instead got: ' + value)
-      }
+    /**
+     * @description Creates a new Timr object.
+     *
+     * @param {String|Number} startTime - The starting time for the timr object.
+     * @param {Object} [options] - Options to customise the timer.
+     *
+     * @returns {Object} A new Timr object.
+     */
+    Timr = function(startTime, options) {
+      return new Timr.init(startTime, options);
     },
 
     /**
      * @description Checks the validity of each option passed.
      *
-     * @param {String} The options name.
-     * @param {String} The options value.
+     * @param {String} option - The options name.
+     * @param {String} value - The options value.
+     *
      * @throws If the option check fails, it throws a speicifc error.
      */
+
     checkOption = function(option, value) {
       switch(option) {
         case 'outputFormat':
           if (typeof value !== 'string') {
-            throw errors(typeof value).outputFormat;
+            throw new TypeError(
+              'Warning! outputFormat needs to be of type string, instead got: ' + value
+            );
           }
           if (
             value !== 'HH:MM:SS' &&
             value !== 'MM:SS' &&
             value !== 'SS'
-          ) { throw errors(value).outputFormat }
+          ) { throw new Error('Warning! outputFormat only accepts the following: HH:MM:SS, MM:SS (default) and SS, instead got: ' + value) }
         case 'separator':
           if (typeof value !== 'string') {
-            throw errors(typeof value).separator;
+            throw new TypeError(
+              'Warning! separator needs to be of type string, instead got: ' + value
+            );
           }
       }
     },
 
     /**
-     * @description
-     * Builds an options object from default and custom options.
+     * @description Builds an options object from default and custom options.
      *
-     * @param {Object} Custom options.
+     * @param {Object} options - Custom options.
      * @returns {Object} Compiled options from default and custom.
      */
+
     buildOptions = function(options) {
       var defaultOptions = {
         outputFormat: 'MM:SS',
         separator: ':'
       };
-      for (var option in options) {
-        checkOption(option, options[option]);
+      if (options) {
+        for (var option in options) {
+          checkOption(option, options[option]);
+          defaultOptions[option] = options[option];
+        }
       }
-      return Object.assign({}, defaultOptions, options);
+      return defaultOptions;
     },
 
     /**
      * @description Checks the provided time for correct formatting.
      *
-     * @param {String} The provided time string.
+     * @param {String} time - The provided time string.
      * @returns {Boolean} True if format is incorrect, false otherwise.
      */
     incorrectFormat = function(time) {
@@ -123,10 +111,20 @@
     /**
      * @description Converts time format (HH:MM:SS) into seconds.
      *
-     * @param {String} The time to be converted.
+     * @param {String} time - The time to be converted.
+     *
+     * @throws Will throw an error if the provided time is
+     * incorrect format.
+     *
      * @returns {Number} The converted time in seconds.
      */
     timeToSeconds = function(time) {
+      if (incorrectFormat(time)) {
+        throw new Error(
+          'Warning! Provided time is not in the correct format. Expected time format (HH:MM:SS, MM:SS or SS), instead got: ' + time
+        );
+      }
+
       return time.split(':')
         .map(function(item, index, arr) {
           if (arr.length === 1) { return +item; }
@@ -148,7 +146,7 @@
      * Pads out single digit numbers with a 0 at the beginning.
      * Primarly used for time units - 00:00:00.
      *
-     * @param {Number} Number to be padded.
+     * @param {Number} num - Number to be padded.
      * @returns {String} A 0 padded string or the the original
      * number as a string.
      */
@@ -157,18 +155,32 @@
     },
 
     /**
-     * Class representing a new Timr.
+     * @description Countdown function.
+     * Bound to a setInterval timer when start() is called.
      *
-     * @description Creates a Timr.
-     * @param {Number} The startTime (in seconds)
+     * @param {Object} self - Timr object.
      */
-    Timr = function(startTime, options) {
-      this.timer = null;
-      this.events = {};
-      this.running = false;
-      this.options = options;
-      this.startTime = startTime;
-      this.currentTime = startTime;
+    countdown = function(self) {
+      self.currentTime -= 1;
+
+      self.emit('ticker', self.formatTime(), self.currentTime, self.startTime);
+
+      if (self.currentTime <= 0) {
+        self.emit('finish');
+        self.stop();
+      }
+    },
+
+    /**
+     * @description Stopwatch function.
+     * Bound to a setInterval timer when start() is called.
+     *
+     * @param {Object} self - Timr object.
+     */
+    stopwatch = function(self) {
+      self.currentTime += 1;
+
+      self.emit('ticker', self.formatTime(), self.currentTime);
     };
 
   Timr.prototype = {
@@ -178,27 +190,32 @@
     /**
      * @description Simulates Node EventEmitter on method.
      *
-     * @param {String} The name of the event.
-     * @param {Function} The function to call when emitted.
+     * @param {String} name - The name of the event.
+     * @param {Function} fn - The function to call when emitted.
      */
     on: function(name, fn) {
-      if (!Array.isArray(this.events[name])) { this.events[name] = []; }
+      if (!Array.isArray(this.events[name])) {
+        this.events[name] = [];
+      }
+
       this.events[name].push(fn);
     },
 
     /**
      * @description Simulates Node EventEmitter emit method.
      *
-     * @param {String} The event to fire.
+     * @param {String} name - The event to fire.
      */
     emit: function(name) {
       if (!this.events[name] || this.events[name].length === 0) {
         return;
       }
+
       var args = [];
       for (var i = 1, j = arguments.length; i < j; i++) {
         args.push(arguments[i]);
       }
+
       for (var x = 0, y = this.events[name].length; x < y; x++) {
         this.events[name][x].apply(this, args);
       }
@@ -206,54 +223,65 @@
 
     /**
      * @description Starts the timr.
+     *
      * @return {Object} Returns the instance of Timr.
      * For possible method chaining.
      */
     start: function() {
       if (!this.running) {
         this.running = true;
+
         if (this.startTime > 0) {
-          this.timer = setInterval(this.countdown.bind(this), 1000);
+          this.timer = setInterval(countdown.bind(this, this), 1000);
         } else {
-          this.timer = setInterval(this.stopwatch.bind(this), 1000);
+          this.timer = setInterval(stopwatch.bind(this, this), 1000);
         }
+
       } else {
         console.warn('Timer already running');
       }
+
       return this;
     },
 
     /**
      * @description Pauses the timr.
+     *
      * @return {Object} Returns the instance of Timr.
      * For possible method chaining.
      */
     pause: function() {
       this.clear();
+
       this.running = false;
+
       return this;
     },
 
     /**
      * @description Stops the timr.
+     *
      * @return {Object} Returns the instance of Timr.
      * For possible method chaining.
      */
     stop: function() {
       this.clear();
+
       this.running = false;
       this.currentTime = this.startTime;
+
       return this;
     },
 
     /**
      * @description Clears the timr.
-     * Only used by internal methods.
+     *
      * @return {Object} Returns the instance of Timr.
      * For possible method chaining.
      */
     clear: function() {
       clearInterval(this.timer);
+
       return this;
     },
 
@@ -267,14 +295,20 @@
      *
      * @throws If the argument is not of type function.
      *
-     * @param {Function} Function to be called every second.
+     * @param {Function} fn - Function to be called every second.
      * @return {Object} Returns the instance of Timr.
      * For possible method chaining.
      */
     ticker: function(fn) {
-       if (typeof fn !== 'function') { throw errors(typeof fn).eventFunctions; }
-       this.on('ticker', fn);
-       return this;
+      if (typeof fn !== 'function') {
+        throw new TypeError(
+          'Warning! Ticker requires a function, instead got: ' + typeof fn
+        );
+      }
+
+      this.on('ticker', fn);
+
+      return this;
     },
 
     /**
@@ -287,43 +321,20 @@
      *
      * @throws If the argument is not of type function.
      *
-     * @param {Function} Function to be called when finished.
+     * @param {Function} fn - Function to be called when finished.
      * @return {Object} Returns the instance of Timr.
      * For possible method chaining.
      */
     finish: function(fn) {
-      if (typeof fn !== 'function') { throw errors(typeof fn).eventFunctions; }
+      if (typeof fn !== 'function') {
+        throw new TypeError(
+          'Warning! Finish requires a function, instead got: ' + typeof fn
+        );
+      }
+
       this.on('finish', fn);
-      return this;
-    },
 
-    /**
-     * @description A stopwatch style counter.
-     * Counts upwards, rather than down
-     * @return {Object} Returns the instance of Timr.
-     * For possible method chaining.
-     */
-    stopwatch: function() {
-      this.currentTime += 1;
-      this.emit('ticker', this.formatTime(), this.currentTime);
       return this;
-    },
-
-    /**
-     * @description The main Timr function for counting down.
-     * Bound to a setInterval timer when start() is called.
-     *
-     * @return {Object} Returns the instance of Timr.
-     * For possible method chaining.
-     */
-    countdown: function() {
-     this.currentTime -= 1;
-     this.emit('ticker', this.formatTime(), this.currentTime, this.startTime);
-     if (this.currentTime <= 0) {
-      this.emit('finish');
-      this.stop();
-     }
-     return this;
     },
 
     /**
@@ -333,22 +344,30 @@
      * @return {String} Returns the formatted string.
      */
     formatTime: function() {
-      var seconds = this.currentTime,
-        minutes = seconds / 60;
+      var seconds = this.currentTime
+        , minutes = seconds / 60
+        , output = this.options.outputFormat
+        , sep = this.options.separator;
+
       if (minutes >= 1) {
         var hours = minutes / 60;
         minutes = Math.floor(minutes);
+
         if (hours >= 1) {
           hours = Math.floor(hours);
-          return zeroPad(hours) + this.options.separator + zeroPad(minutes - hours * 60) + this.options.separator + zeroPad(seconds - minutes * 60);
+
+          return zeroPad(hours) + sep + zeroPad(minutes - hours * 60) + sep + zeroPad(seconds - minutes * 60);
         }
-        return (this.options.outputFormat === 'HH:MM:SS' ? '00' + this.options.separator : '') + zeroPad(minutes) + this.options.separator + zeroPad(seconds - minutes * 60);
+
+        return (output === 'HH:MM:SS' ? '00' + sep : '') + zeroPad(minutes) + sep + zeroPad(seconds - minutes * 60);
       }
-      return (this.options.outputFormat === 'HH:MM:SS' ? '00' + this.options.separator + '00' + this.options.separator : this.options.outputFormat === 'MM:SS' ? '00' + this.options.separator : '') + zeroPad(seconds);
+
+      return (output === 'HH:MM:SS' ? '00' + sep + '00' + sep : output === 'MM:SS' ? '00' + sep : '') + zeroPad(seconds);
     },
 
     /**
      * @description Gets the Timrs current time.
+     *
      * @returns {Number} Current time in seconds
      */
     getCurrentTime: function() {
@@ -357,6 +376,7 @@
 
     /**
      * @description Gets the Timrs running value.
+     *
      * @returns {Boolean} True if running, false if not.
      */
     isRunning: function() {
@@ -366,40 +386,43 @@
   }
 
   /**
-   * @description Creates a new Timr object.
+   * @description Creates a Timr.
    *
-   * @param {String} [startTime=0] The starting time for the timr object.
+   * @param {String|Number} startTime - The starting time for the timr object.
    * @param {Object} [options] - Options to customise the timer.
    *
-   * @throws {TypeError} Will throw an error if the provided
-   * argument is not of type string or number.
-   *
-   * @throws Will throw an error if provided option doesn't
-   * meet criteria.
-   *
-   * @throws Will throw an error if the provided startTime is
-   * incorrect format.
-   *
-   * @returns {Object} A new Timr object.
+   * @throws If the provided startTime is neither a number or a string.
    */
-  function init(startTime, options) {
-    startTime = startTime || 0;
+  Timr.init = function(startTime, options) {
     if (typeof startTime === 'string') {
-      if (incorrectFormat(startTime)) {
-        throw errors(startTime).incorrectFormat;
-      }
-      return new Timr(timeToSeconds(startTime), buildOptions(options));
+      startTime = timeToSeconds(startTime);
     }
-    if (typeof startTime !== 'number') {
-      throw errors(typeof startTime).startTime;
+
+    else if (typeof startTime !== 'number') {
+      throw new TypeError(
+        'Warning! Expected starting time to be of type string or number, instead got: ' + typeof startTime
+      );
     }
-    return new Timr(startTime, buildOptions(options));
+
+    this.timer = null;
+    this.events = {};
+    this.running = false;
+    this.options = buildOptions(options);
+    this.startTime = startTime;
+    this.currentTime = startTime;
   };
 
-  /**
-   * Exposes Timr to global scope.
-   */
-  global.Timr = init;
+  // Sets new Timr objects prototype to Timrs prototype
+  Timr.init.prototype = Timr.prototype;
 
-// TODO: Provide global if window is undefined.
-}(window));
+  // Exposes Timr to global scope.
+  global.Timr = Timr;
+
+/**
+ * Provides window object for a browser enviroment.
+ * Provides global object for a NodeJS enviroment.
+ */
+}(function() {
+  try { return window; }
+  catch(e) { return global; }
+}()));
