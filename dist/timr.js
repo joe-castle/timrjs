@@ -1,5 +1,5 @@
 /**
- * TimrJS v0.4.1
+ * TimrJS v0.4.2
  * https://github.com/joesmith100/timrjs
  * https://www.npmjs.com/package/timrjs
  *
@@ -131,16 +131,16 @@
     },
 
     /**
-     * @description
-     * Pads out single digit numbers with a 0 at the beginning.
-     * Primarly used for time units - 00:00:00.
+     * @description Pads out single digit numbers in a string
+     * with a 0 at the beginning. Primarly used for time units - 00:00:00.
      *
-     * @param {Number} num - Number to be padded.
-     * @returns {String} A 0 padded string or the the original
-     * number as a string.
+     * @param {String} str - String to be padded.
+     * @returns {String} A 0 padded string or the the original string.
      */
-    zeroPad = function(num) {
-      return num < 10 ? '0' + num : '' + num;
+    zeroPad = function(str) {
+      return str.replace(/\d+/g, function(match) {
+        return +match < 10 ? '0' + match : match;
+      });
     },
 
     /**
@@ -344,13 +344,19 @@
         if (hours >= 1) {
           hours = Math.floor(hours);
 
-          return zeroPad(hours) + sep + zeroPad(minutes - hours * 60) + sep + zeroPad(seconds - minutes * 60);
+          return zeroPad(
+            hours + sep + (minutes - hours * 60) + sep + (seconds - minutes * 60)
+          );
         }
 
-        return (output === 'HH:MM:SS' ? '00' + sep : '') + zeroPad(minutes) + sep + zeroPad(seconds - minutes * 60);
+        return zeroPad(
+          (output === 'HH:MM:SS' ? '0' + 'sep' : '') + minutes + sep + (seconds - minutes * 60)
+        );
       }
 
-      return (output === 'HH:MM:SS' ? '00' + sep + '00' + sep : output === 'MM:SS' ? '00' + sep : '') + zeroPad(seconds);
+      return zeroPad(
+        (output === 'HH:MM:SS' ? '0' + sep + '0' + sep : output === 'MM:SS' ? '0' + sep : '') + seconds
+      );
     },
 
     /**
