@@ -1,5 +1,5 @@
 /**
- * TimrJS v0.4.0
+ * TimrJS v0.4.1
  * https://github.com/joesmith100/timrjs
  * https://www.npmjs.com/package/timrjs
  *
@@ -126,19 +126,22 @@
       }
 
       return time.split(':')
-        .map(function(item, index, arr) {
-          if (arr.length === 1) { return +item; }
-          if (arr.length === 2) {
-            if (index === 0) { return +item * 60; }
-            return +item;
-          }
+        .reduce(function(prevItem, currentItem, index, arr) {
+          var hours   = prevItem + +currentItem * 60 * 60
+            , minutes = prevItem + +currentItem * 60
+            , seconds = prevItem + +currentItem;
+
           if (arr.length === 3) {
-            if (index === 0) { return +item * 60 * 60; }
-            if (index === 1) { return +item * 60; }
-            return +item
+            if (index === 0) { return hours; }
+            if (index === 1) { return minutes; }
           }
-        })
-        .reduce(function(a, b) { return a+b }, 0);
+
+          if (arr.length === 2) {
+            if (index === 0) { return minutes; }
+          }
+
+          return seconds;
+        }, 0)
     },
 
     /**
@@ -253,8 +256,6 @@
     pause: function() {
       this.clear();
 
-      this.running = false;
-
       return this;
     },
 
@@ -267,7 +268,6 @@
     stop: function() {
       this.clear();
 
-      this.running = false;
       this.currentTime = this.startTime;
 
       return this;
@@ -281,6 +281,8 @@
      */
     clear: function() {
       clearInterval(this.timer);
+
+      this.running = false;
 
       return this;
     },
@@ -419,7 +421,7 @@
   global.Timr = Timr;
 
 /**
- * Provides window object for a browser enviroment.
+ * Provides window object for a Browser enviroment.
  * Provides global object for a NodeJS enviroment.
  */
 }(function() {

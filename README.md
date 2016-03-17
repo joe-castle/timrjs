@@ -93,11 +93,19 @@ Because Timr inherits from EventEmitter, you can declare as many unique ticker/f
 timer.start();
 
 /**
- * pause() and stop() are also available.
+ * To pause the timer, call .pause().
+ * To stop the timer (resets currentTime to startTime),
+ * call .stop().
+ *
+ * To restart a timer after pausing/stopping it,
+ * call .start() again.
  */
 
 timer.pause();
+// currentTime - unchanged.
+
 timer.stop();
+// currentTime - reset to startTime.
 
 /**
  * You can get the value of the currentTime at any point by
