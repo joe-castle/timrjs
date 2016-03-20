@@ -17,7 +17,7 @@
   "homepage": "https://github.com/joesmith100/timrjs",
   "repository": {
     "type": "git",
-    "url": "git://github.com/joesmith100/timrjs"
+    "url": "git://github.com/joesmith100/timrjs.git"
   }
   "moduleType": [
     "node"
