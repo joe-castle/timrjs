@@ -1,0 +1,31 @@
+{
+  "name": "timrjs",
+  "description": "Timr is a simple utility for creating timers in JavaScript.",
+  "main": "lib/init.js",
+  "authors": [
+    "Joe Smith <joesmith0488@gmail.com>"
+  ],
+  "license": "MIT",
+  "keywords": [
+    "timr",
+    "timer",
+    "timrjs",
+    "utility",
+    "countdown",
+    "stopwatch"
+  ],
+  "homepage": "https://github.com/joesmith100/timrjs",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/joesmith100/timrjs"
+  }
+  "moduleType": [
+    "node"
+  ],
+  "ignore": [
+    "node_modules",
+    "bower_components",
+    "dist",
+    "test"
+  ]
+}

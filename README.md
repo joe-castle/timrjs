@@ -7,9 +7,11 @@ Otherwise it works the latest versions of Node and with browsers using a module 
 
 Note: The compiled versions are ES5 friendly, so no need to transpile.
 ### Installation
+Install with npm or Bower.
 ```
 npm install timrjs --save
 ```
+
 Alternatively you can download the compiled versions:
 > https://github.com/joesmith100/timrjs/blob/master/dist/timr.js
 > https://github.com/joesmith100/timrjs/blob/master/dist/timr.min.js
@@ -19,6 +21,11 @@ Or include the following CDN:
 > https://cdn.rawgit.com/joesmith100/timrjs/master/dist/timr.min.js
 
 Both of these will expose a single global variable: `Timr`.
+
+Note: The compiled versions are also included with both npm and Bower packages. So you could include them directly into a script tag:
+```html
+<script src="node_modules/timrjs/dist/timr.min.js"></script>
+```
 ### Syntax
 ```
 Timr(startTime[, options]]);
@@ -46,7 +53,7 @@ An optional options object which accepts:
 
 ### Usage
 ```js
-import Timr from 'timrjs';
+const Timr = require('timrjs');
 
 const timer = Timr('10:00');
 
