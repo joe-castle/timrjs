@@ -86,11 +86,8 @@
      */
     incorrectFormat = function(time) {
       return time.split(':')
-        .some(function(item, i, a) {
-          if (a.length === 3 && i === 0) {
-            return +item < 0 || +item > 23 || isNaN(+item);
-          }
-          return +item < 0 || +item > 59 || isNaN(+item);
+        .some(function(e, i, a) {
+          return +e < 0 || +e > (a.length === 3 && i === 0 ? 23 : 59) || isNaN(+e);
         });
     },
 
@@ -113,20 +110,16 @@
 
       return time.split(':')
         .reduce(function(prevItem, currentItem, index, arr) {
-          var hours   = prevItem + +currentItem * 60 * 60
-            , minutes = prevItem + +currentItem * 60
-            , seconds = prevItem + +currentItem;
-
           if (arr.length === 3) {
-            if (index === 0) { return hours; }
-            if (index === 1) { return minutes; }
+            if (index === 0) { return prevItem + +currentItem * 60 * 60; }
+            if (index === 1) { return prevItem + +currentItem * 60; }
           }
 
           if (arr.length === 2) {
-            if (index === 0) { return minutes; }
+            if (index === 0) { return prevItem + +currentItem * 60; }
           }
 
-          return seconds;
+          return prevItem + +currentItem;
         }, 0)
     },
 
