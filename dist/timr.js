@@ -1,5 +1,5 @@
 /**
- * TimrJS v0.4.4
+ * TimrJS v0.4.6
  * https://github.com/joesmith100/timrjs
  * https://www.npmjs.com/package/timrjs
  *
@@ -10,7 +10,7 @@
  * https://github.com/joesmith100/timrjs/blob/master/LICENSE
  */
 
-;(function(global) {
+;(function() {
   'use strict';
 
   var
@@ -402,14 +402,13 @@
   // Sets new Timr objects prototype to Timrs prototype
   Timr.init.prototype = Timr.prototype;
 
-  // Exposes Timr to global scope.
-  global.Timr = Timr;
-
-/**
- * Provides window object for a Browser enviroment.
- * Provides global object for a NodeJS enviroment.
- */
-}(function() {
-  try { return window; }
-  catch(e) { return global; }
-}()));
+  if (typeof module !== 'undefined' && module.exports) {
+    module.exports = Timr;
+  } else if (typeof define === 'function' && typeof define.amd === 'object' && define.amd) {
+    define('Timr', [], function() {
+      return Timr;
+    });
+  } else {
+    window.Timr = Timr;
+  }
+}());

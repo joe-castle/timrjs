@@ -20,12 +20,10 @@ Or include the following CDN:
 > https://cdn.rawgit.com/joesmith100/timrjs/master/dist/timr.js
 > https://cdn.rawgit.com/joesmith100/timrjs/master/dist/timr.min.js
 
-Both of these will expose a single global variable: `Timr`.
+Both of these will expose a single global method: `Timr`.
+Alternatively, they will define a module if you are using RequireJS.
 
-Note: The compiled versions are also included with both npm and Bower packages. So you could include them directly into a script tag:
-```html
-<script src="node_modules/timrjs/dist/timr.min.js"></script>
-```
+Note: The compiled versions are also included with both npm and Bower packages.
 ### Syntax
 ```
 Timr(startTime[, options]]);
