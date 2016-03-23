@@ -10,9 +10,9 @@ describe('Timr Class', () => {
       expect(new Timr(600).startTime).to.equal(600);
       expect(new Timr(600).currentTime).to.equal(600);
     });
-    it('Throws an error if startTime is not of type string or number', () => {
+    it('Throws an error if startTime is not a string or number', () => {
       expect(() => new Timr).to.throw(TypeError);
-      expect(() => new Timr).to.throw('Expected time to be of type string or number, instead got: undefined');
+      expect(() => new Timr).to.throw('Expected time to be a string or number, instead got: undefined');
     });
   });
   describe('formatTime method', () => {
@@ -88,7 +88,7 @@ describe('Timr Class', () => {
         TypeError
       );
       expect(new Timr(600).finish.bind(Timr.prototype.finish)).to.throw(
-        'Warning! Finish requires a function, instead got: undefined'
+        'Expected finish to be a function, instead got: undefined'
       );
     });
   });
@@ -110,7 +110,7 @@ describe('Timr Class', () => {
         TypeError
       );
       expect(new Timr(600).ticker.bind()).to.throw(
-        'Warning! Ticker requires a function, instead got: undefined'
+        'Expected ticker to be a function, instead got: undefined'
       );
     });
   });

@@ -40,18 +40,18 @@
         case 'outputFormat':
           if (typeof value !== 'string') {
             throw new TypeError(
-              'Warning! outputFormat needs to be of type string, instead got: ' + value
+              'Expected outputFormat to be a string, instead got: ' + typeof value
             );
           }
           if (
             value !== 'HH:MM:SS' &&
             value !== 'MM:SS' &&
             value !== 'SS'
-          ) { throw new Error('Warning! outputFormat only accepts the following: HH:MM:SS, MM:SS (default) and SS, instead got: ' + value) }
+          ) { throw new Error('Expected outputFormat to be: HH:MM:SS, MM:SS (default) or SS, instead got: ' + value) }
         case 'separator':
           if (typeof value !== 'string') {
             throw new TypeError(
-              'Warning! separator needs to be of type string, instead got: ' + value
+              'Expected separator to be a string, instead got: ' + value
             );
           }
       }
@@ -79,35 +79,13 @@
     },
 
     /**
-     * @description Checks the provided time for correct formatting.
-     *
-     * @param {String} time - The provided time string.
-     * @returns {Boolean} True if format is incorrect, false otherwise.
-     */
-    incorrectFormat = function(time) {
-      return time.split(':')
-        .some(function(e, i, a) {
-          return +e < 0 || +e > (a.length === 3 && i === 0 ? 23 : 59) || isNaN(+e);
-        });
-    },
-
-    /**
      * @description Converts time format (HH:MM:SS) into seconds.
      *
      * @param {String} time - The time to be converted.
      *
-     * @throws Will throw an error if the provided time is
-     * incorrect format.
-     *
      * @returns {Number} The converted time in seconds.
      */
     timeToSeconds = function(time) {
-      if (incorrectFormat(time)) {
-        throw new Error(
-          'Warning! Provided time is not in the correct format. Expected time format (HH:MM:SS, MM:SS or SS), instead got: ' + time
-        );
-      }
-
       return time.split(':')
         .reduce(function(prevItem, currentItem, index, arr) {
           if (arr.length === 3) {
@@ -134,6 +112,47 @@
       return str.replace(/\d+/g, function(match) {
         return +match < 10 ? '0' + match : match;
       });
+    },
+
+    /**
+     * @description Checks the provided time for correct formatting.
+     *
+     * @param {String} time - The provided time string.
+     * @returns {Boolean} True if format is incorrect, false otherwise.
+     */
+    incorrectFormat = function(time) {
+      return time.split(':')
+        .some(function(e, i, a) {
+          return +e < 0 || +e > (a.length === 3 && i === 0 ? 23 : 59) || isNaN(+e);
+        });
+    },
+
+    /**
+     * @description Validates the provded time
+     *
+     * @param {String|Number} time - The time to be checked
+
+     * @throws If the provided time is not in the correct format.
+     * @throws If the provided time is neither a number nor a string.
+     *
+     * @return The provided time if its valid.
+     */
+    validate = function(time) {
+      if (typeof time === 'string') {
+        if (incorrectFormat(time)) {
+          throw new Error(
+            'Expected time format (HH:MM:SS, MM:SS or SS), instead got: ' + time
+          );
+        }
+      }
+
+      else if (typeof time !== 'number') {
+        throw new TypeError(
+          'Expected time to be a string or number, instead got: ' + typeof time
+        );
+      }
+
+      return time;
     },
 
     /**
@@ -283,7 +302,7 @@
     ticker: function(fn) {
       if (typeof fn !== 'function') {
         throw new TypeError(
-          'Warning! Ticker requires a function, instead got: ' + typeof fn
+          'Expected ticker to be a function, instead got: ' + typeof fn
         );
       }
 
@@ -309,7 +328,7 @@
     finish: function(fn) {
       if (typeof fn !== 'function') {
         throw new TypeError(
-          'Warning! Finish requires a function, instead got: ' + typeof fn
+          'Expected finish to be a function, instead got: ' + typeof fn
         );
       }
 
@@ -378,26 +397,22 @@
    * @param {String|Number} startTime - The starting time for the timr object.
    * @param {Object} [options] - Options to customise the timer.
    *
-   * @throws If the provided startTime is neither a number or a string.
+   * @throws If the provided startTime is neither a number or a string,
+   * or, incorrect format.
    */
   Timr.init = function(startTime, options) {
-    if (typeof startTime === 'string') {
-      startTime = timeToSeconds(startTime);
-    }
-
-    else if (typeof startTime !== 'number') {
-      throw new TypeError(
-        'Warning! Expected starting time to be of type string or number, instead got: ' + typeof startTime
-      );
-    }
+    validate(startTime);
 
     this.timer = null;
     this.events = {};
     this.running = false;
     this.options = buildOptions(options);
-    this.startTime = startTime;
-    this.currentTime = startTime;
+    this.startTime = typeof startTime === 'number' ? startTime : timeToSeconds(startTime);;
+    this.currentTime = this.startTime;
   };
+
+  // Expose validate for use externally.
+  Timr.validate = validate;
 
   // Sets new Timr objects prototype to Timrs prototype
   Timr.init.prototype = Timr.prototype;

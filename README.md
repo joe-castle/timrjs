@@ -38,6 +38,8 @@ Timr(startTime[, options]]);
 
 The time at which to start the timer. Accepts time as a string, e.g. '10:00' or the time in seconds, e.g. 600.
 
+If the provided time is invalid (wrong type, or incorrect time format) an error will be thrown.
+
 If the time is set to 0, the timer will act as a stopwatch and count up rather than down.
 
 Note: The stopwatch feature isn't fully tested yet so is considered unstable.
@@ -139,13 +141,31 @@ timer.isRunning();
 // false
 
 /**
- * Finally, methods (except formatTime, isRunning and
+ * Methods (except formatTime, isRunning and
  * getCurrentTime) return this, so you can chain some
  * methods together.
  */
 
 timer.start().isRunning();
 // true
+
+/**
+ * Finally, Timr also has a validate method which can be used to
+ * validate a time prior to creating a new Timr object.
+ *
+ * It will throw an error if the time is invalid, or
+ * simply return the original if it's valid.
+ *
+ * Note: This is called on a Timr objects initilisation,
+ * however, can be useful for validating user input, as an example.
+ */
+
+Timr.validate(600);
+// 600
+Timr.validate('10:00');
+// '10:00'
+Timr.validate('invalid input');
+// Throws an error
 ```
 That's all there is to it! As simple as you get.
 ### Bugs
