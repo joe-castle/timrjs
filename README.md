@@ -3,7 +3,7 @@ Timr is a simple utility for creating timers in JavaScript.
 
 Timr makes use of some ES6 features, so if your project needs to support environments that don't have ES6 support, it's recommended to use a transpiler like Babel.
 
-Otherwise it works the latest versions of Node and with browsers using a module bundler like Browserify or Webpack.
+Otherwise it works with the latest versions of Node and with browsers using a module bundler like Browserify or Webpack.
 
 Note: The compiled versions are ES5 friendly, so no need to transpile.
 ### Installation
@@ -23,7 +23,11 @@ Or include the following CDN:
 Both of these will expose a single global method: `Timr`.
 Alternatively, they will define a module if you are using RequireJS.
 
-Note: The compiled versions are also included with both npm and Bower packages.
+Note: The compiled versions are also included with both npm and Bower packages:
+
+> node_modules/timrjs/dist/timr.js & timr.min.js
+> bower_components/timrjs/dist/timr.js & timr.min.js
+
 ### Syntax
 ```
 Timr(startTime[, options]]);

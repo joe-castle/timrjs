@@ -1,12 +1,12 @@
 {
   "name": "timrjs",
-  "version": "0.4.6",
+  "version": "0.5.0",
   "description": "Timr is a simple utility for creating timers in JavaScript.",
   "main": "lib/init.js",
   "scripts": {
     "test": "mocha --watch --timeout 5000",
     "clean": "rimraf dist/timr.min.js",
-    "uglify": "npm run clean && uglifyjs dist/timr.js -m -o dist/timr.min.js && echo '/* TimrJS v0.4.6 | (c) 2016 Joe Smith | https://github.com/joesmith100/timrjs/blob/master/LICENSE */' | cat - dist/timr.min.js > temp && mv temp dist/timr.min.js",
+    "uglify": "npm run clean && uglifyjs dist/timr.js -m -o dist/timr.min.js && echo '/* TimrJS v0.5.0 | (c) 2016 Joe Smith | https://github.com/joesmith100/timrjs/blob/master/LICENSE */' | cat - dist/timr.min.js > temp && mv temp dist/timr.min.js",
     "deploy:github": "git push origin master",
     "deploy": "npm run deploy:github && npm publish"
   },

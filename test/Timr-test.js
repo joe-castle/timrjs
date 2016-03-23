@@ -12,7 +12,7 @@ describe('Timr Class', () => {
     });
     it('Throws an error if startTime is not of type string or number', () => {
       expect(() => new Timr).to.throw(TypeError);
-      expect(() => new Timr).to.throw('Warning! Expected starting time to be of type string or number, instead got: undefined');
+      expect(() => new Timr).to.throw('Expected time to be of type string or number, instead got: undefined');
     });
   });
   describe('formatTime method', () => {

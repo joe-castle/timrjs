@@ -1,9 +1,9 @@
 /**
- * TimrJS v0.4.6
+ * TimrJS v0.5.0
  * https://github.com/joesmith100/timrjs
  * https://www.npmjs.com/package/timrjs
  *
- * Compatible with Browsers and NodeJS.
+ * Compatible with Browsers, NodeJS and RequireJS.
  *
  * Copyright (c) 2016 Joe Smith
  * Released under the MIT license
