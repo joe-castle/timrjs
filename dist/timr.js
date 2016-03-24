@@ -1,5 +1,5 @@
 /**
- * TimrJS v0.5.0
+ * TimrJS v0.5.1
  * https://github.com/joesmith100/timrjs
  * https://www.npmjs.com/package/timrjs
  *
@@ -134,22 +134,31 @@
 
      * @throws If the provided time is not in the correct format.
      * @throws If the provided time is neither a number nor a string.
-     *
+     * @throws If the provided time in seconds is over 23:59:59.
+
      * @return The provided time if its valid.
      */
     validate = function(time) {
       if (typeof time === 'string') {
-        if (incorrectFormat(time)) {
+        if (+time < 0 || isNaN(+time) && incorrectFormat(time)) {
           throw new Error(
             'Expected time format (HH:MM:SS, MM:SS or SS), instead got: ' + time
           );
         }
       }
 
-      else if (typeof time !== 'number') {
+      else if (typeof time !== 'number' || isNaN(time)) {
         throw new TypeError(
-          'Expected time to be a string or number, instead got: ' + typeof time
+          'Expected time to be a string or number, instead got: ' + (
+            typeof time === 'number' ? time : typeof time
+          )
         );
+      }
+
+      if (+time > 86399) {
+        throw new Error(
+          'Sorry, we don\'t support any time over 23:59:59 at the moment.'
+        )
       }
 
       return time;

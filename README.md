@@ -24,9 +24,7 @@ Both of these will expose a single global method: `Timr`.
 Alternatively, they will define a module if you are using RequireJS.
 
 Note: The compiled versions are also included with both npm and Bower packages:
-
-> node_modules/timrjs/dist/timr.js & timr.min.js
-> bower_components/timrjs/dist/timr.js & timr.min.js
+>node_modules/timrjs/dist/timr.js & timr.min.js
 
 ### Syntax
 ```
@@ -36,9 +34,9 @@ Timr(startTime[, options]]);
 #### Parameters
 **startTime**
 
-The time at which to start the timer. Accepts time as a string, e.g. '10:00' or the time in seconds, e.g. 600.
+The time at which to start the timer. Accepts time as a string, e.g. '10:00' or the time in seconds, e.g. 600. Will also accept a string containing a whole number, e.g. '600'.
 
-If the provided time is invalid (wrong type, or incorrect time format) an error will be thrown.
+If the provided time is invalid (wrong type, or incorrect time format) an error will be thrown. Currently we only support times up to 23:59:59.
 
 If the time is set to 0, the timer will act as a stopwatch and count up rather than down.
 
@@ -175,6 +173,7 @@ If you find any and fancy helping me out, go [here](https://github.com/joesmith1
 ### Future Plans
 I have some ideas to improve Timr.
  - Flesh out the stopwatch feature.
+ - Support times over 23:59:59. Include a day counter?
  - Provide an optional 100 millisecond counter: 01:40:20:24.
  - Refactor, I suspect some of my code is quite verbose.
 
