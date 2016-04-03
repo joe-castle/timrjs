@@ -173,7 +173,14 @@
     countdown = function(self) {
       self.currentTime -= 1;
 
-      self.emit('ticker', self.formatTime(), self.currentTime, self.startTime);
+      self.emit(
+        'ticker',
+        self.formatTime(),
+        self.percentDone(),
+        self.currentTime,
+        self.startTime,
+        self
+      );
 
       if (self.currentTime <= 0) {
         self.emit('finish');
@@ -378,6 +385,15 @@
       return zeroPad(
         (output === 'HH:MM:SS' ? '0' + sep + '0' + sep : output === 'MM:SS' ? '0' + sep : '') + seconds
       );
+    },
+
+    /**
+     * @description Returns the time elapsed in percent.
+     *
+     * @returns {Number} Time elapsed in percent.
+     */
+    percentDone: function() {
+      return 100 - Math.round(this.currentTime / this.startTime * 100);
     },
 
     /**

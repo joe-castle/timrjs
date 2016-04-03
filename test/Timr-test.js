@@ -30,57 +30,65 @@ describe('Timr Class', () => {
       expect(new Timr(600, {separator: 'boop'}).formatTime()).to.equal('10boop00');
     });
   });
+  describe('percentDone Method', () => {
+    it('Returns the time elapsed in percent', () => {
+      const timer = new Timr(600);
+      expect(timer.percentDone()).to.equal(0);
+      timer.currentTime = 400;
+      expect(timer.percentDone()).to.equal(33);
+    });
+  });
   describe('getCurrentTime method', () => {
     it('Returns the currentTime in seconds', () => {
       expect(new Timr(600).getCurrentTime()).to.equal(600);
     });
   });
   describe('isRunning method', () => {
-    it('Returns false when the timr isnt running', () => {
+    it('Returns false when the timer isnt running', () => {
       expect(new Timr(600).isRunning()).to.equal(false);
     });
-    it('Returns true when the timr is running', () => {
-      const timr = new Timr(600).start();
-      expect(timr.isRunning()).to.equal(true);
-      timr.stop();
+    it('Returns true when the timer is running', () => {
+      const timer = new Timr(600).start();
+      expect(timer.isRunning()).to.equal(true);
+      timer.stop();
     });
   });
   describe('start method', () => {
     it('Starts the timer', (done) => {
-      const timr = new Timr(600).start()
-        .ticker(currentTime => {
-          expect(currentTime).to.equal('09:59')
-          timr.stop();
+      const timer = new Timr(600).start()
+        .ticker(formattedTime => {
+          expect(formattedTime).to.equal('09:59')
+          timer.stop();
           done();
         });
     });
   });
   describe('pause method', () => {
     it('Pauses the timer', (done) => {
-      const timr = new Timr(600).start()
+      const timer = new Timr(600).start()
         .ticker(() => {
-          expect(timr.isRunning()).to.equal(true);
-          timr.pause();
-          expect(timr.isRunning()).to.equal(false);
+          expect(timer.isRunning()).to.equal(true);
+          timer.pause();
+          expect(timer.isRunning()).to.equal(false);
           done();
         })
     });
   });
   describe('stop method', () => {
     it('Stops the timer', (done) => {
-      const timr = new Timr(600).start();
-      timr.ticker(currentTime => {
-        expect(currentTime).to.equal('09:59')
-        timr.stop();
-        expect(timr.getCurrentTime()).to.equal(600);
+      const timer = new Timr(600).start();
+      timer.ticker(formattedTime => {
+        expect(formattedTime).to.equal('09:59')
+        timer.stop();
+        expect(timer.getCurrentTime()).to.equal(600);
         done();
       });
     });
   });
   describe('finish method', () => {
     it('Fires the finish function when a timer finishes', (done) => {
-      const timr = new Timr(1, {}).start();
-      timr.finish(() => done());
+      const timer = new Timr(1, {}).start();
+      timer.finish(() => done());
     });
     it(`Throws an error if the finish method is called with no
       function provided as the first argument`, () => {
@@ -95,12 +103,14 @@ describe('Timr Class', () => {
   describe('ticker method', () => {
     it(`Fires the ticker function every second the timer runs, and
       returns the formattedTime, time and startTime in seconds`, (done) => {
-      const timr = new Timr(600, {separator: ':'}).start()
-        .ticker((currentTime, seconds, startTime) => {
-          expect(currentTime).to.equal('09:59');
-          expect(seconds).to.equal(599);
+      const timer = new Timr(600, {separator: ':'}).start()
+        .ticker((formattedTime, percentDone, currentTime, startTime, timr) => {
+          expect(formattedTime).to.equal('09:59');
+          expect(percentDone).to.equal(0);
+          expect(currentTime).to.equal(599);
           expect(startTime).to.equal(600);
-          timr.stop();
+          expect(timr).to.equal(timer);
+          timer.stop();
           done();
         })
     });
