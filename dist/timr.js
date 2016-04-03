@@ -436,8 +436,10 @@
     this.currentTime = this.startTime;
   };
 
-  // Expose validate for use externally.
+  // Exposed helper methods.
   Timr.validate = validate;
+  Timr.timeToSeconds = timeToSeconds;
+  Timr.incorrectFormat = incorrectFormat;
 
   // Sets new Timr objects prototype to Timrs prototype
   Timr.init.prototype = Timr.prototype;
