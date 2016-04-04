@@ -1,5 +1,5 @@
 # TimrJS
-Timr is a simple utility for creating timers in JavaScript.
+Timr is a simple, event driven, utility for creating timers in JavaScript.
 
 Timr makes use of some ES6 features, so if your project needs to support environments that don't have ES6 support, it's recommended to use a transpiler like Babel.
 
@@ -24,7 +24,7 @@ Both of these will expose a single global method: `Timr`.
 Alternatively, they will define a module if you are using RequireJS.
 
 Note: The compiled versions are also included with both npm and Bower packages:
->node_modules/timrjs/dist/timr.js & timr.min.js
+> node_modules/timrjs/dist/timr.js & timr.min.js
 
 ### Syntax
 ```

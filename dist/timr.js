@@ -241,8 +241,7 @@
     /**
      * @description Starts the timr.
      *
-     * @return {Object} Returns the instance of Timr.
-     * For possible method chaining.
+     * @return {Object} Returns a reference to the Timr so calls can be chained.
      */
     start: function() {
       if (!this.running) {
@@ -264,8 +263,7 @@
     /**
      * @description Pauses the timr.
      *
-     * @return {Object} Returns the instance of Timr.
-     * For possible method chaining.
+     * @return {Object} Returns a reference to the Timr so calls can be chained.
      */
     pause: function() {
       this.clear();
@@ -276,8 +274,7 @@
     /**
      * @description Stops the timr.
      *
-     * @return {Object} Returns the instance of Timr.
-     * For possible method chaining.
+     * @return {Object} Returns a reference to the Timr so calls can be chained.
      */
     stop: function() {
       this.clear();
@@ -290,13 +287,26 @@
     /**
      * @description Clears the timr.
      *
-     * @return {Object} Returns the instance of Timr.
-     * For possible method chaining.
+     * @return {Object} Returns a reference to the Timr so calls can be chained.
      */
     clear: function() {
       clearInterval(this.timer);
 
       this.running = false;
+
+      return this;
+    },
+
+    /**
+     * @description Destroys the timr,
+     * clearing the interval and removing all event listeners.
+     *
+     * @return {Object} Returns a reference to the Timr so calls can be chained.
+     */
+    destroy: function() {
+      this.clear();
+
+      this.events = {};
 
       return this;
     },
@@ -312,8 +322,7 @@
      * @throws If the argument is not of type function.
      *
      * @param {Function} fn - Function to be called every second.
-     * @return {Object} Returns the instance of Timr.
-     * For possible method chaining.
+     * @return {Object} Returns a reference to the Timr so calls can be chained.
      */
     ticker: function(fn) {
       if (typeof fn !== 'function') {
@@ -338,8 +347,7 @@
      * @throws If the argument is not of type function.
      *
      * @param {Function} fn - Function to be called when finished.
-     * @return {Object} Returns the instance of Timr.
-     * For possible method chaining.
+     * @return {Object} Returns a reference to the Timr so calls can be chained.
      */
     finish: function(fn) {
       if (typeof fn !== 'function') {
