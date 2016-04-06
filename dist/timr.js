@@ -234,21 +234,23 @@
     },
 
     // Methods associated with all timrs.
-    startAll = function() { timrs.forEach(function(timr) { timr.start() })},
+    startAll = function() { timrs.forEach(function(timr) { timr.start(); })},
 
-    pauseAll = function() { timrs.forEach(function(timr) { timr.pause() })},
+    pauseAll = function() { timrs.forEach(function(timr) { timr.pause(); })},
 
-    stopAll = function() { timrs.forEach(function(timr) { timr.stop() })},
+    stopAll = function() { timrs.forEach(function(timr) { timr.stop(); })},
 
-    isRunning = function() { timrs.filter(function(timr) { timr.isRunning() })},
+    getAll = function() { return timrs; },
+
+    isRunning = function() { timrs.filter(function(timr) { timr.isRunning(); })},
 
     destroyAll = function() {
-      timrs.forEach(function(timr) { timr.destroy() });
+      timrs.forEach(function(timr) { timr.destroy(); });
       timrs = [];
     },
 
     removeFromStore = function(timr) {
-      timrs = timrs.filter(function(x) { return x !== timr} )
+      timrs = timrs.filter(function(x) { return x !== timr; });
     };
 
   Timr.prototype = {
