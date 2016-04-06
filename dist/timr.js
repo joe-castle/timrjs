@@ -1,5 +1,5 @@
 /**
- * TimrJS v0.5.1
+ * TimrJS v0.6.0
  * https://github.com/joesmith100/timrjs
  * https://www.npmjs.com/package/timrjs
  *
@@ -23,7 +23,22 @@
      * @returns {Object} A new Timr object.
      */
     Timr = function(startTime, options) {
-      return new Timr.init(startTime, options);
+      var timr = new Timr.init(startTime, options);
+
+      if (options) {
+        if (options.store) {
+          return store(timr);
+        }
+        if (options.store === false) {
+          return timr;
+        }
+      }
+
+      if (Timr.store) {
+        return store(timr);
+      }
+
+      return timr;
     },
 
     /**
@@ -34,7 +49,6 @@
      *
      * @throws If the option check fails, it throws a speicifc error.
      */
-
     checkOption = function(option, value) {
       switch(option) {
         case 'outputFormat':
@@ -63,7 +77,6 @@
      * @param {Object} options - Custom options.
      * @returns {Object} Compiled options from default and custom.
      */
-
     buildOptions = function(options) {
       var defaultOptions = {
         outputFormat: 'MM:SS',
@@ -198,6 +211,44 @@
       self.currentTime += 1;
 
       self.emit('ticker', self.formatTime(), self.currentTime);
+    },
+
+    // Array to store all timrs.
+    timrs = [],
+
+    /**
+     * @description A function that stores all timr objects created.
+     * This feature is disabled by default, Timr.store = true to enable.
+     *
+     * Can also be disabled/enabled on an individual basis.
+     * Each timr object accepts store as an option, true or false.
+     * This overides the globabl Timr.store option.
+     *
+     * @param {Object} A timr object.
+     * @returns {Object} The provided timr object.
+     */
+    store = function(timr) {
+      timrs.push(timr);
+
+      return timr;
+    },
+
+    // Methods associated with all timrs.
+    startAll = function() { timrs.forEach(function(timr) { timr.start() })},
+
+    pauseAll = function() { timrs.forEach(function(timr) { timr.pause() })},
+
+    stopAll = function() { timrs.forEach(function(timr) { timr.stop() })},
+
+    isRunning = function() { timrs.filter(function(timr) { timr.isRunning() })},
+
+    destroyAll = function() {
+      timrs.forEach(function(timr) { timr.destroy() });
+      timrs = [];
+    },
+
+    removeFromStore = function(timr) {
+      timrs = timrs.filter(function(x) { return x !== timr} )
     };
 
   Timr.prototype = {
@@ -299,7 +350,8 @@
 
     /**
      * @description Destroys the timr,
-     * clearing the interval and removing all event listeners.
+     * clearing the interval, removing all event listeners and removing,
+     * from the store.
      *
      * @return {Object} Returns a reference to the Timr so calls can be chained.
      */
@@ -307,6 +359,8 @@
       this.clear();
 
       this.events = {};
+
+      removeFromStore(this);
 
       return this;
     },
@@ -421,8 +475,7 @@
     isRunning: function() {
       return this.running;
     }
-
-  }
+  };
 
   /**
    * @description Creates a Timr.
@@ -449,16 +502,31 @@
   Timr.timeToSeconds = timeToSeconds;
   Timr.incorrectFormat = incorrectFormat;
 
+  // Option to enable storing timrs, defaults to false.
+  Timr.store = false;
+
+  // Methods for all stored timrs.
+  Timr.destroyAll = destroyAll;
+  Timr.isRunning = isRunning;
+  Timr.startAll = startAll;
+  Timr.pauseAll = pauseAll;
+  Timr.stopAll = stopAll;
+
   // Sets new Timr objects prototype to Timrs prototype
   Timr.init.prototype = Timr.prototype;
 
+  // Global Exports
   if (typeof module !== 'undefined' && module.exports) {
     module.exports = Timr;
-  } else if (typeof define === 'function' && typeof define.amd === 'object' && define.amd) {
+  }
+
+  else if (typeof define === 'function' && typeof define.amd === 'object' && define.amd) {
     define('Timr', [], function() {
       return Timr;
     });
-  } else {
+  }
+
+  else {
     window.Timr = Timr;
   }
 }());
