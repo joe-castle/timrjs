@@ -523,7 +523,8 @@
   }
 
   else if (typeof define === 'function' && typeof define.amd === 'object' && define.amd) {
-    define('Timr', [], function() {
+    // Register as timrjs to remain consistent with npm module.
+    define('timrjs', [], function() {
       return Timr;
     });
   }

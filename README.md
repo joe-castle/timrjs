@@ -1,11 +1,14 @@
 # TimrJS
+
+### !!Requires updating!!
+
 Timr is a simple, event driven, utility for creating timers in JavaScript.
 
 Timr makes use of some ES6 features, so if your project needs to support environments that don't have ES6 support, it's recommended to use a transpiler like Babel.
 
 Otherwise it works with the latest versions of Node and with browsers using a module bundler like Browserify or Webpack.
 
-Note: The compiled versions are ES5 friendly, so no need to transpile.
+Note: The compiled versions are ES5 friendly and support RequireJS.
 ### Installation
 Install with npm or Bower.
 ```
@@ -22,9 +25,6 @@ Or include the following CDN:
 
 Both of these will expose a single global method: `Timr`.
 Alternatively, they will define a module if you are using RequireJS.
-
-Note: The compiled versions are also included with both npm and Bower packages:
-> node_modules/timrjs/dist/timr.js & timr.min.js
 
 ### Syntax
 ```
@@ -47,11 +47,12 @@ Note: The stopwatch feature isn't fully tested yet so is considered unstable.
 An optional options object which accepts:
  - _outputFormat_ - Specify the output of the currentTime string. **_Defaults to ( MM:SS )_**.
    - _Accepts the following values:_
-   - _HH:MM:SS_ - 01:00:00 - 00:43:23 - 00:00:25.
-   - _MM:SS_ - 01:00:00 - 43:23 - 00:25.
-   - _SS_ - 01:00:00 - 43:23 - 25.
+     - **_HH:MM:SS_**, e.g. output: 01:00:00 - 00:43:23 - 00:00:25.
+     - **_MM:SS_**, e.g. output: 01:00:00 - 43:23 - 00:25.
+     - **_SS_**, e.g. output: 01:00:00 - 43:23 - 25.
  - _separator_ - Specify how the time output is separated, e.g. 10:00 or 10-00. **_Defaults to ( : )_**.
    - Accepts any string value, so you could have 10foobar00 if you really want to.
+ - _store_ - Override the global store setting.
 
 ### Usage
 ```js
