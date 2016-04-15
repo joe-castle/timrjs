@@ -1,17 +1,44 @@
 /**
- * TimrJS v0.6.0
+ * TimrJS v0.6.1
  * https://github.com/joesmith100/timrjs
  * https://www.npmjs.com/package/timrjs
  *
- * Compatible with Browsers and NodeJS.
+ * Compatible with Browsers and NodeJS (CommonJS) and RequireJS.
  *
  * Copyright (c) 2016 Joe Smith
  * Released under the MIT license
  * https://github.com/joesmith100/timrjs/blob/master/LICENSE
  */
 
-;window.Timr = (function() {
-  return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+// Based off https://github.com/ForbesLindesay/umd/blob/master/template.js
+;(function(Timr) {
+  // CommonJS
+  if (typeof exports === "object" && typeof module !== "undefined") {
+    module.exports = Timr;
+
+  // RequireJS
+  } else if (typeof define === "function" && define.amd) {
+    // Name consistent with npm module
+    define('timrjs', [], function() { return Timr; });
+
+  // <script>
+  } else {
+    var global
+    if (typeof window !== "undefined") {
+      global = window;
+    } else if (typeof global !== "undefined") {
+      global = global;
+    } else if (typeof self !== "undefined") {
+      global = self;
+    } else {
+      // works providing we're not in "use strict";
+      // needed for Java 8 Nashorn
+      // see https://github.com/facebook/react/issues/3037
+      global = this;
+    }
+    global.Timr = Timr;
+  }
+}(((function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 'use strict';
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
@@ -925,6 +952,4 @@ function isUndefined(arg) {
   return arg === void 0;
 }
 
-},{}]},{},[6]);
-
-}())(6);
+},{}]},{},[6]))(6)));

@@ -6,9 +6,17 @@ const uglify = require('gulp-uglify');
 const rename = require('gulp-rename');
 const buffer = require('vinyl-buffer');
 const source = require('vinyl-source-stream');
+const through2 = require('through2');
 const browserify = require('browserify');
 
 const version = require('./package.json').version;
+
+const removeFinalSemi = () => (
+  through2.obj((file, encoding, callback) => {
+    file.contents = new Buffer(String(file.contents).trim().replace(/;$/, ''));
+    callback(null, file);
+  })
+);
 
 const minCom = `/* TimrJS v${version} | (c) 2016 Joe Smith | https://github.com/joesmith100/timrjs/blob/master/LICENSE */
 ;<%= contents %>`
@@ -18,16 +26,42 @@ const funcWrapper = `/**
  * https://github.com/joesmith100/timrjs
  * https://www.npmjs.com/package/timrjs
  *
- * Compatible with Browsers and NodeJS.
+ * Compatible with Browsers and NodeJS (CommonJS) and RequireJS.
  *
  * Copyright (c) 2016 Joe Smith
  * Released under the MIT license
  * https://github.com/joesmith100/timrjs/blob/master/LICENSE
  */
 
-;window.Timr = (function() {
-  return <%= contents %>
-}())(6);`
+// Based off https://github.com/ForbesLindesay/umd/blob/master/template.js
+;(function(Timr) {
+  // CommonJS
+  if (typeof exports === "object" && typeof module !== "undefined") {
+    module.exports = Timr;
+
+  // RequireJS
+  } else if (typeof define === "function" && define.amd) {
+    // Name consistent with npm module
+    define('timrjs', [], function() { return Timr; });
+
+  // <script>
+  } else {
+    var global
+    if (typeof window !== "undefined") {
+      global = window;
+    } else if (typeof global !== "undefined") {
+      global = global;
+    } else if (typeof self !== "undefined") {
+      global = self;
+    } else {
+      // works providing we're not in "use strict";
+      // needed for Java 8 Nashorn
+      // see https://github.com/facebook/react/issues/3037
+      global = this;
+    }
+    global.Timr = Timr;
+  }
+}((<%= contents %>)(6)));`
 
 gulp.task('default', () => (
   browserify('./lib/init.js')
@@ -35,6 +69,7 @@ gulp.task('default', () => (
     .bundle()
     .pipe(source('timr.js'))
     .pipe(buffer())
+    .pipe(removeFinalSemi())
     .pipe(wrap(funcWrapper))
     .pipe(gulp.dest('./dist/'))
     .pipe(uglify({compress: {negate_iife: false}}))

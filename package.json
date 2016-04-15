@@ -1,6 +1,6 @@
 {
   "name": "timrjs",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "description": "Timr is a simple utility for creating timers in JavaScript.",
   "main": "lib/init.js",
   "scripts": {
@@ -8,7 +8,7 @@
     "clean": "rimraf dist/",
     "bundle": "npm run clean && gulp",
     "deploy:github": "git push origin master",
-    "deploy": "npm run deploy:github && npm publish"
+    "deploy": "npm publish && npm run deploy:github"
   },
   "keywords": [
     "timr",
@@ -38,6 +38,7 @@
     "gulp-wrap": "^0.11.0",
     "mocha": "^2.4.5",
     "rimraf": "^2.5.2",
+    "through2": "^2.0.1",
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0"
   }
