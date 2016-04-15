@@ -23,7 +23,7 @@
 
   // <script>
   } else {
-    var global
+    var global;
     if (typeof window !== "undefined") {
       global = window;
     } else if (typeof global !== "undefined") {
@@ -38,10 +38,8 @@
     }
     global.Timr = Timr;
   }
-}(((function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+}((function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 'use strict';
-
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -56,6 +54,7 @@ var EventEmitter = require('events');
 var createStartTime = require('./createStartTime');
 var buildOptions = require('./buildOptions');
 var zeroPad = require('./zeroPad');
+var errors = require('./errors');
 
 var countdown = require('./countdown');
 var stopwatch = require('./stopwatch');
@@ -199,7 +198,7 @@ module.exports = function (_EventEmitter) {
     key: 'ticker',
     value: function ticker(fn) {
       if (typeof fn !== 'function') {
-        throw new TypeError('Expected ticker to be a function, instead got: ' + (typeof fn === 'undefined' ? 'undefined' : _typeof(fn)));
+        throw errors(fn)('ticker');
       }
 
       this.on('ticker', fn);
@@ -225,7 +224,7 @@ module.exports = function (_EventEmitter) {
     key: 'finish',
     value: function finish(fn) {
       if (typeof fn !== 'function') {
-        throw new TypeError('Expected finish to be a function, instead got: ' + (typeof fn === 'undefined' ? 'undefined' : _typeof(fn)));
+        throw errors(fn)('finish');
       }
 
       this.on('finish', fn);
@@ -325,7 +324,7 @@ module.exports = function (_EventEmitter) {
   return Timr;
 }(EventEmitter);
 
-},{"./buildOptions":2,"./countdown":3,"./createStartTime":4,"./stopwatch":7,"./store":8,"./zeroPad":11,"events":12}],2:[function(require,module,exports){
+},{"./buildOptions":2,"./countdown":3,"./createStartTime":4,"./errors":5,"./stopwatch":8,"./store":9,"./zeroPad":12,"events":13}],2:[function(require,module,exports){
 'use strict';
 
 /**
@@ -337,20 +336,20 @@ module.exports = function (_EventEmitter) {
  * @throws If the option check fails, it throws a speicifc error.
  */
 
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
-
 var checkOption = function checkOption(option, value) {
+  var errors = require('./errors')(value);
+
   switch (option) {
     case 'outputFormat':
       if (typeof value !== 'string') {
-        throw new TypeError('Expected outputFormat to be a string, instead got: ' + (typeof value === 'undefined' ? 'undefined' : _typeof(value)));
+        throw errors('outputFormatType');
       }
       if (value !== 'HH:MM:SS' && value !== 'MM:SS' && value !== 'SS') {
-        throw new Error('Expected outputFormat to be: HH:MM:SS, MM:SS (default) or SS, instead got: ' + value);
+        throw errors('invalidOutputFormat');
       }
     case 'separator':
       if (typeof value !== 'string') {
-        throw new TypeError('Expected separator to be a string, instead got: ' + (typeof value === 'undefined' ? 'undefined' : _typeof(value)));
+        throw errors('separatorType');
       }
   }
 };
@@ -376,7 +375,7 @@ module.exports = function (options) {
   return defaultOptions;
 };
 
-},{}],3:[function(require,module,exports){
+},{"./errors":5}],3:[function(require,module,exports){
 'use strict';
 /**
  * @description Countdown function.
@@ -417,7 +416,27 @@ module.exports = function (startTime) {
   return typeof startTime === 'number' ? startTime : timeToSeconds(startTime);
 };
 
-},{"./timeToSeconds":9,"./validate":10}],5:[function(require,module,exports){
+},{"./timeToSeconds":10,"./validate":11}],5:[function(require,module,exports){
+'use strict';
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+
+module.exports = function (value) {
+  return function (error) {
+    return {
+      outputFormatType: new TypeError('Expected outputFormat to be a string, instead got: ' + (typeof value === 'undefined' ? 'undefined' : _typeof(value))),
+      invalidOutputFormat: new Error('Expected outputFormat to be: HH:MM:SS, MM:SS (default) or SS, instead got: ' + value),
+      separatorType: new TypeError('Expected separator to be a string, instead got: ' + (typeof value === 'undefined' ? 'undefined' : _typeof(value))),
+      invalidTime: new Error('Expected time format (HH:MM:SS, MM:SS or SS), instead got: ' + value),
+      invalidTimeType: new TypeError('Expected time to be a string or number, instead got: ' + (typeof value === 'number' ? value : typeof value === 'undefined' ? 'undefined' : _typeof(value))),
+      timeOverADay: new Error('Sorry, we don\'t support any time over 23:59:59 at the moment.'),
+      ticker: new TypeError('Expected ticker to be a function, instead got: ' + (typeof value === 'undefined' ? 'undefined' : _typeof(value))),
+      finish: new TypeError('Expected finish to be a function, instead got: ' + (typeof value === 'undefined' ? 'undefined' : _typeof(value)))
+    }[error];
+  };
+};
+
+},{}],6:[function(require,module,exports){
 'use strict';
 
 /**
@@ -433,7 +452,7 @@ module.exports = function (time) {
   });
 };
 
-},{}],6:[function(require,module,exports){
+},{}],7:[function(require,module,exports){
 'use strict';
 
 var Timr = require('./Timr');
@@ -484,7 +503,7 @@ init.stopAll = store.stopAll;
 
 module.exports = init;
 
-},{"./Timr":1,"./incorrectFormat":5,"./store":8,"./timeToSeconds":9,"./validate":10}],7:[function(require,module,exports){
+},{"./Timr":1,"./incorrectFormat":6,"./store":9,"./timeToSeconds":10,"./validate":11}],8:[function(require,module,exports){
 'use strict';
 
 /**
@@ -500,7 +519,7 @@ module.exports = function (self) {
   self.emit('ticker', self.formatTime(), self.currentTime);
 };
 
-},{}],8:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 'use strict';
 
 // Array to store all timrs.
@@ -568,7 +587,7 @@ store.removeFromStore = function (timr) {
 
 module.exports = store;
 
-},{}],9:[function(require,module,exports){
+},{}],10:[function(require,module,exports){
 'use strict';
 
 /**
@@ -600,10 +619,8 @@ module.exports = function (time) {
   }, 0);
 };
 
-},{}],10:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 'use strict';
-
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
 
 var incorrectFormat = require('./incorrectFormat');
 
@@ -620,22 +637,24 @@ var incorrectFormat = require('./incorrectFormat');
  */
 
 module.exports = function (time) {
+  var errors = require('./errors')(time);
+
   if (typeof time === 'string') {
     if (+time < 0 || isNaN(+time) && incorrectFormat(time)) {
-      throw new Error('Expected time format (HH:MM:SS, MM:SS or SS), instead got: ' + time);
+      throw errors('invalidTime');
     }
   } else if (typeof time !== 'number' || isNaN(time)) {
-    throw new TypeError('Expected time to be a string or number, instead got: ' + (typeof time === 'number' ? time : typeof time === 'undefined' ? 'undefined' : _typeof(time)));
+    throw errors('invalidTimeType');
   }
 
   if (+time > 86399) {
-    throw new Error('Sorry, we don\'t support any time over 23:59:59 at the moment.');
+    throw errors('timeOverADay');
   }
 
   return time;
 };
 
-},{"./incorrectFormat":5}],11:[function(require,module,exports){
+},{"./errors":5,"./incorrectFormat":6}],12:[function(require,module,exports){
 'use strict';
 
 /**
@@ -652,7 +671,7 @@ module.exports = function (str) {
   });
 };
 
-},{}],12:[function(require,module,exports){
+},{}],13:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -952,4 +971,4 @@ function isUndefined(arg) {
   return arg === void 0;
 }
 
-},{}]},{},[6]))(6)));
+},{}]},{},[7])(7)));

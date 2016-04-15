@@ -12,11 +12,25 @@ const browserify = require('browserify');
 const version = require('./package.json').version;
 
 const removeFinalSemi = () => (
-  through2.obj((file, encoding, callback) => {
+  through2.obj((file, e, cb) => {
     file.contents = new Buffer(String(file.contents).trim().replace(/;$/, ''));
-    callback(null, file);
+    cb(null, file);
   })
 );
+
+const prodErrors = `
+    if (!DEBUG) {
+      return new Error('Minified exception occured; use non-minified dev enviroment for full message.');
+    }
+`
+const addProdErrors = () => (
+  through2.obj((file, e, cb) => {
+    file.contents = new Buffer(
+      String(file.contents).replace('return function (error) {', (m) => m + prodErrors)
+    );
+    cb(null, file);
+  })
+)
 
 const minCom = `/* TimrJS v${version} | (c) 2016 Joe Smith | https://github.com/joesmith100/timrjs/blob/master/LICENSE */
 ;<%= contents %>`
@@ -46,7 +60,7 @@ const funcWrapper = `/**
 
   // <script>
   } else {
-    var global
+    var global;
     if (typeof window !== "undefined") {
       global = window;
     } else if (typeof global !== "undefined") {
@@ -61,7 +75,7 @@ const funcWrapper = `/**
     }
     global.Timr = Timr;
   }
-}((<%= contents %>)(6)));`
+}(<%= contents %>(7)));`
 
 gulp.task('default', () => (
   browserify('./lib/init.js')
@@ -72,7 +86,8 @@ gulp.task('default', () => (
     .pipe(removeFinalSemi())
     .pipe(wrap(funcWrapper))
     .pipe(gulp.dest('./dist/'))
-    .pipe(uglify({compress: {negate_iife: false}}))
+    .pipe(addProdErrors())
+    .pipe(uglify({compress: {negate_iife: false, global_defs: {DEBUG: false}}}))
     .pipe(wrap(minCom))
     .pipe(rename('timr.min.js'))
     .pipe(gulp.dest('./dist/'))
