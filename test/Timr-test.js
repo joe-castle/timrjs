@@ -75,14 +75,14 @@ describe('Timr Class', () => {
   });
   describe('ticker method', () => {
     it(`Fires the ticker function every second the timer runs, and
-      returns the formattedTime, time and startTime in seconds`, (done) => {
+      returns the formattedTime, precentDone, currentTime, startTime and the original Timr object.`, (done) => {
       const timer = new Timr(600, {separator: ':'}).start()
-        .ticker((formattedTime, percentDone, currentTime, startTime, timr) => {
+        .ticker((formattedTime, percentDone, currentTime, startTime, self) => {
           expect(formattedTime).to.equal('09:59');
           expect(percentDone).to.equal(0);
           expect(currentTime).to.equal(599);
           expect(startTime).to.equal(600);
-          expect(timr).to.equal(timer);
+          expect(self).to.equal(timer);
           timer.stop();
           done();
         })
@@ -98,9 +98,12 @@ describe('Timr Class', () => {
     });
   });
   describe('finish method', () => {
-    it('Fires the finish function when a timer finishes', (done) => {
+    it('Fires the finish function when the timer finishes and provides the original Timr object.', (done) => {
       const timer = new Timr(1, {}).start();
-      timer.finish(() => done());
+      timer.finish(self => {
+        expect(self).to.equal(timer);
+        done()
+      });
     });
     it(`Throws an error if the finish method is called with no
       function provided as the first argument`, () => {

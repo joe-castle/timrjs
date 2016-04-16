@@ -297,7 +297,18 @@ module.exports = function (_EventEmitter) {
     }
 
     /**
-     * @description Gets the Timrs current time.
+     * @description Gets the Timrs startTime.
+     *
+     * @returns {Number} Current time in seconds
+     */
+
+  }, {
+    key: 'getStartTime',
+    value: function getStartTime() {
+      return this.startTime;
+    }
+    /**
+     * @description Gets the Timrs currentTime.
      *
      * @returns {Number} Current time in seconds
      */
@@ -390,8 +401,8 @@ module.exports = function (self) {
   self.emit('ticker', self.formatTime(), self.percentDone(), self.currentTime, self.startTime, self);
 
   if (self.currentTime <= 0) {
-    self.emit('finish');
     self.stop();
+    self.emit('finish', self);
   }
 };
 
@@ -532,7 +543,7 @@ var timrs = [];
  *
  * Can also be disabled/enabled on an individual basis.
  * Each timr object accepts store as an option, true or false.
- * This overides the globabl Timr.store option.
+ * This overides the global Timr.store option.
  *
  * @param {Object} A timr object.
  * @returns {Object} The provided timr object.

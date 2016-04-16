@@ -26,7 +26,10 @@ const prodErrors = `
 const addProdErrors = () => (
   through2.obj((file, e, cb) => {
     file.contents = new Buffer(
-      String(file.contents).replace('return function (error) {', (m) => m + prodErrors)
+      String(file.contents).replace(
+        'return function (error) {',
+        (match) => match + prodErrors
+      )
     );
     cb(null, file);
   })
