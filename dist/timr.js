@@ -280,7 +280,7 @@ module.exports = function (_EventEmitter) {
      *
      * @throws If the starttime is invalid.
      *
-     * @return {String} Returns the startTime.
+     * @return {String} Returns the formatted startTime.
      */
 
   }, {
@@ -290,7 +290,7 @@ module.exports = function (_EventEmitter) {
 
       this.startTime = this.currentTime = createStartTime(startTime);
 
-      return startTime;
+      return this.formatTime();
     }
 
     /**
