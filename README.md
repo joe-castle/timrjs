@@ -100,7 +100,7 @@ There are a number of helper methods available to Timrs.
  - `destroy` - Clears the timer, removes all event listeners and removes the Timr from the store.
  - `formatTime` - Returns the formatted time.
  - `percentDone` - Returns the time elapsed in percent.
- - `setStartTime` - Changes startTime and returns it. Will stop the timer if its running.
+ - `setStartTime` - Changes startTime and returns it formatted. Will stop the timer if its running.
  - `getStartTime` - Returns the startTime in seconds.
  - `getCurrentTime` - Returns the currentTime in seconds.
  - `isRunning` - Returns true if the timer is running, false otherwise.
