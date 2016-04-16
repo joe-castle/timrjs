@@ -236,7 +236,7 @@ module.exports = function (_EventEmitter) {
      * @description Converts seconds back to time format.
      * This is provided to the ticker method as the first argument.
      *
-     * @return {String} Returns the formatted string.
+     * @return {String} The formatted time.
      */
 
   }, {
@@ -283,7 +283,7 @@ module.exports = function (_EventEmitter) {
      *
      * @throws If the starttime is invalid.
      *
-     * @return {Object} Returns a reference to the Timr so calls can be chained.
+     * @return {String} Returns the startTime.
      */
 
   }, {
@@ -293,7 +293,7 @@ module.exports = function (_EventEmitter) {
 
       this.startTime = this.currentTime = createStartTime(startTime);
 
-      return this;
+      return startTime;
     }
 
     /**
