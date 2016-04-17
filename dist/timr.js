@@ -1,5 +1,5 @@
 /**
- * TimrJS v0.6.2
+ * TimrJS v0.6.3
  * https://github.com/joesmith100/timrjs
  * https://www.npmjs.com/package/timrjs
  *
@@ -50,11 +50,8 @@ var EventEmitter = require('events');
 
 var createStartTime = require('./createStartTime');
 var buildOptions = require('./buildOptions');
-var zeroPad = require('./zeroPad');
+var formatTime = require('./formatTime');
 var errors = require('./errors');
-
-var countdown = require('./countdown');
-var stopwatch = require('./stopwatch');
 
 var removeFromStore = require('./store').removeFromStore;
 
@@ -62,7 +59,8 @@ var removeFromStore = require('./store').removeFromStore;
  * Class representing a new Timr.
  * @extends EventEmitter
  */
-module.exports = function (_EventEmitter) {
+
+var Timr = function (_EventEmitter) {
   _inherits(Timr, _EventEmitter);
 
   /**
@@ -80,31 +78,40 @@ module.exports = function (_EventEmitter) {
 
     var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Timr).call(this));
 
+    options = buildOptions(options);
+
     _this.timer = null;
     _this.running = false;
-    _this.options = buildOptions(options);
+    _this.outputFormat = options.outputFormat;
+    _this.separator = options.separator;
     _this.startTime = createStartTime(startTime);
     _this.currentTime = _this.startTime;
     return _this;
   }
 
   /**
-   * @description Starts the timr.
-   *
-   * @return {Object} Returns a reference to the Timr so calls can be chained.
+   * @description Countdown function.
+   * Bound to a setInterval timer when start() is called.
    */
 
 
   _createClass(Timr, [{
     key: 'start',
+
+
+    /**
+     * @description Starts the timr.
+     *
+     * @return {Object} Returns a reference to the Timr so calls can be chained.
+     */
     value: function start() {
       if (!this.running) {
         this.running = true;
 
         if (this.startTime > 0) {
-          this.timer = setInterval(countdown.bind(this, this), 1000);
+          this.timer = setInterval(Timr.countdown.bind(this), 1000);
         } else {
-          this.timer = setInterval(stopwatch.bind(this, this), 1000);
+          this.timer = setInterval(Timr.stopwatch.bind(this), 1000);
         }
       } else {
         console.warn('Timer already running');
@@ -230,38 +237,8 @@ module.exports = function (_EventEmitter) {
     }
 
     /**
-     * @description Converts seconds back to time format.
-     * This is provided to the ticker method as the first argument.
-     *
-     * @return {String} The formatted time.
-     */
-
-  }, {
-    key: 'formatTime',
-    value: function formatTime() {
-      var seconds = this.currentTime,
-          minutes = seconds / 60,
-          output = this.options.outputFormat,
-          sep = this.options.separator;
-
-      if (minutes >= 1) {
-        var hours = minutes / 60;
-        minutes = Math.floor(minutes);
-
-        if (hours >= 1) {
-          hours = Math.floor(hours);
-
-          return zeroPad('' + hours + sep + (minutes - hours * 60) + sep + (seconds - minutes * 60));
-        }
-
-        return zeroPad('' + (output === 'HH:MM:SS' ? '0' + sep : '') + minutes + sep + (seconds - minutes * 60));
-      }
-
-      return zeroPad('' + (output === 'HH:MM:SS' ? '0' + sep + '0' + sep : output === 'MM:SS' ? '0' + sep : '') + seconds);
-    }
-
-    /**
      * @description Returns the time elapsed in percent.
+     * This is provided to the ticker method as the second argument.
      *
      * @returns {Number} Time elapsed in percent.
      */
@@ -327,12 +304,59 @@ module.exports = function (_EventEmitter) {
     value: function isRunning() {
       return this.running;
     }
+  }], [{
+    key: 'countdown',
+    value: function countdown() {
+      this.currentTime -= 1;
+
+      this.emit('ticker', this.formatTime(), this.percentDone(), this.currentTime, this.startTime, this);
+
+      if (this.currentTime <= 0) {
+        this.stop();
+        this.emit('finish', this);
+      }
+    }
+
+    /**
+     * @description Stopwatch function.
+     * Bound to a setInterval timer when start() is called.
+     */
+
+  }, {
+    key: 'stopwatch',
+    value: function stopwatch() {
+      this.currentTime += 1;
+
+      this.emit('ticker', this.formatTime(), this.currentTime);
+    }
   }]);
 
   return Timr;
 }(EventEmitter);
 
-},{"./buildOptions":2,"./countdown":3,"./createStartTime":4,"./errors":5,"./stopwatch":8,"./store":9,"./zeroPad":12,"events":13}],2:[function(require,module,exports){
+;
+
+/**
+ * @description Converts currentTime to time format.
+ * This is provided to the ticker method as the first argument.
+ *
+ * @return {String} The formatted time.
+ */
+Timr.prototype.formatTime = formatTime;
+
+/**
+ * @description Converts startTime to time format.
+ * This is provided to the ticker method as the first argument.
+ *
+ * @return {String} The formatted time.
+ */
+Timr.prototype.formatStartTime = function () {
+  return formatTime.call(this, this.startTime);
+};
+
+module.exports = Timr;
+
+},{"./buildOptions":2,"./createStartTime":3,"./errors":4,"./formatTime":5,"./store":8,"events":12}],2:[function(require,module,exports){
 'use strict';
 
 /**
@@ -383,27 +407,7 @@ module.exports = function (options) {
   return defaultOptions;
 };
 
-},{"./errors":5}],3:[function(require,module,exports){
-'use strict';
-/**
- * @description Countdown function.
- * Bound to a setInterval timer when start() is called.
- *
- * @param {Object} self - Timr object.
- */
-
-module.exports = function (self) {
-  self.currentTime -= 1;
-
-  self.emit('ticker', self.formatTime(), self.percentDone(), self.currentTime, self.startTime, self);
-
-  if (self.currentTime <= 0) {
-    self.stop();
-    self.emit('finish', self);
-  }
-};
-
-},{}],4:[function(require,module,exports){
+},{"./errors":4}],3:[function(require,module,exports){
 'use strict';
 
 var timeToSeconds = require('./timeToSeconds');
@@ -424,7 +428,7 @@ module.exports = function (startTime) {
   return typeof startTime === 'number' ? startTime : timeToSeconds(startTime);
 };
 
-},{"./timeToSeconds":10,"./validate":11}],5:[function(require,module,exports){
+},{"./timeToSeconds":9,"./validate":10}],4:[function(require,module,exports){
 'use strict';
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
@@ -444,7 +448,44 @@ module.exports = function (value) {
   };
 };
 
-},{}],6:[function(require,module,exports){
+},{}],5:[function(require,module,exports){
+'use strict';
+
+var zeroPad = require('./zeroPad');
+
+/**
+ * @description Converts seconds to time format.
+ *
+ * @param {Number} seconds - The seconds to convert.
+ * @param {String} output - The format in which to output the time.
+ * @param {String} sep - The character used to separate the time units.
+ *
+ * @return {String} The formatted time.
+ */
+module.exports = function (seconds, sep, output) {
+  seconds = seconds || this.currentTime;
+  sep = sep || this.separator || ':';
+  output = output || this.outputFormat || 'MM:SS';
+
+  var minutes = seconds / 60;
+
+  if (minutes >= 1) {
+    var hours = minutes / 60;
+    minutes = Math.floor(minutes);
+
+    if (hours >= 1) {
+      hours = Math.floor(hours);
+
+      return zeroPad('' + hours + sep + (minutes - hours * 60) + sep + (seconds - minutes * 60));
+    }
+
+    return zeroPad('' + (output === 'HH:MM:SS' ? '0' + sep : '') + minutes + sep + (seconds - minutes * 60));
+  }
+
+  return zeroPad('' + (output === 'HH:MM:SS' ? '0' + sep + '0' + sep : output === 'MM:SS' ? '0' + sep : '') + seconds);
+};
+
+},{"./zeroPad":11}],6:[function(require,module,exports){
 'use strict';
 
 /**
@@ -496,6 +537,7 @@ var init = function init(startTime, options) {
 
 // Exposed helper methods.
 init.validate = require('./validate');
+init.formatTime = require('./formatTime');
 init.timeToSeconds = require('./timeToSeconds');
 init.incorrectFormat = require('./incorrectFormat');
 
@@ -511,23 +553,7 @@ init.stopAll = store.stopAll;
 
 module.exports = init;
 
-},{"./Timr":1,"./incorrectFormat":6,"./store":9,"./timeToSeconds":10,"./validate":11}],8:[function(require,module,exports){
-'use strict';
-
-/**
- * @description Stopwatch function.
- * Bound to a setInterval timer when start() is called.
- *
- * @param {Object} self - Timr object.
- */
-
-module.exports = function (self) {
-  self.currentTime += 1;
-
-  self.emit('ticker', self.formatTime(), self.currentTime);
-};
-
-},{}],9:[function(require,module,exports){
+},{"./Timr":1,"./formatTime":5,"./incorrectFormat":6,"./store":8,"./timeToSeconds":9,"./validate":10}],8:[function(require,module,exports){
 'use strict';
 
 // Array to store all timrs.
@@ -595,7 +621,7 @@ store.removeFromStore = function (timr) {
 
 module.exports = store;
 
-},{}],10:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 'use strict';
 
 /**
@@ -627,7 +653,7 @@ module.exports = function (time) {
   }, 0);
 };
 
-},{}],11:[function(require,module,exports){
+},{}],10:[function(require,module,exports){
 'use strict';
 
 var incorrectFormat = require('./incorrectFormat');
@@ -662,7 +688,7 @@ module.exports = function (time) {
   return time;
 };
 
-},{"./errors":5,"./incorrectFormat":6}],12:[function(require,module,exports){
+},{"./errors":4,"./incorrectFormat":6}],11:[function(require,module,exports){
 'use strict';
 
 /**
@@ -679,7 +705,7 @@ module.exports = function (str) {
   });
 };
 
-},{}],13:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
