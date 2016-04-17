@@ -98,9 +98,10 @@ All the above methods return a reference to the Timr, so calls can be chained.
 #### Helper Methods
 There are a number of helper methods available to Timrs.
  - `destroy` - Clears the timer, removes all event listeners and removes the Timr from the store.
- - `formatTime` - Returns the formatted time.
+ - `formatTime` - Returns the currentTime, formatted.
+ - `formatStartTime` - Returns the startTime, formatted.
  - `percentDone` - Returns the time elapsed in percent.
- - `setStartTime` - Changes startTime and returns it formatted. Will stop the timer if its running.
+ - `setStartTime` - Changes startTime to the one provided and returns it formatted. Will stop the timer if its running. It's also subject to validation, so will throw an error if the provided time is invalid.
  - `getStartTime` - Returns the startTime in seconds.
  - `getCurrentTime` - Returns the currentTime in seconds.
  - `isRunning` - Returns true if the timer is running, false otherwise.
@@ -109,6 +110,8 @@ There are a number of helper methods available to Timrs.
 timer.destroy();
 // Returns a reference to the Timr.
 timer.formatTime();
+// '10:00'
+timer.formatStartTime();
 // '10:00'
 timer.percentDone();
 // 0
@@ -151,8 +154,12 @@ There are also a number of helper methods available on the Global Timr function.
    - Checks validity of time string.
    - Ensures provided time is a number or a string.
    - Ensures provided time does not exceed '23:59:59'.
- - `Timr.incorrectFormat` - Checks the format of a time string. Must be separated by a colon, e.g. '10:00'. Used in the validate method above.
+ - `Timr.formatTime` - Converts seconds into a time string.
+   - `seconds` - Required. The seconds to be converted.
+   - `separator` - See https://github.com/joesmith100/timrjs#parameters
+   - `outputFormat` - See https://github.com/joesmith100/timrjs#parameters
  - `Timr.timeToSeconds` - Converts a time string into seconds. Must be separated by a colon, e.g. '10:00'.
+ - `Timr.incorrectFormat` - Checks the format of a time string. Must be separated by a colon, e.g. '10:00'. Used in the validate method above.
 
 ```js
 Timr.validate('10:00');
@@ -164,15 +171,22 @@ Timr.validate('invalid input');
 Timr.validate('25:00:00');
 // Throws an error
 
-Timr.incorrectFormat('10:00');
-// false
-Timr.incorrectFormat('invalid');
-// true
+Timr.formatTime(600);
+// '10:00'
+Timr.formatTime(600, '-');
+// '10-00'
+Timr.formatTime(600, null, 'HH:MM:SS');
+// '00:10:00'
 
 Timr.timeToSeconds('10:00');
 // 600
 Timr.timeToSeconds('1:34:23');
 // 5663
+
+Timr.incorrectFormat('10:00');
+// false
+Timr.incorrectFormat('invalid');
+// true
 ```
 ### Bugs
 This is my first contribution to the Open Source community so I fully expect there to be bugs.

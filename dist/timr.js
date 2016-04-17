@@ -1,5 +1,5 @@
 /**
- * TimrJS v0.6.3
+ * TimrJS v0.7.0
  * https://github.com/joesmith100/timrjs
  * https://www.npmjs.com/package/timrjs
  *
@@ -46,22 +46,16 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var EventEmitter = require('events');
-
 var createStartTime = require('./createStartTime');
-var buildOptions = require('./buildOptions');
-var formatTime = require('./formatTime');
 var errors = require('./errors');
-
-var removeFromStore = require('./store').removeFromStore;
 
 /**
  * Class representing a new Timr.
  * @extends EventEmitter
  */
 
-var Timr = function (_EventEmitter) {
-  _inherits(Timr, _EventEmitter);
+var Timr = function (_require) {
+  _inherits(Timr, _require);
 
   /**
    * @description Creates a Timr.
@@ -78,12 +72,9 @@ var Timr = function (_EventEmitter) {
 
     var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Timr).call(this));
 
-    options = buildOptions(options);
-
     _this.timer = null;
     _this.running = false;
-    _this.outputFormat = options.outputFormat;
-    _this.separator = options.separator;
+    _this.options = require('./buildOptions')(options);
     _this.startTime = createStartTime(startTime);
     _this.currentTime = _this.startTime;
     return _this;
@@ -179,7 +170,7 @@ var Timr = function (_EventEmitter) {
     value: function destroy() {
       this.clear().removeAllListeners();
 
-      removeFromStore(this);
+      require('./store').removeFromStore(this);
 
       return this;
     }
@@ -332,9 +323,18 @@ var Timr = function (_EventEmitter) {
   }]);
 
   return Timr;
-}(EventEmitter);
+}(require('events'));
 
 ;
+
+var formatTime = require('./formatTime');
+
+// Factory for formatTime and formatStartTime;
+var createFormatTime = function createFormatTime(time) {
+  return function () {
+    return formatTime.call(this, this[time], this.options.separator, this.options.outputFormat);
+  };
+};
 
 /**
  * @description Converts currentTime to time format.
@@ -342,17 +342,15 @@ var Timr = function (_EventEmitter) {
  *
  * @return {String} The formatted time.
  */
-Timr.prototype.formatTime = formatTime;
+Timr.prototype.formatTime = createFormatTime('currentTime');
 
 /**
  * @description Converts startTime to time format.
  * This is provided to the ticker method as the first argument.
  *
- * @return {String} The formatted time.
+ * @return {String} The formatted startTime.
  */
-Timr.prototype.formatStartTime = function () {
-  return formatTime.call(this, this.startTime);
-};
+Timr.prototype.formatStartTime = createFormatTime('startTime');
 
 module.exports = Timr;
 
@@ -410,9 +408,6 @@ module.exports = function (options) {
 },{"./errors":4}],3:[function(require,module,exports){
 'use strict';
 
-var timeToSeconds = require('./timeToSeconds');
-var validate = require('./validate');
-
 /**
  * @description Validates startTime and converts to seconds if a string,
  * or returns the original time in seconds.
@@ -423,9 +418,9 @@ var validate = require('./validate');
  *
  * @returns {Number} startTime in seconds.
  */
+
 module.exports = function (startTime) {
-  validate(startTime);
-  return typeof startTime === 'number' ? startTime : timeToSeconds(startTime);
+  return require('./validate')(startTime), require('./timeToSeconds')(startTime);
 };
 
 },{"./timeToSeconds":9,"./validate":10}],4:[function(require,module,exports){
@@ -463,9 +458,8 @@ var zeroPad = require('./zeroPad');
  * @return {String} The formatted time.
  */
 module.exports = function (seconds, sep, output) {
-  seconds = seconds || this.currentTime;
-  sep = sep || this.separator || ':';
-  output = output || this.outputFormat || 'MM:SS';
+  output = output || 'MM:SS';
+  sep = sep || ':';
 
   var minutes = seconds / 60;
 
@@ -492,11 +486,18 @@ module.exports = function (seconds, sep, output) {
  * @description Checks the provided time for correct formatting.
  *
  * @param {String} time - The provided time string.
+ *
  * @returns {Boolean} True if format is incorrect, false otherwise.
  */
 
 module.exports = function (time) {
-  return time.split(':').some(function (e, i, a) {
+  if (typeof time !== 'string') {
+    return true;
+  }
+
+  time = time.split(':');
+
+  return time.length > 3 || time.some(function (e, i, a) {
     return +e < 0 || +e > (a.length === 3 && i === 0 ? 23 : 59) || isNaN(+e);
   });
 };
@@ -627,13 +628,14 @@ module.exports = store;
 /**
  * @description Converts time format (HH:MM:SS) into seconds.
  *
- * @param {String} time - The time to be converted.
+ * @param {String|Number} time - The time to be converted.
+ * If a number is provided it will simply return that number.
  *
- * @returns {Number} The converted time in seconds.
+ * @returns {Number} - The time in seconds.
  */
 
 module.exports = function (time) {
-  return time.split(':').reduce(function (prevItem, currentItem, index, arr) {
+  return typeof time === 'number' && !isNaN(time) ? time : time.split(':').reduce(function (prevItem, currentItem, index, arr) {
     if (arr.length === 3) {
       if (index === 0) {
         return prevItem + +currentItem * 60 * 60;
@@ -656,25 +658,28 @@ module.exports = function (time) {
 },{}],10:[function(require,module,exports){
 'use strict';
 
-var incorrectFormat = require('./incorrectFormat');
-
 /**
  * @description Validates the provded time
  *
  * @param {String|Number} time - The time to be checked
-
+ *
+ * @throws If the provided time is a negative number.
  * @throws If the provided time is not in the correct format.
  * @throws If the provided time is neither a number nor a string.
  * @throws If the provided time in seconds is over 23:59:59.
  *
- * @return The provided time if its valid.
+ * @returns {String|Number} - The provided time if its valid.
  */
 
 module.exports = function (time) {
   var errors = require('./errors')(time);
 
+  if (+time < 0) {
+    throw errors('invalidTime');
+  }
+
   if (typeof time === 'string') {
-    if (+time < 0 || isNaN(+time) && incorrectFormat(time)) {
+    if (isNaN(+time) && require('./incorrectFormat')(time)) {
       throw errors('invalidTime');
     }
   } else if (typeof time !== 'number' || isNaN(time)) {

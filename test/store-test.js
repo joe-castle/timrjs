@@ -51,13 +51,9 @@ describe('Store', () => {
   });
   it('Returns an array of all the timrs that are running', () => {
     const timer = new Timr(600);
-
     store(timer);
-
     expect(store.isRunning()).to.have.lengthOf(0);
-
     store.startAll();
-
     expect(store.isRunning()).to.have.lengthOf(1);
   })
 });

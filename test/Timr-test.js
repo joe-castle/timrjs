@@ -25,6 +25,11 @@ describe('Timr Class', () => {
           done();
         });
     });
+    it('Returns a reference to the Timr', () => {
+      const timer = new Timr(600).start();
+      expect(timer).equal(timer);
+      timer.destroy();
+    });
   });
   describe('pause method', () => {
     it('Pauses the timer', (done) => {
@@ -36,6 +41,10 @@ describe('Timr Class', () => {
           done();
         })
     });
+    it('Returns a reference to the Timr', () => {
+      const timer = new Timr(600).pause();
+      expect(timer).equal(timer);
+    });
   });
   describe('stop method', () => {
     it('Stops the timer', (done) => {
@@ -46,6 +55,10 @@ describe('Timr Class', () => {
         expect(timer.getCurrentTime()).to.equal(600);
         done();
       });
+    });
+    it('Returns a reference to the Timr', () => {
+      const timer = new Timr(600).stop();
+      expect(timer).equal(timer);
     });
   });
   describe('destroy method', () => {
@@ -72,6 +85,10 @@ describe('Timr Class', () => {
 
       expect(store.getAll().indexOf(timer)).to.equal(-1);
     });
+    it('Returns a reference to the Timr', () => {
+      const timer = new Timr(600).destroy();
+      expect(timer).equal(timer);
+    });
   });
   describe('ticker method', () => {
     it(`Fires the ticker function every second the timer runs, and
@@ -96,6 +113,10 @@ describe('Timr Class', () => {
         'Expected ticker to be a function, instead got: undefined'
       );
     });
+    it('Returns a reference to the Timr', () => {
+      const timer = new Timr(600).ticker(() => {});
+      expect(timer).equal(timer);
+    });
   });
   describe('finish method', () => {
     it('Fires the finish function when the timer finishes and provides the original Timr object.', (done) => {
@@ -114,20 +135,9 @@ describe('Timr Class', () => {
         'Expected finish to be a function, instead got: undefined'
       );
     });
-  });
-  describe('formatTime method', () => {
-    it('Returns 24hr human readble time', () => {
-      expect(new Timr(50).formatTime()).to.equal('00:50');
-      expect(new Timr(600).formatTime()).to.equal('10:00');
-      expect(new Timr(9600).formatTime()).to.equal('02:40:00');
-    });
-    it('Returns 24hr human readable time with a modified outputFormat', () => {
-      expect(new Timr(600, {outputFormat: 'HH:MM:SS'}).formatTime()).to.equal('00:10:00');
-      expect(new Timr(50, {outputFormat: 'SS'}).formatTime()).to.equal('50');
-    })
-    it('Returns 24hr human readable time with a modifided separator', () => {
-      expect(new Timr(600, {separator: '-'}).formatTime()).to.equal('10-00');
-      expect(new Timr(600, {separator: 'boop'}).formatTime()).to.equal('10boop00');
+    it('Returns a reference to the Timr', () => {
+      const timer = new Timr(600).finish(() => {});
+      expect(timer).equal(timer);
     });
   });
   describe('percentDone method', () => {
@@ -161,6 +171,11 @@ describe('Timr Class', () => {
       expect(timer.setStartTime.bind(timer, '123:123')).to.throw(Error);
       expect(timer.setStartTime.bind(timer, 8737475638)).to.throw(Error);
     });
+    it('Returns the formatted start time', () => {
+      expect(new Timr(600).setStartTime('11:00')).equal('11:00');
+      expect(new Timr(600).setStartTime('1:00')).equal('01:00');
+      expect(new Timr(600).setStartTime(800)).equal('13:20');
+    });
   });
   describe('getCurrentTime method', () => {
     it('Returns the currentTime in seconds', () => {
@@ -175,6 +190,36 @@ describe('Timr Class', () => {
       const timer = new Timr(600).start();
       expect(timer.isRunning()).to.equal(true);
       timer.stop();
+    });
+  });
+  describe('formatTime method', () => {
+    it('Returns the currentTime formatted into a time string', () => {
+      expect(new Timr(50).formatTime()).to.equal('00:50');
+      expect(new Timr(600).formatTime()).to.equal('10:00');
+      expect(new Timr(9600).formatTime()).to.equal('02:40:00');
+    });
+    it('Returns the currentTime formatted into a time string with a modified outputFormat', () => {
+      expect(new Timr(600, {outputFormat: 'HH:MM:SS'}).formatTime()).to.equal('00:10:00');
+      expect(new Timr(50, {outputFormat: 'SS'}).formatTime()).to.equal('50');
+    })
+    it('Returns the currentTime formatted into a time string with a modifided separator', () => {
+      expect(new Timr(600, {separator: '-'}).formatTime()).to.equal('10-00');
+      expect(new Timr(600, {separator: 'boop'}).formatTime()).to.equal('10boop00');
+    });
+  });
+  describe('formatStartTime method', () => {
+    it('Returns the startTime formatted into a time string', () => {
+      expect(new Timr(50).formatStartTime()).to.equal('00:50');
+      expect(new Timr(600).formatStartTime()).to.equal('10:00');
+      expect(new Timr(9600).formatStartTime()).to.equal('02:40:00');
+    });
+    it('Returns the startTime formatted into a time string with a modified outputFormat', () => {
+      expect(new Timr(600, {outputFormat: 'HH:MM:SS'}).formatStartTime()).to.equal('00:10:00');
+      expect(new Timr(50, {outputFormat: 'SS'}).formatStartTime()).to.equal('50');
+    })
+    it('Returns the startTime formatted into a time string with a modifided separator', () => {
+      expect(new Timr(600, {separator: '-'}).formatStartTime()).to.equal('10-00');
+      expect(new Timr(600, {separator: 'boop'}).formatStartTime()).to.equal('10boop00');
     });
   });
 });
