@@ -18,11 +18,10 @@ const removeFinalSemi = () => (
   })
 );
 
-const prodErrors = `
-    if (!DEBUG) {
-      return new Error('Minified exception occured; use non-minified dev enviroment for full message.');
-    }
-`
+const prodErrors = `if (!DEBUG) {
+  return new Error('Minified exception occured; use non-minified dev enviroment for full message.');
+}`
+
 const addProdErrors = () => (
   through2.obj((file, e, cb) => {
     file.contents = new Buffer(

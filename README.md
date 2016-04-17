@@ -14,7 +14,7 @@ Install with npm or Bower.
 npm install timrjs --save
 ```
 
-Alternatively you can include the following CDN - _Also included with both npm and Bower packages_ `node_modules/dist/timr.js`:
+Alternatively you can include the following CDN - _Also included with both npm and Bower packages_ `node_modules/dist/timr.js`
 > https://cdn.rawgit.com/joesmith100/timrjs/master/dist/timr.js
 > https://cdn.rawgit.com/joesmith100/timrjs/master/dist/timr.min.js
 
