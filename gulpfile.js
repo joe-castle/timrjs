@@ -78,7 +78,7 @@ const funcWrapper = `/**
 
 gulp.task('default', () => (
   browserify('./lib/init.js')
-    .transform('babelify', {presets: ['es2015']})
+    .transform('babelify', {presets: ['es2015'], plugins: ['transform-object-assign']})
     .bundle()
     .pipe(source('timr.js'))
     .pipe(buffer())

@@ -38,319 +38,268 @@
 }((function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 'use strict';
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+var EventEmitter = require('events');
 
 var createStartTime = require('./createStartTime');
 var errors = require('./errors');
 
-/**
- * Class representing a new Timr.
- * @extends EventEmitter
- */
-
-var Timr = function (_require) {
-  _inherits(Timr, _require);
-
-  /**
-   * @description Creates a Timr.
-   *
-   * @param {String|Number} startTime - The starting time for the timr object.
-   * @param {Object} [options] - Options to customise the timer.
-   *
-   * @throws If the provided startTime is neither a number or a string,
-   * or, incorrect format.
-   */
-
-  function Timr(startTime, options) {
-    _classCallCheck(this, Timr);
-
-    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Timr).call(this));
-
-    _this.timer = null;
-    _this.running = false;
-    _this.options = require('./buildOptions')(options);
-    _this.startTime = createStartTime(startTime);
-    _this.currentTime = _this.startTime;
-    return _this;
-  }
-
-  /**
-   * @description Countdown function.
-   * Bound to a setInterval timer when start() is called.
-   */
-
-
-  _createClass(Timr, [{
-    key: 'start',
-
-
-    /**
-     * @description Starts the timr.
-     *
-     * @return {Object} Returns a reference to the Timr so calls can be chained.
-     */
-    value: function start() {
-      if (!this.running) {
-        this.running = true;
-
-        if (this.startTime > 0) {
-          this.timer = setInterval(Timr.countdown.bind(this), 1000);
-        } else {
-          this.timer = setInterval(Timr.stopwatch.bind(this), 1000);
-        }
-      } else {
-        console.warn('Timer already running');
-      }
-
-      return this;
-    }
-
-    /**
-     * @description Pauses the timr.
-     *
-     * @return {Object} Returns a reference to the Timr so calls can be chained.
-     */
-
-  }, {
-    key: 'pause',
-    value: function pause() {
-      this.clear();
-
-      return this;
-    }
-
-    /**
-     * @description Stops the timr.
-     *
-     * @return {Object} Returns a reference to the Timr so calls can be chained.
-     */
-
-  }, {
-    key: 'stop',
-    value: function stop() {
-      this.clear();
-
-      this.currentTime = this.startTime;
-
-      return this;
-    }
-
-    /**
-     * @description Clears the timr.
-     *
-     * @return {Object} Returns a reference to the Timr so calls can be chained.
-     */
-
-  }, {
-    key: 'clear',
-    value: function clear() {
-      clearInterval(this.timer);
-
-      this.running = false;
-
-      return this;
-    }
-
-    /**
-     * @description Destroys the timr,
-     * clearing the interval, removing all event listeners and removing,
-     * from the store.
-     *
-     * @return {Object} Returns a reference to the Timr so calls can be chained.
-     */
-
-  }, {
-    key: 'destroy',
-    value: function destroy() {
-      this.clear().removeAllListeners();
-
-      require('./store').removeFromStore(this);
-
-      return this;
-    }
-
-    /**
-     * @description The ticker method is called every second
-     * the timer ticks down.
-     *
-     * As Timr inherits from EventEmitter, this can be called
-     * multiple times with different functions and each one will
-     * be called when the event is emitted.
-     *
-     * @throws If the argument is not of type function.
-     *
-     * @param {Function} fn - Function to be called every second.
-     * @return {Object} Returns a reference to the Timr so calls can be chained.
-     */
-
-  }, {
-    key: 'ticker',
-    value: function ticker(fn) {
-      if (typeof fn !== 'function') {
-        throw errors(fn)('ticker');
-      }
-
-      this.on('ticker', fn);
-
-      return this;
-    }
-
-    /**
-     * @description The finish method is called once when the
-     * timer finishes.
-     *
-     * As Timr inherits from EventEmitter, this can be called
-     * multiple times with different functions and each one will
-     * be called when the event is emitted.
-     *
-     * @throws If the argument is not of type function.
-     *
-     * @param {Function} fn - Function to be called when finished.
-     * @return {Object} Returns a reference to the Timr so calls can be chained.
-     */
-
-  }, {
-    key: 'finish',
-    value: function finish(fn) {
-      if (typeof fn !== 'function') {
-        throw errors(fn)('finish');
-      }
-
-      this.on('finish', fn);
-
-      return this;
-    }
-
-    /**
-     * @description Returns the time elapsed in percent.
-     * This is provided to the ticker method as the second argument.
-     *
-     * @returns {Number} Time elapsed in percent.
-     */
-
-  }, {
-    key: 'percentDone',
-    value: function percentDone() {
-      return 100 - Math.round(this.currentTime / this.startTime * 100);
-    }
-
-    /**
-     * @description Sets new startTime after Timr has been created.
-     * Will clear currentTime and reset to new startTime.
-     *
-     * @param {String|Number} startTime - The new start time.
-     *
-     * @throws If the starttime is invalid.
-     *
-     * @return {String} Returns the formatted startTime.
-     */
-
-  }, {
-    key: 'setStartTime',
-    value: function setStartTime(startTime) {
-      this.clear();
-
-      this.startTime = this.currentTime = createStartTime(startTime);
-
-      return this.formatTime();
-    }
-
-    /**
-     * @description Gets the Timrs startTime.
-     *
-     * @returns {Number} Current time in seconds
-     */
-
-  }, {
-    key: 'getStartTime',
-    value: function getStartTime() {
-      return this.startTime;
-    }
-    /**
-     * @description Gets the Timrs currentTime.
-     *
-     * @returns {Number} Current time in seconds
-     */
-
-  }, {
-    key: 'getCurrentTime',
-    value: function getCurrentTime() {
-      return this.currentTime;
-    }
-
-    /**
-     * @description Gets the Timrs running value.
-     *
-     * @returns {Boolean} True if running, false if not.
-     */
-
-  }, {
-    key: 'isRunning',
-    value: function isRunning() {
-      return this.running;
-    }
-  }], [{
-    key: 'countdown',
-    value: function countdown() {
-      this.currentTime -= 1;
-
-      this.emit('ticker', this.formatTime(), this.percentDone(), this.currentTime, this.startTime, this);
-
-      if (this.currentTime <= 0) {
-        this.stop();
-        this.emit('finish', this);
-      }
-    }
-
-    /**
-     * @description Stopwatch function.
-     * Bound to a setInterval timer when start() is called.
-     */
-
-  }, {
-    key: 'stopwatch',
-    value: function stopwatch() {
-      this.currentTime += 1;
-
-      this.emit('ticker', this.formatTime(), this.currentTime);
-    }
-  }]);
-
-  return Timr;
-}(require('events'));
-
-;
-
-var formatTime = require('./formatTime');
-
 // Factory for formatTime and formatStartTime;
-var createFormatTime = function createFormatTime(time) {
+function createFormatTime(time) {
   return function () {
-    return formatTime.call(this, this[time], this.options.separator, this.options.outputFormat);
+    return require('./formatTime')(this[time], this.options.separator, this.options.outputFormat);
   };
 };
 
 /**
- * @description Converts currentTime to time format.
- * This is provided to the ticker method as the first argument.
+ * @description Creates a Timr.
  *
- * @return {String} The formatted time.
+ * @param {String|Number} startTime - The starting time for the timr object.
+ * @param {Object} [options] - Options to customise the timer.
+ *
+ * @throws If the provided startTime is neither a number or a string,
+ * or, incorrect format.
  */
-Timr.prototype.formatTime = createFormatTime('currentTime');
+function Timr(startTime, options) {
+  EventEmitter.call(this);
+
+  this.timer = null;
+  this.running = false;
+  this.options = require('./buildOptions')(options);
+  this.startTime = createStartTime(startTime);
+  this.currentTime = this.startTime;
+}
 
 /**
- * @description Converts startTime to time format.
- * This is provided to the ticker method as the first argument.
- *
- * @return {String} The formatted startTime.
+ * @description Countdown function.
+ * Bound to a setInterval timer when start() is called.
  */
-Timr.prototype.formatStartTime = createFormatTime('startTime');
+Timr.countdown = function () {
+  this.currentTime -= 1;
+
+  this.emit('ticker', this.formatTime(), this.percentDone(), this.currentTime, this.startTime, this);
+
+  if (this.currentTime <= 0) {
+    this.stop();
+    this.emit('finish', this);
+  }
+};
+
+/**
+ * @description Stopwatch function.
+ * Bound to a setInterval timer when start() is called.
+ */
+Timr.stopwatch = function () {
+  this.currentTime += 1;
+
+  this.emit('ticker', this.formatTime(), this.currentTime);
+};
+
+Timr.prototype = _extends(Object.create(EventEmitter.prototype), {
+
+  constructor: Timr,
+
+  /**
+   * @description Starts the timr.
+   *
+   * @return {Object} Returns a reference to the Timr so calls can be chained.
+   */
+  start: function start() {
+    if (!this.running) {
+      this.running = true;
+
+      if (this.startTime > 0) {
+        this.timer = setInterval(Timr.countdown.bind(this), 1000);
+      } else {
+        this.timer = setInterval(Timr.stopwatch.bind(this), 1000);
+      }
+    } else {
+      console.warn('Timer already running');
+    }
+
+    return this;
+  },
+
+
+  /**
+   * @description Pauses the timr.
+   *
+   * @return {Object} Returns a reference to the Timr so calls can be chained.
+   */
+  pause: function pause() {
+    this.clear();
+
+    return this;
+  },
+
+
+  /**
+   * @description Stops the timr.
+   *
+   * @return {Object} Returns a reference to the Timr so calls can be chained.
+   */
+  stop: function stop() {
+    this.clear();
+
+    this.currentTime = this.startTime;
+
+    return this;
+  },
+
+
+  /**
+   * @description Clears the timr.
+   *
+   * @return {Object} Returns a reference to the Timr so calls can be chained.
+   */
+  clear: function clear() {
+    clearInterval(this.timer);
+
+    this.running = false;
+
+    return this;
+  },
+
+
+  /**
+   * @description Destroys the timr,
+   * clearing the interval, removing all event listeners and removing,
+   * from the store.
+   *
+   * @return {Object} Returns a reference to the Timr so calls can be chained.
+   */
+  destroy: function destroy() {
+    this.clear().removeAllListeners();
+
+    require('./store').removeFromStore(this);
+
+    return this;
+  },
+
+
+  /**
+   * @description The ticker method is called every second
+   * the timer ticks down.
+   *
+   * As Timr inherits from EventEmitter, this can be called
+   * multiple times with different functions and each one will
+   * be called when the event is emitted.
+   *
+   * @throws If the argument is not of type function.
+   *
+   * @param {Function} fn - Function to be called every second.
+   * @return {Object} Returns a reference to the Timr so calls can be chained.
+   */
+  ticker: function ticker(fn) {
+    if (typeof fn !== 'function') {
+      throw errors(fn)('ticker');
+    }
+
+    this.on('ticker', fn);
+
+    return this;
+  },
+
+
+  /**
+   * @description The finish method is called once when the
+   * timer finishes.
+   *
+   * As Timr inherits from EventEmitter, this can be called
+   * multiple times with different functions and each one will
+   * be called when the event is emitted.
+   *
+   * @throws If the argument is not of type function.
+   *
+   * @param {Function} fn - Function to be called when finished.
+   * @return {Object} Returns a reference to the Timr so calls can be chained.
+   */
+  finish: function finish(fn) {
+    if (typeof fn !== 'function') {
+      throw errors(fn)('finish');
+    }
+
+    this.on('finish', fn);
+
+    return this;
+  },
+
+
+  /**
+   * @description Converts currentTime to time format.
+   * This is provided to the ticker method as the first argument.
+   *
+   * @return {String} The formatted time.
+   */
+  formatTime: createFormatTime('currentTime'),
+
+  /**
+   * @description Converts startTime to time format.
+   *
+   * @return {String} The formatted startTime.
+   */
+  formatStartTime: createFormatTime('startTime'),
+
+  /**
+   * @description Returns the time elapsed in percent.
+   * This is provided to the ticker method as the second argument.
+   *
+   * @returns {Number} Time elapsed in percent.
+   */
+  percentDone: function percentDone() {
+    return 100 - Math.round(this.currentTime / this.startTime * 100);
+  },
+
+
+  /**
+   * @description Sets new startTime after Timr has been created.
+   * Will clear currentTime and reset to new startTime.
+   *
+   * @param {String|Number} startTime - The new start time.
+   *
+   * @throws If the starttime is invalid.
+   *
+   * @return {String} Returns the formatted startTime.
+   */
+  setStartTime: function setStartTime(startTime) {
+    this.clear();
+
+    this.startTime = this.currentTime = createStartTime(startTime);
+
+    return this.formatTime();
+  },
+
+
+  /**
+   * @description Gets the Timrs startTime.
+   *
+   * @returns {Number} Current time in seconds
+   */
+  getStartTime: function getStartTime() {
+    return this.startTime;
+  },
+
+
+  /**
+   * @description Gets the Timrs currentTime.
+   *
+   * @returns {Number} Current time in seconds
+   */
+  getCurrentTime: function getCurrentTime() {
+    return this.currentTime;
+  },
+
+
+  /**
+   * @description Gets the Timrs running value.
+   *
+   * @returns {Boolean} True if running, false if not.
+   */
+  isRunning: function isRunning() {
+    return this.running;
+  }
+});
 
 module.exports = Timr;
 
