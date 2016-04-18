@@ -2,6 +2,7 @@
 
 const gulp = require('gulp');
 const wrap = require('gulp-wrap');
+const gutil = require('gulp-util');
 const uglify = require('gulp-uglify');
 const rename = require('gulp-rename');
 const buffer = require('vinyl-buffer');
@@ -74,10 +75,10 @@ const funcWrapper = `/**
     }
     global.Timr = Timr;
   }
-}(<%= contents %>(6)));`
+}(<%= contents %>(3)));`
 
 gulp.task('default', () => (
-  browserify('./lib/init.js')
+  browserify('./lib/index.js')
     .transform('babelify', {presets: ['es2015'], plugins: ['transform-object-assign']})
     .bundle()
     .pipe(source('timr.js'))
@@ -87,6 +88,7 @@ gulp.task('default', () => (
     .pipe(gulp.dest('./dist/'))
     .pipe(addProdErrors())
     .pipe(uglify({compress: {negate_iife: false, global_defs: {DEBUG: false}}}))
+    .on('error', gutil.log)
     .pipe(wrap(minCom))
     .pipe(rename('timr.min.js'))
     .pipe(gulp.dest('./dist/'))

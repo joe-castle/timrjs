@@ -63,7 +63,7 @@ describe('Timr Class', () => {
   });
   describe('destroy method', () => {
     it('Clears the timer and removes all event listeners', () => {
-      const timer  = new Timr(600);
+      const timer = new Timr(600);
       timer.ticker(() => {});
       timer.ticker(() => {});
       timer.finish(() => {});
@@ -77,7 +77,7 @@ describe('Timr Class', () => {
       expect(timer.listenerCount('finish')).to.equal(0);
     });
     it('Removes the timer from the store', () => {
-      const timer = store(new Timr(600));
+      const timer = store.add(new Timr(600));
 
       expect(store.getAll().indexOf(timer)).to.equal(0);
 

@@ -140,10 +140,10 @@ const timer = Timr('10:00', {store: false});
 // This Timr won't be stored, regardless of the global setting.
 ```
 **Available Methods**
+ - `Timr.getAll` - Returns the array of all stored Timrs.
  - `Timr.startAll` - Starts all stored Timrs.
  - `Timr.pauseAll` - Pauses all stored Timrs.
  - `Timr.stopAll` - Stops all stored Timrs.
- - `Timr.getAll` - Returns the array of all stored Timrs.
  - `Timr.isRunning` - Returns a new array of all stored Timrs that are running.
  - `Timr.destroyAll` - Destroys all stored Timrs, clearing them and removing them from the store.
  - `Timr.removeFromStore` - Removes the provided Timr from the store.

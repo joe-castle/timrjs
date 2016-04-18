@@ -43,12 +43,12 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 var EventEmitter = require('events');
 
 var validate = require('./validate');
-var errors = require('./errors');
+var errors = require('./utils/errors');
 
 // Factory for formatTime and formatStartTime;
 function createFormatTime(time) {
   return function () {
-    return require('./formatTime')(this[time], this.options.separator, this.options.outputFormat);
+    return require('./utils/formatTime')(this[time], this.options.separator, this.options.outputFormat);
   };
 };
 
@@ -303,7 +303,7 @@ Timr.prototype = _extends(Object.create(EventEmitter.prototype), {
 
 module.exports = Timr;
 
-},{"./buildOptions":2,"./errors":3,"./formatTime":4,"./store":7,"./validate":9,"events":11}],2:[function(require,module,exports){
+},{"./buildOptions":2,"./store":4,"./utils/errors":5,"./utils/formatTime":6,"./validate":10,"events":11}],2:[function(require,module,exports){
 'use strict';
 
 /**
@@ -313,10 +313,12 @@ module.exports = Timr;
  * @param {String} value - The options value.
  *
  * @throws If the option check fails, it throws a speicifc error.
+ *
+ * @returns The provided value.
  */
 
 var checkOption = function checkOption(option, value) {
-  var errors = require('./errors')(value);
+  var errors = require('./utils/errors')(value);
 
   switch (option) {
     case 'outputFormat':
@@ -331,6 +333,8 @@ var checkOption = function checkOption(option, value) {
         throw errors('separatorType');
       }
   }
+
+  return value;
 };
 
 /**
@@ -345,16 +349,131 @@ module.exports = function (options) {
     outputFormat: 'MM:SS',
     separator: ':'
   };
-  if (options) {
-    for (var option in options) {
-      checkOption(option, options[option]);
-      defaultOptions[option] = options[option];
-    }
+
+  for (var option in options) {
+    defaultOptions[option] = checkOption(option, options[option]);
   }
+
   return defaultOptions;
 };
 
-},{"./errors":3}],3:[function(require,module,exports){
+},{"./utils/errors":5}],3:[function(require,module,exports){
+'use strict';
+
+var Timr = require('./Timr');
+var store = require('./store');
+
+/**
+ * @description Creates a new Timr object.
+ *
+ * @param {String|Number} startTime - The starting time for the timr object.
+ * @param {Object} [options] - Options to customise the timer.
+ *
+ * @returns {Object} A new Timr object.
+ */
+
+var init = function init(startTime, options) {
+  var timr = new Timr(startTime, options);
+
+  if (options) {
+    if (options.store) {
+      return store.add(timr);
+    }
+    if (options.store === false) {
+      return timr;
+    }
+  }
+
+  if (init.store) {
+    return store.add(timr);
+  }
+
+  return timr;
+};
+
+// Exposed helper methods.
+init.validate = require('./validate');
+init.formatTime = require('./utils/formatTime');
+init.timeToSeconds = require('./utils/timeToSeconds');
+init.incorrectFormat = require('./utils/incorrectFormat');
+
+// Option to enable storing timrs, defaults to false.
+init.store = false;
+
+// Methods for all stored timrs.
+init.startAll = store.startAll;
+init.pauseAll = store.pauseAll;
+init.stopAll = store.stopAll;
+init.getAll = store.getAll;
+init.isRunning = store.isRunning;
+init.destroyAll = store.destroyAll;
+init.removeFromStore = store.removeFromStore;
+
+module.exports = init;
+
+},{"./Timr":1,"./store":4,"./utils/formatTime":6,"./utils/incorrectFormat":7,"./utils/timeToSeconds":8,"./validate":10}],4:[function(require,module,exports){
+'use strict';
+
+module.exports = function () {
+  // Array to store all timrs.
+  var timrs = [];
+
+  return {
+    /**
+     * @description A function that stores all timr objects created.
+     * This feature is disabled by default, Timr.store = true to enable.
+     *
+     * Can also be disabled/enabled on an individual basis.
+     * Each timr object accepts store as an option, true or false.
+     * This overides the global Timr.store option.
+     *
+     * @param {Object} A timr object.
+     *
+     * @returns {Object} The provided timr object.
+     */
+    add: function add(timr) {
+      return timrs.push(timr), timr;
+    },
+
+    // Methods associated with all Timrs.
+    getAll: function getAll() {
+      return timrs;
+    },
+    startAll: function startAll() {
+      return timrs.forEach(function (timr) {
+        return timr.start();
+      });
+    },
+    pauseAll: function pauseAll() {
+      return timrs.forEach(function (timr) {
+        return timr.pause();
+      });
+    },
+    stopAll: function stopAll() {
+      return timrs.forEach(function (timr) {
+        return timr.stop();
+      });
+    },
+    isRunning: function isRunning() {
+      return timrs.filter(function (timr) {
+        return timr.isRunning();
+      });
+    },
+    destroyAll: function destroyAll() {
+      timrs.forEach(function (timr) {
+        return timr.destroy();
+      });
+      timrs = [];
+    },
+    removeFromStore: function removeFromStore(timr) {
+      timrs = timrs.filter(function (x) {
+        return x !== timr;
+      });
+    }
+  };
+}();
+
+},{}],5:[function(require,module,exports){
 'use strict';
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
@@ -374,7 +493,7 @@ module.exports = function (value) {
   };
 };
 
-},{}],4:[function(require,module,exports){
+},{}],6:[function(require,module,exports){
 'use strict';
 
 var zeroPad = require('./zeroPad');
@@ -410,7 +529,7 @@ module.exports = function (seconds, sep, output) {
   return zeroPad('' + (output === 'HH:MM:SS' ? '0' + sep + '0' + sep : output === 'MM:SS' ? '0' + sep : '') + seconds);
 };
 
-},{"./zeroPad":10}],5:[function(require,module,exports){
+},{"./zeroPad":9}],7:[function(require,module,exports){
 'use strict';
 
 /**
@@ -432,126 +551,6 @@ module.exports = function (time) {
     return +e < 0 || +e > (a.length === 3 && i === 0 ? 23 : 59) || isNaN(+e);
   });
 };
-
-},{}],6:[function(require,module,exports){
-'use strict';
-
-var Timr = require('./Timr');
-var store = require('./store');
-
-/**
- * @description Creates a new Timr object.
- *
- * @param {String|Number} startTime - The starting time for the timr object.
- * @param {Object} [options] - Options to customise the timer.
- *
- * @returns {Object} A new Timr object.
- */
-
-var init = function init(startTime, options) {
-  var timr = new Timr(startTime, options);
-
-  if (options) {
-    if (options.store) {
-      return store(timr);
-    }
-    if (options.store === false) {
-      return timr;
-    }
-  }
-
-  if (init.store) {
-    return store(timr);
-  }
-
-  return timr;
-};
-
-// Exposed helper methods.
-init.validate = require('./validate');
-init.formatTime = require('./formatTime');
-init.timeToSeconds = require('./timeToSeconds');
-init.incorrectFormat = require('./incorrectFormat');
-
-// Option to enable storing timrs, defaults to false.
-init.store = false;
-
-// Methods for all stored timrs.
-init.destroyAll = store.destroyAll;
-init.isRunning = store.isRunning;
-init.startAll = store.startAll;
-init.pauseAll = store.pauseAll;
-init.stopAll = store.stopAll;
-
-module.exports = init;
-
-},{"./Timr":1,"./formatTime":4,"./incorrectFormat":5,"./store":7,"./timeToSeconds":8,"./validate":9}],7:[function(require,module,exports){
-'use strict';
-
-// Array to store all timrs.
-
-var timrs = [];
-
-/**
- * @description A function that stores all timr objects created.
- * This feature is disabled by default, Timr.store = true to enable.
- *
- * Can also be disabled/enabled on an individual basis.
- * Each timr object accepts store as an option, true or false.
- * This overides the global Timr.store option.
- *
- * @param {Object} A timr object.
- * @returns {Object} The provided timr object.
- */
-var store = function store(timr) {
-  timrs.push(timr);
-
-  return timr;
-};
-
-// Methods associated with all timrs.
-store.startAll = function () {
-  return timrs.forEach(function (timr) {
-    return timr.start();
-  });
-};
-
-store.pauseAll = function () {
-  return timrs.forEach(function (timr) {
-    return timr.pause();
-  });
-};
-
-store.stopAll = function () {
-  return timrs.forEach(function (timr) {
-    return timr.stop();
-  });
-};
-
-store.getAll = function () {
-  return timrs;
-};
-
-store.isRunning = function () {
-  return timrs.filter(function (timr) {
-    return timr.isRunning();
-  });
-};
-
-store.destroyAll = function () {
-  timrs.forEach(function (timr) {
-    return timr.destroy();
-  });
-  timrs = [];
-};
-
-store.removeFromStore = function (timr) {
-  timrs = timrs.filter(function (x) {
-    return x !== timr;
-  });
-};
-
-module.exports = store;
 
 },{}],8:[function(require,module,exports){
 'use strict';
@@ -590,6 +589,23 @@ module.exports = function (time) {
 'use strict';
 
 /**
+ * @description Pads out single digit numbers in a string
+ * with a 0 at the beginning. Primarly used for time units - 00:00:00.
+ *
+ * @param {String} str - String to be padded.
+ * @returns {String} A 0 padded string or the the original string.
+ */
+
+module.exports = function (str) {
+  return str.replace(/\d+/g, function (match) {
+    return +match < 10 ? '0' + match : match;
+  });
+};
+
+},{}],10:[function(require,module,exports){
+'use strict';
+
+/**
  * @description Validates the provded time
  *
  * @param {String|Number} time - The time to be checked
@@ -604,14 +620,14 @@ module.exports = function (time) {
  */
 
 module.exports = function (time) {
-  var errors = require('./errors')(time);
+  var errors = require('./utils/errors')(time);
 
   if (+time < 0) {
     throw errors('invalidTime');
   }
 
   if (typeof time === 'string') {
-    if (isNaN(+time) && require('./incorrectFormat')(time)) {
+    if (isNaN(+time) && require('./utils/incorrectFormat')(time)) {
       throw errors('invalidTime');
     }
   } else if (typeof time !== 'number' || isNaN(time)) {
@@ -622,27 +638,10 @@ module.exports = function (time) {
     throw errors('timeOverADay');
   }
 
-  return require('./timeToSeconds')(time);
+  return require('./utils/timeToSeconds')(time);
 };
 
-},{"./errors":3,"./incorrectFormat":5,"./timeToSeconds":8}],10:[function(require,module,exports){
-'use strict';
-
-/**
- * @description Pads out single digit numbers in a string
- * with a 0 at the beginning. Primarly used for time units - 00:00:00.
- *
- * @param {String} str - String to be padded.
- * @returns {String} A 0 padded string or the the original string.
- */
-
-module.exports = function (str) {
-  return str.replace(/\d+/g, function (match) {
-    return +match < 10 ? '0' + match : match;
-  });
-};
-
-},{}],11:[function(require,module,exports){
+},{"./utils/errors":5,"./utils/incorrectFormat":7,"./utils/timeToSeconds":8}],11:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -942,4 +941,4 @@ function isUndefined(arg) {
   return arg === void 0;
 }
 
-},{}]},{},[6])(6)));
+},{}]},{},[3])(3)));
