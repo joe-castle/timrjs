@@ -2,7 +2,7 @@
 
 const expect = require('chai').expect;
 
-const init = require('../lib/init');
+const init = require('../lib/index');
 const Timr = require('../lib/Timr');
 
 describe('Init function', () => {

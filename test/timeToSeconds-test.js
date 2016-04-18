@@ -2,7 +2,7 @@
 
 const expect = require('chai').expect;
 
-const timeToSeconds = require('../lib/timeToSeconds');
+const timeToSeconds = require('../lib/utils/timeToSeconds');
 
 describe('Time To Seconds function', () => {
   it('Returns the converted the provided time (string) to seconds (number)', () => {
