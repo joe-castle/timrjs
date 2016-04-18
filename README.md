@@ -198,9 +198,5 @@ Timr.incorrectFormat('invalid');
 This is my first contribution to the Open Source community so I fully expect there to be bugs.
 
 If you find any and fancy helping me out, go _**[here](https://github.com/joesmith100/timrjs/issues)**_ to create an issue, or send one of those fancy pull requests.
-### Future Plans
-I have some ideas to improve Timr.
- - Provide an optional 100 millisecond counter: 01:40:20:24.
-
 ### License
 MIT

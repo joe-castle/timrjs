@@ -10,6 +10,7 @@ describe('Timr Class', () => {
     it('Creates a new Timr object', () => {
       expect(new Timr(600).startTime).to.equal(600);
       expect(new Timr(600).currentTime).to.equal(600);
+      expect(new Timr(0).currentTime).to.equal(0);
     });
     it('Throws an error if startTime is not a string or number', () => {
       expect(() => new Timr).to.throw(TypeError);

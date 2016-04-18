@@ -116,9 +116,7 @@ Timr.prototype = _extends(Object.create(EventEmitter.prototype), {
 
       this.timer = this.startTime > 0 ? setInterval(Timr.countdown.bind(this), 1000) : setInterval(Timr.stopwatch.bind(this), 1000);
     } else {
-      try {
-        console.warn('Timer already running', this);
-      } catch (e) {}
+      typeof console !== 'undefined' && typeof console.warn === 'function' && console.warn('Timer already running', this);
     }
 
     return this;
@@ -465,11 +463,10 @@ module.exports = function () {
     destroyAll: function destroyAll() {
       timrs.forEach(function (timr) {
         return timr.destroy();
-      });
-      timrs = [];
+      });timrs = [];
     },
     removeFromStore: function removeFromStore(timr) {
-      timrs = timrs.filter(function (x) {
+      return timrs = timrs.filter(function (x) {
         return x !== timr;
       });
     }
@@ -550,8 +547,8 @@ module.exports = function (time) {
 
   time = time.split(':');
 
-  return time.length > 3 || time.some(function (e, i, a) {
-    return +e < 0 || +e > (a.length === 3 && i === 0 ? 999 : 59) || isNaN(+e);
+  return time.length > 3 || time.some(function (el, i, arr) {
+    return isNaN(+el) || +el < 0 || +el > (arr.length === 3 && i === 0 ? 999 : 59);
   });
 };
 
@@ -561,6 +558,9 @@ module.exports = function (time) {
 /**
  * @description Converts time format (HH:MM:SS) into seconds.
  *
+ * Automatically rounds the returned number to avoid errors
+ * with floating point values.
+ *
  * @param {String|Number} time - The time to be converted.
  * If a number is provided it will simply return that number.
  *
@@ -568,24 +568,28 @@ module.exports = function (time) {
  */
 
 module.exports = function (time) {
-  return typeof time === 'number' && !isNaN(time) ? time : time.split(':').reduce(function (prevItem, currentItem, index, arr) {
+  if (typeof time === 'number' && !isNaN(time)) {
+    return Math.round(time);
+  }
+
+  return Math.round(time.split(':').reduce(function (prev, curr, index, arr) {
     if (arr.length === 3) {
       if (index === 0) {
-        return prevItem + +currentItem * 60 * 60;
+        return prev + +curr * 60 * 60;
       }
       if (index === 1) {
-        return prevItem + +currentItem * 60;
+        return prev + +curr * 60;
       }
     }
 
     if (arr.length === 2) {
       if (index === 0) {
-        return prevItem + +currentItem * 60;
+        return prev + +curr * 60;
       }
     }
 
-    return prevItem + +currentItem;
-  }, 0);
+    return prev + +curr;
+  }, 0));
 };
 
 },{}],9:[function(require,module,exports){
