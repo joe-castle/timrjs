@@ -76,7 +76,7 @@ const funcWrapper = `/**
     }
     global.Timr = Timr;
   }
-})(<%= contents %>(3));`;
+})(<%= contents %>(4));`;
 
 gulp.task('lint', () => (
   gulp.src(['**/*.js', '!node_modules/**', '!gulpfile.js'])

@@ -1,5 +1,8 @@
 {
-  "extends": "google",
+  "extends": [
+    "eslint:recommended",
+    "google"
+  ],
   "parserOption": {
     "ecmaVersion": 6
   },
@@ -9,6 +12,7 @@
     "node": true
   },
   rules: {
-    "no-nested-ternary": 0
+    "no-nested-ternary": 0,
+    "no-console": 0
   }
 }
