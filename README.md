@@ -149,8 +149,8 @@ const timer = Timr('10:00', {store: false});
  - `Timr.pauseAll` - Pauses all stored Timrs.
  - `Timr.stopAll` - Stops all stored Timrs.
  - `Timr.isRunning` - Returns a new array of all stored Timrs that are running.
- - `Timr.destroyAll` - Destroys all stored Timrs, clearing them and removing them from the store.
  - `Timr.removeFromStore` - Removes the provided Timr from the store.
+ - `Timr.destroyAll` - Destroys all stored Timrs, clearing them and removing them from the store.
 
 #### Global Helper Methods
 There are also a number of helper methods available on the Global Timr function. These are all internal functions used for creating Timrs, but could be useful on their own.

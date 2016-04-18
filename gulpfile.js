@@ -7,6 +7,7 @@ const uglify = require('gulp-uglify');
 const rename = require('gulp-rename');
 const buffer = require('vinyl-buffer');
 const source = require('vinyl-source-stream');
+const eslint = require('gulp-eslint');
 const through2 = require('through2');
 const browserify = require('browserify');
 
@@ -21,22 +22,22 @@ const removeFinalSemi = () => (
 
 const prodErrors = `if (!DEBUG) {
   return new Error('Minified exception occured; use non-minified dev enviroment for full message.');
-}`
+}`;
 
 const addProdErrors = () => (
   through2.obj((file, e, cb) => {
     file.contents = new Buffer(
       String(file.contents).replace(
         'return function (error) {',
-        (match) => match + prodErrors
+        match => match + prodErrors
       )
     );
     cb(null, file);
   })
-)
+);
 
 const minCom = `/* TimrJS v${version} | (c) 2016 Joe Smith | https://github.com/joesmith100/timrjs/blob/master/LICENSE */
-;<%= contents %>`
+;<%= contents %>`;
 
 const funcWrapper = `/**
  * TimrJS v${version}
@@ -75,11 +76,20 @@ const funcWrapper = `/**
     }
     global.Timr = Timr;
   }
-}(<%= contents %>(3)));`
+})(<%= contents %>(3));`;
 
-gulp.task('default', () => (
+gulp.task('lint', () => (
+  gulp.src(['**/*.js', '!node_modules/**', '!gulpfile.js'])
+    .pipe(eslint())
+    .pipe(eslint.format())
+    .pipe(eslint.failAfterError())
+));
+
+gulp.task('default', ['lint'], () => (
   browserify('./lib/index.js')
-    .transform('babelify', {presets: ['es2015'], plugins: ['transform-object-assign']})
+    .transform('babelify', {
+      presets: ['es2015'], plugins: ['transform-object-assign']
+    })
     .bundle()
     .pipe(source('timr.js'))
     .pipe(buffer())

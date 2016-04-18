@@ -15,5 +15,5 @@ describe('Incorrect Format function', () => {
     expect(incorrectFormat('07:10:00')).to.equal(false);
     expect(incorrectFormat('09')).to.equal(false);
     expect(incorrectFormat('999:00:00')).to.equal(false);
-  })
+  });
 });

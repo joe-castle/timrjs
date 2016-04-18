@@ -1,0 +1,14 @@
+{
+  "extends": "google",
+  "parserOption": {
+    "ecmaVersion": 6
+  },
+  "env": {
+    "browser": true,
+    "mocha": true,
+    "node": true
+  },
+  rules: {
+    "no-nested-ternary": 0
+  }
+}
