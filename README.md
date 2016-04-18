@@ -32,7 +32,7 @@ Accepts time as a string, e.g. '10:00' or the time in seconds, e.g. 600. Will al
 
 If the provided time is invalid (wrong type, or incorrect time format) an error will be thrown. Currently we only support times up to 999:59:59.
 
-If the time is set to 0, the timer will act as a stopwatch and count up rather than down. - This feature isn't fully tested yet so is considered unstable.
+If the time is set to 0, the timer will act as a stopwatch and count up rather than down.
 
 **options**
 
