@@ -42,7 +42,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 
 var EventEmitter = require('events');
 
-var createStartTime = require('./createStartTime');
+var validate = require('./validate');
 var errors = require('./errors');
 
 // Factory for formatTime and formatStartTime;
@@ -67,7 +67,7 @@ function Timr(startTime, options) {
   this.timer = null;
   this.running = false;
   this.options = require('./buildOptions')(options);
-  this.startTime = createStartTime(startTime);
+  this.startTime = validate(startTime);
   this.currentTime = this.startTime;
 }
 
@@ -265,7 +265,7 @@ Timr.prototype = _extends(Object.create(EventEmitter.prototype), {
   setStartTime: function setStartTime(startTime) {
     this.clear();
 
-    this.startTime = this.currentTime = createStartTime(startTime);
+    this.startTime = this.currentTime = validate(startTime);
 
     return this.formatTime();
   },
@@ -303,7 +303,7 @@ Timr.prototype = _extends(Object.create(EventEmitter.prototype), {
 
 module.exports = Timr;
 
-},{"./buildOptions":2,"./createStartTime":3,"./errors":4,"./formatTime":5,"./store":8,"events":12}],2:[function(require,module,exports){
+},{"./buildOptions":2,"./errors":3,"./formatTime":4,"./store":7,"./validate":9,"events":11}],2:[function(require,module,exports){
 'use strict';
 
 /**
@@ -354,25 +354,7 @@ module.exports = function (options) {
   return defaultOptions;
 };
 
-},{"./errors":4}],3:[function(require,module,exports){
-'use strict';
-
-/**
- * @description Validates startTime and converts to seconds if a string,
- * or returns the original time in seconds.
- *
- * @param {String|Number} startTime - Starting time.
- *
- * @throws If startTime is invalid.
- *
- * @returns {Number} startTime in seconds.
- */
-
-module.exports = function (startTime) {
-  return require('./validate')(startTime), require('./timeToSeconds')(startTime);
-};
-
-},{"./timeToSeconds":9,"./validate":10}],4:[function(require,module,exports){
+},{"./errors":3}],3:[function(require,module,exports){
 'use strict';
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
@@ -392,7 +374,7 @@ module.exports = function (value) {
   };
 };
 
-},{}],5:[function(require,module,exports){
+},{}],4:[function(require,module,exports){
 'use strict';
 
 var zeroPad = require('./zeroPad');
@@ -428,7 +410,7 @@ module.exports = function (seconds, sep, output) {
   return zeroPad('' + (output === 'HH:MM:SS' ? '0' + sep + '0' + sep : output === 'MM:SS' ? '0' + sep : '') + seconds);
 };
 
-},{"./zeroPad":11}],6:[function(require,module,exports){
+},{"./zeroPad":10}],5:[function(require,module,exports){
 'use strict';
 
 /**
@@ -451,7 +433,7 @@ module.exports = function (time) {
   });
 };
 
-},{}],7:[function(require,module,exports){
+},{}],6:[function(require,module,exports){
 'use strict';
 
 var Timr = require('./Timr');
@@ -503,7 +485,7 @@ init.stopAll = store.stopAll;
 
 module.exports = init;
 
-},{"./Timr":1,"./formatTime":5,"./incorrectFormat":6,"./store":8,"./timeToSeconds":9,"./validate":10}],8:[function(require,module,exports){
+},{"./Timr":1,"./formatTime":4,"./incorrectFormat":5,"./store":7,"./timeToSeconds":8,"./validate":9}],7:[function(require,module,exports){
 'use strict';
 
 // Array to store all timrs.
@@ -571,7 +553,7 @@ store.removeFromStore = function (timr) {
 
 module.exports = store;
 
-},{}],9:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 'use strict';
 
 /**
@@ -604,7 +586,7 @@ module.exports = function (time) {
   }, 0);
 };
 
-},{}],10:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 'use strict';
 
 /**
@@ -617,7 +599,8 @@ module.exports = function (time) {
  * @throws If the provided time is neither a number nor a string.
  * @throws If the provided time in seconds is over 23:59:59.
  *
- * @returns {String|Number} - The provided time if its valid.
+ * @returns {Number} - The original number or the converted number if
+ * a time string was provided.
  */
 
 module.exports = function (time) {
@@ -639,10 +622,10 @@ module.exports = function (time) {
     throw errors('timeOverADay');
   }
 
-  return time;
+  return require('./timeToSeconds')(time);
 };
 
-},{"./errors":4,"./incorrectFormat":6}],11:[function(require,module,exports){
+},{"./errors":3,"./incorrectFormat":5,"./timeToSeconds":8}],10:[function(require,module,exports){
 'use strict';
 
 /**
@@ -659,7 +642,7 @@ module.exports = function (str) {
   });
 };
 
-},{}],12:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -959,4 +942,4 @@ function isUndefined(arg) {
   return arg === void 0;
 }
 
-},{}]},{},[7])(7)));
+},{}]},{},[6])(6)));

@@ -150,7 +150,7 @@ const timer = Timr('10:00', {store: false});
 
 #### Global Helper Methods
 There are also a number of helper methods available on the Global Timr function. These are all internal functions used for creating Timrs, but could be useful on their own.
- - `Timr.validate` - Validates the startTime.
+ - `Timr.validate` - Validates the startTime and returns it converted to seconds.
    - Checks validity of time string.
    - Ensures provided time is a number or a string.
    - Ensures provided time does not exceed '23:59:59'.
@@ -163,7 +163,7 @@ There are also a number of helper methods available on the Global Timr function.
 
 ```js
 Timr.validate('10:00');
-// '10:00'
+// 600
 Timr.validate(600);
 // 600
 Timr.validate('invalid input');
@@ -185,6 +185,8 @@ Timr.timeToSeconds('1:34:23');
 
 Timr.incorrectFormat('10:00');
 // false
+Timr.incorrectFormat('25:00:00');
+// true
 Timr.incorrectFormat('invalid');
 // true
 ```

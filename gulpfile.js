@@ -74,7 +74,7 @@ const funcWrapper = `/**
     }
     global.Timr = Timr;
   }
-}(<%= contents %>(7)));`
+}(<%= contents %>(6)));`
 
 gulp.task('default', () => (
   browserify('./lib/init.js')
