@@ -30,7 +30,7 @@ Timr(startTime[, options]]);
 
 Accepts time as a string, e.g. '10:00' or the time in seconds, e.g. 600. Will also accept a string containing a whole number, e.g. '600'.
 
-If the provided time is invalid (wrong type, or incorrect time format) an error will be thrown. Currently we only support times up to 23:59:59.
+If the provided time is invalid (wrong type, or incorrect time format) an error will be thrown. Currently we only support times up to 999:59:59.
 
 If the time is set to 0, the timer will act as a stopwatch and count up rather than down. - This feature isn't fully tested yet so is considered unstable.
 
@@ -87,6 +87,8 @@ timer.ticker((formattedTime, percentDone, currentTime, startTime, self) => {
   // Timr {_events: Object, _maxListeners: undefined, timer: 319, running: true, options: Object…}
 });
 ```
+_When used as a stopwatch, the ticker will be provided with 3 arguments, `formattedTime`, `currentTime` and `self`._
+
 The `finish` method is called once, when the timer hits 0. Only 1 argument is provided into the function, the original Timr object.
 ```js
 timer.finish(self => {
@@ -153,7 +155,7 @@ There are also a number of helper methods available on the Global Timr function.
  - `Timr.validate` - Validates the startTime and returns it converted to seconds.
    - Checks validity of time string.
    - Ensures provided time is a number or a string.
-   - Ensures provided time does not exceed '23:59:59'.
+   - Ensures provided time does not exceed '999:59:59'.
  - `Timr.formatTime` - Converts seconds into a time string.
    - `seconds` - Required. The seconds to be converted.
    - `separator` - See https://github.com/joesmith100/timrjs#parameters
@@ -197,7 +199,6 @@ If you find any and fancy helping me out, go _**[here](https://github.com/joesmi
 ### Future Plans
 I have some ideas to improve Timr.
  - Flesh out the stopwatch feature.
- - Support times over 23:59:59. Include a day counter?
  - Provide an optional 100 millisecond counter: 01:40:20:24.
 
 ### License
