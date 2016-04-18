@@ -96,6 +96,8 @@ timer.finish(self => {
   // Timr {_events: Object, _maxListeners: undefined, timer: 319, running: false, options: Object…}
 });
 ```
+_When used as a stopwatch, the timer will stop and the finish function will fire when the time reaches the maximum supported time `'999:59:59'`_
+
 All the above methods return a reference to the Timr, so calls can be chained.
 #### Helper Methods
 There are a number of helper methods available to Timrs.
@@ -198,7 +200,6 @@ This is my first contribution to the Open Source community so I fully expect the
 If you find any and fancy helping me out, go _**[here](https://github.com/joesmith100/timrjs/issues)**_ to create an issue, or send one of those fancy pull requests.
 ### Future Plans
 I have some ideas to improve Timr.
- - Flesh out the stopwatch feature.
  - Provide an optional 100 millisecond counter: 01:40:20:24.
 
 ### License

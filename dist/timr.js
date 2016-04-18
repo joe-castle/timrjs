@@ -93,7 +93,12 @@ Timr.countdown = function () {
 Timr.stopwatch = function () {
   this.currentTime += 1;
 
-  this.emit('ticker', this.formatTime(), this.currentTime);
+  this.emit('ticker', this.formatTime(), this.currentTime, this);
+
+  if (this.currentTime >= 3600000) {
+    this.stop();
+    this.emit('finish', this);
+  }
 };
 
 Timr.prototype = _extends(Object.create(EventEmitter.prototype), {
@@ -109,13 +114,11 @@ Timr.prototype = _extends(Object.create(EventEmitter.prototype), {
     if (!this.running) {
       this.running = true;
 
-      if (this.startTime > 0) {
-        this.timer = setInterval(Timr.countdown.bind(this), 1000);
-      } else {
-        this.timer = setInterval(Timr.stopwatch.bind(this), 1000);
-      }
+      this.timer = this.startTime > 0 ? setInterval(Timr.countdown.bind(this), 1000) : setInterval(Timr.stopwatch.bind(this), 1000);
     } else {
-      console.warn('Timer already running');
+      try {
+        console.warn('Timer already running', this);
+      } catch (e) {}
     }
 
     return this;
@@ -486,7 +489,7 @@ module.exports = function (value) {
       separatorType: new TypeError('Expected separator to be a string, instead got: ' + (typeof value === 'undefined' ? 'undefined' : _typeof(value))),
       invalidTime: new Error('Expected time format (HH:MM:SS, MM:SS or SS), instead got: ' + value),
       invalidTimeType: new TypeError('Expected time to be a string or number, instead got: ' + (typeof value === 'number' ? value : typeof value === 'undefined' ? 'undefined' : _typeof(value))),
-      timeOverADay: new Error('Sorry, we don\'t support any time over 23:59:59 at the moment.'),
+      timeOverADay: new Error('Sorry, we don\'t support any time over 999:59:59.'),
       ticker: new TypeError('Expected ticker to be a function, instead got: ' + (typeof value === 'undefined' ? 'undefined' : _typeof(value))),
       finish: new TypeError('Expected finish to be a function, instead got: ' + (typeof value === 'undefined' ? 'undefined' : _typeof(value)))
     }[error];
@@ -548,7 +551,7 @@ module.exports = function (time) {
   time = time.split(':');
 
   return time.length > 3 || time.some(function (e, i, a) {
-    return +e < 0 || +e > (a.length === 3 && i === 0 ? 23 : 59) || isNaN(+e);
+    return +e < 0 || +e > (a.length === 3 && i === 0 ? 999 : 59) || isNaN(+e);
   });
 };
 
@@ -613,7 +616,7 @@ module.exports = function (str) {
  * @throws If the provided time is a negative number.
  * @throws If the provided time is not in the correct format.
  * @throws If the provided time is neither a number nor a string.
- * @throws If the provided time in seconds is over 23:59:59.
+ * @throws If the provided time in seconds is over 999:59:59.
  *
  * @returns {Number} - The original number or the converted number if
  * a time string was provided.
@@ -634,7 +637,7 @@ module.exports = function (time) {
     throw errors('invalidTimeType');
   }
 
-  if (+time > 86399) {
+  if (+time > 3599999) {
     throw errors('timeOverADay');
   }
 
