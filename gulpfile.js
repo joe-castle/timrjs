@@ -14,28 +14,9 @@ const browserify = require('browserify');
 
 const version = require('./package.json').version;
 
-const removeFinalSemi = () => (
-  through2.obj((file, e, cb) => {
-    file.contents = new Buffer(String(file.contents).trim().replace(/;$/, ''));
-    cb(null, file);
-  })
-);
-
 const prodErrors = `if (!DEBUG) {
   return new Error('Minified exception occured; use non-minified dev enviroment for full message.');
 }`;
-
-const addProdErrors = () => (
-  through2.obj((file, e, cb) => {
-    file.contents = new Buffer(
-      String(file.contents).replace(
-        'return function (error) {',
-        match => match + prodErrors
-      )
-    );
-    cb(null, file);
-  })
-);
 
 const minCom = `/* TimrJS v${version} | (c) 2016 Joe Smith | https://github.com/joesmith100/timrjs */
 ;<%= contents %>`;
@@ -76,7 +57,20 @@ const funcWrapper = `/**
     }
     global.Timr = Timr;
   }
-})(<%= contents %>(5));`;
+})(<%= contents %>`;
+
+const pipeFactory = (reg, rep) => (
+  through2.obj((file, e, cb) => {
+    file.contents = new Buffer(String(file.contents).trim().replace(reg, rep));
+    cb(null, file);
+  })
+);
+
+const removeFinalSemi = pipeFactory(/;$/, '');
+const addFunctionCall = pipeFactory(/\[(\d)\]\)$/i, '$&($1));');
+const addProdErrors = pipeFactory(
+  'return function (error) {', `$&${prodErrors}`
+);
 
 gulp.task('lint', () => (
   gulp.src(['**/*.js', '!node_modules/**', '!test/*.js', '!gulpfile.js'])
@@ -97,10 +91,11 @@ gulp.task('default', ['lint', 'babel'], () => (
     .bundle()
     .pipe(source('timr.js'))
     .pipe(buffer())
-    .pipe(removeFinalSemi())
+    .pipe(removeFinalSemi)
     .pipe(wrap(funcWrapper))
+    .pipe(addFunctionCall)
     .pipe(gulp.dest('./dist/'))
-    .pipe(addProdErrors())
+    .pipe(addProdErrors)
     .pipe(uglify({compress: {negate_iife: false, global_defs: {DEBUG: false}}}))
     .on('error', gutil.log)
     .pipe(wrap(minCom))

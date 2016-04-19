@@ -1,5 +1,5 @@
 /**
- * TimrJS v0.7.2
+ * TimrJS v0.7.3
  * https://github.com/joesmith100/timrjs
  * https://www.npmjs.com/package/timrjs
  *
@@ -114,7 +114,7 @@ var errors = require('./utils/errors');
  */
 var createFormatTime = function createFormatTime(time) {
   return function () {
-    return require('./utils/formatTime')(this[time], this.options.separator, this.options.outputFormat, this.options.outputStyle);
+    return require('./utils/formatTime')(this[time], this.options.separator, this.options.outputFormat, this.options.formatType);
   };
 };
 
@@ -772,4 +772,4 @@ module.exports = function (time) {
   return require('./utils/timeToSeconds')(time);
 };
 
-},{"./utils/errors":7,"./utils/incorrectFormat":9,"./utils/timeToSeconds":10}]},{},[4])(5));
+},{"./utils/errors":7,"./utils/incorrectFormat":9,"./utils/timeToSeconds":10}]},{},[4])(4));

@@ -18,7 +18,7 @@ const createFormatTime = time => (
       this[time],
       this.options.separator,
       this.options.outputFormat,
-      this.options.outputStyle
+      this.options.formatType
     );
   }
 );
