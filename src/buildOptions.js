@@ -21,11 +21,7 @@ module.exports = options => {
       if (typeof out !== 'string') {
         throw errors(out)('outputFormatType');
       }
-      if (
-        out !== 'HH:MM:SS' &&
-        out !== 'MM:SS' &&
-        out !== 'SS'
-      ) {
+      if (!/^(HH:)?(MM:)?SS$/i.test(out)) {
         throw errors(out)('invalidOutputFormat');
       }
     }

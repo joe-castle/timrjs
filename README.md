@@ -1,12 +1,8 @@
 # TimrJS
 
-Timr is a simple, event driven, utility for creating timers in JavaScript.
+Timr is a simple - event driven - utility for creating timers in JavaScript.
 
-Timr makes use of some ES6 features, so if your project needs to support environments that don't have ES6 support, it's recommended to use a transpiler like Babel.
-
-Otherwise it works with the latest versions of Node and with browsers using a module bundler like Browserify or Webpack.
-
-Alternatively, the CDN versions have been pre-compiled with Babel and also support RequireJS.
+Compatible with Browsers, NodeJS and RequireJS.
 
 ### Installation
 Install with npm or Bower.
@@ -14,9 +10,11 @@ Install with npm or Bower.
 npm install timrjs --save
 ```
 
-Alternatively you can include the following CDN - _Also included with both npm and Bower packages_ `node_modules/dist/timr.js`
+Alternatively you can include the following CDN:
 > https://cdn.rawgit.com/joesmith100/timrjs/master/dist/timr.js
 > https://cdn.rawgit.com/joesmith100/timrjs/master/dist/timr.min.js
+
+Or you could include `node_modules/dist/timr.js` on your page with a standalone `<script>` tag.
 
 Both of these will expose a single global method `Timr`. Alternatively, they will define a module if you are using RequireJS `require(['timrjs'])`.
 
@@ -38,7 +36,7 @@ If the time is set to 0, the timer will act as a stopwatch and count up rather t
 
 Optional. Object which accepts:
  - _outputFormat_ - Specify the output of the formatted time string. Defaults to `'MM:SS'`
-   - Accepts the following values:
+   - Accepts the following values (case insensitive):
      - `'HH:MM:SS'` e.g. output: 01:00:00 - 00:43:23 - 00:00:25.
      - `'MM:SS'` e.g. output: 01:00:00 - 43:23 - 00:25.
      - `'SS'` e.g. output: 01:00:00 - 43:23 - 25.

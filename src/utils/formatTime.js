@@ -34,7 +34,7 @@ module.exports = function(seconds, separator, output) {
     }
 
     return zeroPad(
-      (output === 'HH:MM:SS' ? `0${separator}` : '') +
+      (/^HH:MM:SS$/i.test(output) ? `0${separator}` : '') +
       minutes +
       separator +
       (seconds - minutes * 60)
@@ -42,8 +42,8 @@ module.exports = function(seconds, separator, output) {
   }
 
   return zeroPad(
-    (output === 'HH:MM:SS' ? `0${separator}0${separator}` :
-    output === 'MM:SS' ? `0${separator}` : '') +
+    (/^HH:MM:SS$/i.test(output) ? `0${separator}0${separator}` :
+    /^MM:SS$/i.test(output) ? `0${separator}` : '') +
     seconds
   );
 };

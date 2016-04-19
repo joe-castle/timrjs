@@ -623,7 +623,7 @@ module.exports = function (options) {
       if (typeof out !== 'string') {
         throw errors(out)('outputFormatType');
       }
-      if (out !== 'HH:MM:SS' && out !== 'MM:SS' && out !== 'SS') {
+      if (!/^(HH:)?(MM:)?SS$/i.test(out)) {
         throw errors(out)('invalidOutputFormat');
       }
     }
@@ -657,24 +657,37 @@ module.exports = function (time) {
 },{"./utils/formatTime":8}],5:[function(require,module,exports){
 'use strict';
 
-var Timr = require('./Timr');
-var store = require('./store');
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
+var Timr = require('./Timr');
+
+var _require = require('./store');
+
+var add = _require.add;
+var getAll = _require.getAll;
+var startAll = _require.startAll;
+var pauseAll = _require.pauseAll;
+var stopAll = _require.stopAll;
+var isRunning = _require.isRunning;
+var removeFromStore = _require.removeFromStore;
+var destroyAll = _require.destroyAll;
+
+
+var init = _extends(
 /**
  * @description Creates a new Timr object.
  *
  * @param {String|Number} startTime - The starting time for the timr object.
  * @param {Object} [options] - Options to customise the timer.
  *
- * @returns {Object} A new Timr object.
+ * @return {Object} A new Timr object.
  */
-
-var init = function init(startTime, options) {
+function (startTime, options) {
   var timr = new Timr(startTime, options);
 
   if (options) {
     if (options.store) {
-      return store.add(timr);
+      return add(timr);
     }
     if (options.store === false) {
       return timr;
@@ -682,29 +695,33 @@ var init = function init(startTime, options) {
   }
 
   if (init.store) {
-    return store.add(timr);
+    return add(timr);
   }
 
   return timr;
-};
+},
 
 // Exposed helper methods.
-init.validate = require('./validate');
-init.formatTime = require('./utils/formatTime');
-init.timeToSeconds = require('./utils/timeToSeconds');
-init.incorrectFormat = require('./utils/incorrectFormat');
+{
+  validate: require('./validate'),
+  formatTime: require('./utils/formatTime'),
+  timeToSeconds: require('./utils/timeToSeconds'),
+  incorrectFormat: require('./utils/incorrectFormat')
+},
 
 // Option to enable storing timrs, defaults to false.
-init.store = false;
+{ store: false },
 
 // Methods for all stored timrs.
-init.startAll = store.startAll;
-init.pauseAll = store.pauseAll;
-init.stopAll = store.stopAll;
-init.getAll = store.getAll;
-init.isRunning = store.isRunning;
-init.destroyAll = store.destroyAll;
-init.removeFromStore = store.removeFromStore;
+{
+  getAll: getAll,
+  startAll: startAll,
+  pauseAll: pauseAll,
+  stopAll: stopAll,
+  isRunning: isRunning,
+  removeFromStore: removeFromStore,
+  destroyAll: destroyAll
+});
 
 module.exports = init;
 
@@ -820,10 +837,10 @@ module.exports = function (seconds, separator, output) {
       return zeroPad(hours + separator + (minutes - hours * 60) + separator + (seconds - minutes * 60));
     }
 
-    return zeroPad((output === 'HH:MM:SS' ? '0' + separator : '') + minutes + separator + (seconds - minutes * 60));
+    return zeroPad((/^HH:MM:SS$/i.test(output) ? '0' + separator : '') + minutes + separator + (seconds - minutes * 60));
   }
 
-  return zeroPad((output === 'HH:MM:SS' ? '0' + separator + '0' + separator : output === 'MM:SS' ? '0' + separator : '') + seconds);
+  return zeroPad((/^HH:MM:SS$/i.test(output) ? '0' + separator + '0' + separator : /^MM:SS$/i.test(output) ? '0' + separator : '') + seconds);
 };
 
 },{"./zeroPad":11}],9:[function(require,module,exports){

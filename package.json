@@ -4,7 +4,7 @@
   "description": "Timr is a simple utility for creating timers in JavaScript.",
   "main": "dist/timr.js",
   "scripts": {
-    "test": "mocha --watch --timeout 5000",
+    "test": "mocha --watch --timeout 5000 --compilers js:babel-register",
     "clean": "rimraf dist/",
     "bundle": "npm run clean && gulp",
     "deploy:github": "git push origin master",
