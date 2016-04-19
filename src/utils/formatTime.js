@@ -11,17 +11,22 @@ const zeroPad = require('./zeroPad');
  *
  * @return {String} The formatted time.
  */
-module.exports = function(seconds, separator, output) {
-  output = output || 'MM:SS';
+module.exports = function(seconds, separator, outputFormat, formatType) {
+  formatType = formatType || 'h';
+  outputFormat = outputFormat || 'MM:SS';
   separator = separator || ':';
+
+  if (formatType === 's') {
+    return `${seconds}`;
+  }
 
   let minutes = seconds / 60;
 
-  if (minutes >= 1) {
+  if (minutes >= 1 && /[hm]/i.test(formatType)) {
     let hours = minutes / 60;
     minutes = Math.floor(minutes);
 
-    if (hours >= 1) {
+    if (hours >= 1 && /[h]/i.test(formatType)) {
       hours = Math.floor(hours);
 
       return zeroPad(
@@ -34,7 +39,7 @@ module.exports = function(seconds, separator, output) {
     }
 
     return zeroPad(
-      (/^HH:MM:SS$/i.test(output) ? `0${separator}` : '') +
+      (/^HH:MM:SS$/i.test(outputFormat) ? `0${separator}` : '') +
       minutes +
       separator +
       (seconds - minutes * 60)
@@ -42,8 +47,8 @@ module.exports = function(seconds, separator, output) {
   }
 
   return zeroPad(
-    (/^HH:MM:SS$/i.test(output) ? `0${separator}0${separator}` :
-    /^MM:SS$/i.test(output) ? `0${separator}` : '') +
+    (/^HH:MM:SS$/i.test(outputFormat) ? `0${separator}0${separator}` :
+    /^MM:SS$/i.test(outputFormat) ? `0${separator}` : '') +
     seconds
   );
 };

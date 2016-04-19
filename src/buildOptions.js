@@ -14,23 +14,37 @@ module.exports = options => {
   const errors = require('./utils/errors');
 
   if (options) {
-    let out = options.outputFormat;
+    let outF = options.outputFormat;
+    let forT = options.formatType;
     let sep = options.separator;
 
-    if (out) {
-      if (typeof out !== 'string') {
-        throw errors(out)('outputFormatType');
+    if (outF) {
+      if (typeof outF !== 'string') {
+        throw errors(outF)('outputFormatType');
       }
-      if (!/^(HH:)?(MM:)?SS$/i.test(out)) {
-        throw errors(out)('invalidOutputFormat');
+      if (!/^(HH:)?(MM:)?SS$/i.test(outF)) {
+        throw errors(outF)('invalidOutputFormat');
       }
     }
+
     if (sep) {
       if (typeof sep !== 'string') {
         throw errors(sep)('separatorType');
       }
     }
+
+    if (forT) {
+      if (typeof forT !== 'string') {
+        throw errors(forT)('formatType');
+      }
+      if (!/^[hms]$/i.test(forT)) {
+        throw errors(forT)('invalidFormatType')
+      }
+    }
   }
 
-  return Object.assign({outputFormat: 'MM:SS', separator: ':'}, options);
+  return Object.assign(
+    {formatType: 'h', outputFormat: 'MM:SS', separator: ':'},
+    options
+  );
 };

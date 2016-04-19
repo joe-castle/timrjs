@@ -48,17 +48,6 @@ EventEmitter.prototype = {
   },
 
   /**
-   * @description The amount of listeners attatched to an event.
-   *
-   * @param {String} event - The event to check.
-   *
-   * @return {Number} The amount of listeners.
-   */
-  listenerCount(event) {
-    return this._events[event] ? this._events[event].length : 0;
-  },
-
-  /**
    * @description Removes all listeners.
    */
   removeAllListeners() {

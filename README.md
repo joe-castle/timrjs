@@ -30,25 +30,30 @@ Timr(startTime[, options]]);
 
 Accepts a string or a number; a number is treated as seconds. Examples of accepted syntax:
  - `'10:00'` - Time units must be separated by a colon.
- - `600` - Equivalent to 10 minutes.
+ - `600` - Equivalent to 10:00.
  - `'50'` - 50 seconds.
  - `'25m'` - Equivalent to '25:00'
  - `'25h'` - Equivalent to '25:00:00'
  - `0` - Sets up a stopwatch style counter, counting up rather than down.
 
-If the provided time is invalid (wrong type, or incorrect time format) an error will be thrown. Currently we only support times up to 999:59:59.
+If the provided time is invalid an error will be thrown. Times up to 999:59:59 are supported.
 
 **options**
 
 Optional. Object which accepts:
- - _outputFormat_ - Specify the output of the formatted time string. Defaults to `'MM:SS'`
+ - `outputFormat` - Specify the display of time string. Defaults to `'MM:SS'`
    - Accepts the following values (case insensitive):
-     - `'HH:MM:SS'` e.g. output: 01:00:00 - 00:43:23 - 00:00:25.
-     - `'MM:SS'` e.g. output: 01:00:00 - 43:23 - 00:25.
-     - `'SS'` e.g. output: 01:00:00 - 43:23 - 25.
- - _separator_ - Specify how the formatted time is separated. Defaults to `':'`
+     - `'HH:MM:SS'` e.g. output: `'01:00:00'` `'00:43:23'` `'00:00:25'`.
+     - `'MM:SS'` e.g. output: `'01:00:00'` - `'43:23'` - `'00:25'`.
+     - `'SS'` e.g. output: `'01:00:00'` - `'43:23'` - `'25'`.
+ - `formatType` - Specify how the time string is created. Defaults to `'h'`
+    - Accepts the following values (case insensitive):
+      - `'h'` e.g. output: `'02:00:00'`
+      - `'m'` e.g. output: `'120:00'`
+      - `'s'` e.g. output: `'7200'`
+ - `separator` - Specify how the formatted time is separated. Defaults to `':'`
    - Accepts any string value, so you could use `'foobar'` if you really want to.
- - _store_ - Overrides the global store setting if provided.
+ - `store` - Overrides the global store setting if provided.
    - Accepts `true` or `false`.
 
 ### Usage

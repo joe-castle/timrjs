@@ -17,7 +17,8 @@ const createFormatTime = time => (
     return require('./utils/formatTime')(
       this[time],
       this.options.separator,
-      this.options.outputFormat
+      this.options.outputFormat,
+      this.options.outputStyle
     );
   }
 );

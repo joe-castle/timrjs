@@ -71,13 +71,12 @@ describe('Timr Class', () => {
       timer.ticker(() => {});
       timer.finish(() => {});
 
-      expect(timer.listenerCount('ticker')).to.equal(2);
-      expect(timer.listenerCount('finish')).to.equal(1);
+      expect(timer._events.ticker.length).to.equal(2);
+      expect(timer._events.finish.length).to.equal(1);
 
       timer.destroy();
 
-      expect(timer.listenerCount('ticker')).to.equal(0);
-      expect(timer.listenerCount('finish')).to.equal(0);
+      expect(timer._events).to.be.empty;
     });
     it('Removes the timer from the store', () => {
       const timer = store.add(new Timr(600));
@@ -219,6 +218,8 @@ describe('Timr Class', () => {
       expect(timer.startTime).to.equal(600);
       timer.setStartTime(800);
       expect(timer.startTime).to.equal(800);
+      timer.setStartTime('10m');
+      expect(timer.startTime).to.equal(600);
     });
     it(`Clears the existing timer and sets the
       currentTime and startTime to the new starTime`, done => {

@@ -6,8 +6,14 @@ module.exports = value => (
       `Expected outputFormat to be a string, instead got: ${typeof value}`
     ),
     invalidOutputFormat: new Error(
-      'Expected outputFormat to be: HH:MM:SS, MM:SS (default) or SS, ' +
+      'Expected outputFormat to be: HH:MM:SS, MM:SS (default) or SS; ' +
       `instead got: ${value}`
+    ),
+    formatType: new TypeError(
+      `Expected formatType to be a string, instead got: ${typeof value}`
+    ),
+    invalidFormatType: new Error(
+      `Expected formatType to be: h, m or s; instead got: ${value}`
     ),
     separatorType: new TypeError(
       `Expected separator to be a string, instead got: ${typeof value}`
