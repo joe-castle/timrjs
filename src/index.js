@@ -1,5 +1,7 @@
 'use strict';
 
+require('./polyfills');
+
 const Timr = require('./Timr');
 const {
   add,

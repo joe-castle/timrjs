@@ -7,7 +7,6 @@
  * @param {String} str - String to be padded.
  * @returns {String} A 0 padded string or the the original string.
  */
-
 module.exports = str => (
   str.replace(/\d+/g, match => (
     Number(match) < 10 ? `0${match}` : match

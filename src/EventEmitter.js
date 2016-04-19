@@ -20,7 +20,7 @@ EventEmitter.prototype = {
    * @description Registers a listener to an event array.
    *
    * @param {String} event - The event to attach to.
-   * @param {Function} listenr - The event listener.
+   * @param {Function} listener - The event listener.
    */
   on(event, listener) {
     if (!this._events[event]) {
@@ -55,7 +55,7 @@ EventEmitter.prototype = {
    * @return {Number} The amount of listeners.
    */
   listenerCount(event) {
-    return !this._events[event] ? 0 : this._events[event].length;
+    return this._events[event] ? this._events[event].length : 0;
   },
 
   /**
