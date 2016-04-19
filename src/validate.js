@@ -3,6 +3,9 @@
 /**
  * @description Validates the provded time
  *
+ * Additionally, if a pattern is provided, 25h / 25m, than
+ * it is converted here before being passed to timeToSeconds.
+ *
  * @param {String|Number} time - The time to be checked
  *
  * @throws If the provided time is a negative number.
@@ -22,11 +25,15 @@ module.exports = time => {
   }
 
   if (Number(time) > 3599999) {
-    throw errors('timeOverADay');
+    throw errors('maxTime');
   }
 
   if (typeof time === 'string') {
-    if (isNaN(Number(time)) && require('./utils/incorrectFormat')(time)) {
+    if (/^\d+[mh]$/i.test(time)) {
+      time = time.replace(/^(\d+)m$/i, '$1:00');
+      time = time.replace(/^(\d+)h$/i, '$1:00:00');
+    }
+    else if (isNaN(Number(time)) && require('./utils/incorrectFormat')(time)) {
       throw errors('invalidTime');
     }
   } else if (typeof time !== 'number' || isNaN(time)) {

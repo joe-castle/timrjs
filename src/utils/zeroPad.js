@@ -5,7 +5,7 @@
  * with a 0 at the beginning. Primarly used for time units - 00:00:00.
  *
  * @param {String} str - String to be padded.
- * @returns {String} A 0 padded string or the the original string.
+ * @return {String} A 0 padded string or the the original string.
  */
 module.exports = str => (
   str.replace(/\d+/g, match => (

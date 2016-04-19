@@ -16,8 +16,6 @@ module.exports = time => {
   time = time.split(':');
 
   return time.length > 3 || time.some((el, i, arr) => (
-    isNaN(Number(el)) ||
-    Number(el) < 0 ||
-    Number(el) > (arr.length === 3 && i === 0 ? 999 : 59)
+    isNaN(Number(el)) || Number(el) < 0
   ));
 };

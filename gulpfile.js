@@ -3,6 +3,7 @@
 const gulp = require('gulp');
 const wrap = require('gulp-wrap');
 const gutil = require('gulp-util');
+const babel = require('gulp-babel');
 const uglify = require('gulp-uglify');
 const rename = require('gulp-rename');
 const buffer = require('vinyl-buffer');
@@ -84,7 +85,13 @@ gulp.task('lint', () => (
     .pipe(eslint.failAfterError())
 ));
 
-gulp.task('default', ['lint'], () => (
+gulp.task('babel', () => (
+  gulp.src('./src/**/*.js')
+    .pipe(babel())
+    .pipe(gulp.dest('lib'))
+));
+
+gulp.task('default', ['lint', 'babel'], () => (
   browserify('./src/index.js')
     .transform('babelify')
     .bundle()

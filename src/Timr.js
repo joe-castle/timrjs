@@ -4,7 +4,23 @@ const EventEmitter = require('./EventEmitter');
 
 const validate = require('./validate');
 const errors = require('./utils/errors');
-const createFormatTime = require('./createFormatTime');
+
+/**
+ * @description Factory function for formatTime and formatStartTime
+ *
+ * @param {String} time - Either 'currentTime' or 'startTime'
+ *
+ * @return {Function} Formattime function closed over above value.
+ */
+const createFormatTime = time => (
+  function() {
+    return require('./utils/formatTime')(
+      this[time],
+      this.options.separator,
+      this.options.outputFormat
+    );
+  }
+);
 
 /**
  * @description Creates a Timr.

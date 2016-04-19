@@ -1,8 +1,10 @@
 # TimrJS
 
-Timr is a simple - event driven - utility for creating timers in JavaScript.
+Timr is a simple, event driven utility for creating timers in JavaScript.
 
-Compatible with Browsers, NodeJS and RequireJS.
+Compatible with Browsers and NodeJS.
+
+Additionally, the compiled versions support RequireJS.
 
 ### Installation
 Install with npm or Bower.
@@ -10,11 +12,11 @@ Install with npm or Bower.
 npm install timrjs --save
 ```
 
-Alternatively you can include the following CDN:
+Alternatively you can include the following:
 > https://cdn.rawgit.com/joesmith100/timrjs/master/dist/timr.js
 > https://cdn.rawgit.com/joesmith100/timrjs/master/dist/timr.min.js
 
-Or you could include `node_modules/dist/timr.js` on your page with a standalone `<script>` tag.
+Or you can include `node_modules/dist/timr.js` on your page with a standalone `<script>` tag.
 
 Both of these will expose a single global method `Timr`. Alternatively, they will define a module if you are using RequireJS `require(['timrjs'])`.
 
@@ -26,11 +28,15 @@ Timr(startTime[, options]]);
 #### Parameters
 **startTime**
 
-Accepts time as a string, e.g. '10:00' or the time in seconds, e.g. 600. Will also accept a string containing a whole number, e.g. '600'.
+Accepts a string or a number; a number is treated as seconds. Examples of accepted syntax:
+ - `'10:00'` - Time units must be separated by a colon.
+ - `600` - Equivalent to 10 minutes.
+ - `'50'` - 50 seconds.
+ - `'25m'` - Equivalent to '25:00'
+ - `'25h'` - Equivalent to '25:00:00'
+ - `0` - Sets up a stopwatch style counter, counting up rather than down.
 
 If the provided time is invalid (wrong type, or incorrect time format) an error will be thrown. Currently we only support times up to 999:59:59.
-
-If the time is set to 0, the timer will act as a stopwatch and count up rather than down.
 
 **options**
 

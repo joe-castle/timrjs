@@ -234,7 +234,7 @@ describe('Timr Class', () => {
     it('Throws an error if the newly provided startTime is invalid', () => {
       const timer = new Timr(600);
 
-      expect(timer.setStartTime.bind(timer, '123:123')).to.throw(Error);
+      expect(timer.setStartTime.bind(timer, '12-12')).to.throw(Error);
       expect(timer.setStartTime.bind(timer, 8737475638)).to.throw(Error);
     });
     it('Returns the formatted start time', () => {

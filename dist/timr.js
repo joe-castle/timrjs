@@ -116,7 +116,19 @@ var EventEmitter = require('./EventEmitter');
 
 var validate = require('./validate');
 var errors = require('./utils/errors');
-var createFormatTime = require('./createFormatTime');
+
+/**
+ * @description Factory function for formatTime and formatStartTime
+ *
+ * @param {String} time - Either 'currentTime' or 'startTime'
+ *
+ * @return {Function} Formattime function closed over above value.
+ */
+var createFormatTime = function createFormatTime(time) {
+  return function () {
+    return require('./utils/formatTime')(this[time], this.options.separator, this.options.outputFormat);
+  };
+};
 
 /**
  * @description Creates a Timr.
@@ -370,7 +382,7 @@ Timr.prototype = Object.assign(Object.create(EventEmitter.prototype), {
 
 module.exports = Timr;
 
-},{"./EventEmitter":1,"./buildOptions":3,"./createFormatTime":4,"./store":7,"./utils/errors":8,"./validate":13}],3:[function(require,module,exports){
+},{"./EventEmitter":1,"./buildOptions":3,"./store":6,"./utils/errors":7,"./utils/formatTime":8,"./validate":12}],3:[function(require,module,exports){
 'use strict';
 
 /**
@@ -408,24 +420,7 @@ module.exports = function (options) {
   return Object.assign({ outputFormat: 'MM:SS', separator: ':' }, options);
 };
 
-},{"./utils/errors":8}],4:[function(require,module,exports){
-'use strict';
-
-/**
- * @description Factory function for formatTime and formatStartTime
- *
- * @param {String} time - Either 'currentTime' or 'startTime'
- *
- * @return {Function} Formattime function closed over above value.
- */
-
-module.exports = function (time) {
-  return function () {
-    return require('./utils/formatTime')(this[time], this.options.separator, this.options.outputFormat);
-  };
-};
-
-},{"./utils/formatTime":9}],5:[function(require,module,exports){
+},{"./utils/errors":7}],4:[function(require,module,exports){
 'use strict';
 
 require('./polyfills');
@@ -496,7 +491,7 @@ function (startTime, options) {
 
 module.exports = init;
 
-},{"./Timr":2,"./polyfills":6,"./store":7,"./utils/formatTime":9,"./utils/incorrectFormat":10,"./utils/timeToSeconds":11,"./validate":13}],6:[function(require,module,exports){
+},{"./Timr":2,"./polyfills":5,"./store":6,"./utils/formatTime":8,"./utils/incorrectFormat":9,"./utils/timeToSeconds":10,"./validate":12}],5:[function(require,module,exports){
 'use strict';
 
 (function () {
@@ -527,7 +522,7 @@ module.exports = init;
   };
 })();
 
-},{}],7:[function(require,module,exports){
+},{}],6:[function(require,module,exports){
 'use strict';
 
 module.exports = function () {
@@ -589,7 +584,7 @@ module.exports = function () {
   };
 }();
 
-},{}],8:[function(require,module,exports){
+},{}],7:[function(require,module,exports){
 'use strict';
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
@@ -609,7 +604,7 @@ module.exports = function (value) {
   };
 };
 
-},{}],9:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 'use strict';
 
 var zeroPad = require('./zeroPad');
@@ -645,7 +640,7 @@ module.exports = function (seconds, separator, output) {
   return zeroPad((/^HH:MM:SS$/i.test(output) ? '0' + separator + '0' + separator : /^MM:SS$/i.test(output) ? '0' + separator : '') + seconds);
 };
 
-},{"./zeroPad":12}],10:[function(require,module,exports){
+},{"./zeroPad":11}],9:[function(require,module,exports){
 'use strict';
 
 /**
@@ -668,7 +663,7 @@ module.exports = function (time) {
   });
 };
 
-},{}],11:[function(require,module,exports){
+},{}],10:[function(require,module,exports){
 'use strict';
 
 /**
@@ -708,7 +703,7 @@ module.exports = function (time) {
   }, 0));
 };
 
-},{}],12:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 'use strict';
 
 /**
@@ -716,7 +711,7 @@ module.exports = function (time) {
  * with a 0 at the beginning. Primarly used for time units - 00:00:00.
  *
  * @param {String} str - String to be padded.
- * @returns {String} A 0 padded string or the the original string.
+ * @return {String} A 0 padded string or the the original string.
  */
 
 module.exports = function (str) {
@@ -725,7 +720,7 @@ module.exports = function (str) {
   });
 };
 
-},{}],13:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 'use strict';
 
 /**
@@ -764,4 +759,4 @@ module.exports = function (time) {
   return require('./utils/timeToSeconds')(time);
 };
 
-},{"./utils/errors":8,"./utils/incorrectFormat":10,"./utils/timeToSeconds":11}]},{},[5])(5));
+},{"./utils/errors":7,"./utils/incorrectFormat":9,"./utils/timeToSeconds":10}]},{},[4])(5));

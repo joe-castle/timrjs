@@ -13,14 +13,14 @@ module.exports = value => (
       `Expected separator to be a string, instead got: ${typeof value}`
     ),
     invalidTime: new Error(
-      `Expected time format (HH:MM:SS, MM:SS or SS), instead got: ${value}`
+      `Expected a time string, instead got: ${value}`
     ),
     invalidTimeType: new TypeError(
       `Expected time to be a string or number, instead got: ${
         typeof value === 'number' ? value : typeof value
       }`
     ),
-    timeOverADay: new Error(
+    maxTime: new Error(
       'Sorry, we don\'t support any time over 999:59:59.'
     ),
     ticker: new TypeError(

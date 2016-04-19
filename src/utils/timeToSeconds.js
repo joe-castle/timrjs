@@ -15,7 +15,7 @@ module.exports = time => {
   if (typeof time === 'number' && !isNaN(time)) {
     return Math.round(time);
   }
-
+  
   return Math.round(
     time.split(':').reduce((prev, curr, index, arr) => {
       if (arr.length === 3) {

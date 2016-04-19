@@ -8,7 +8,7 @@ describe('Validate function', () => {
   it('Throws an error if provided time is not valid', () => {
     expect(validate.bind(validate, 'boom')).to.throw(Error);
     expect(validate.bind(validate, 'boom')).to.throw(
-      'Expected time format (HH:MM:SS, MM:SS or SS), instead got: boom'
+      'Expected a time string, instead got: boom'
     );
     expect(validate.bind(validate, {})).to.throw(
       'Expected time to be a string or number, instead got: object'
@@ -33,5 +33,7 @@ describe('Validate function', () => {
     if a time string was provided`, () => {
     expect(validate(600)).to.equal(600);
     expect(validate('10:00')).to.equal(600);
+    expect(validate('10m')).to.equal(600);
+    expect(validate('10h')).to.equal(36000);
   });
 });
