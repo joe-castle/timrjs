@@ -1,6 +1,6 @@
 'use strict';
 
-const EventEmitter = require('events');
+const EventEmitter = require('./EventEmitter');
 
 const validate = require('./validate');
 const errors = require('./utils/errors');
