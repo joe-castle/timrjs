@@ -2,8 +2,8 @@
 
 const expect = require('chai').expect;
 
-const store = require('../lib/store');
-const Timr = require('../lib/Timr');
+const store = require('../src/store');
+const Timr = require('../src/Timr');
 
 describe('Store', () => {
   afterEach(() => {

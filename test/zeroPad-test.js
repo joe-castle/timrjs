@@ -2,7 +2,7 @@
 
 const expect = require('chai').expect;
 
-const zeroPad = require('../lib/utils/zeroPad');
+const zeroPad = require('../src/utils/zeroPad');
 
 describe('Zero Pad function', () => {
   it('Pads out single digits in a time string with a 0', () => {

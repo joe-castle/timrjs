@@ -2,7 +2,7 @@
 
 const expect = require('chai').expect;
 
-const formatTime = require('../lib/utils/formatTime');
+const formatTime = require('../src/utils/formatTime');
 
 describe('Format Time function', () => {
   it('Returns the currentTime formatted into a time string', () => {

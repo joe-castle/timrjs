@@ -2,8 +2,8 @@
 
 const expect = require('chai').expect;
 
-const init = require('../lib/index');
-const Timr = require('../lib/Timr');
+const init = require('../src/index');
+const Timr = require('../src/Timr');
 
 describe('Init function', () => {
   it('Returns a new timr object.', () => {

@@ -36,7 +36,7 @@ const addProdErrors = () => (
   })
 );
 
-const minCom = `/* TimrJS v${version} | (c) 2016 Joe Smith | https://github.com/joesmith100/timrjs/blob/master/LICENSE */
+const minCom = `/* TimrJS v${version} | (c) 2016 Joe Smith | https://github.com/joesmith100/timrjs */
 ;<%= contents %>`;
 
 const funcWrapper = `/**
@@ -44,14 +44,13 @@ const funcWrapper = `/**
  * https://github.com/joesmith100/timrjs
  * https://www.npmjs.com/package/timrjs
  *
- * Compatible with Browsers and NodeJS (CommonJS) and RequireJS.
+ * Compatible with Browsers, NodeJS (CommonJS) and RequireJS.
  *
  * Copyright (c) 2016 Joe Smith
  * Released under the MIT license
  * https://github.com/joesmith100/timrjs/blob/master/LICENSE
  */
 
-// Based off https://github.com/ForbesLindesay/umd/blob/master/template.js
 ;(function(Timr) {
   // CommonJS
   if (typeof exports === "object" && typeof module !== "undefined") {
@@ -76,7 +75,7 @@ const funcWrapper = `/**
     }
     global.Timr = Timr;
   }
-})(<%= contents %>(4));`;
+})(<%= contents %>(5));`;
 
 gulp.task('lint', () => (
   gulp.src(['**/*.js', '!node_modules/**', '!gulpfile.js'])
@@ -86,8 +85,8 @@ gulp.task('lint', () => (
 ));
 
 gulp.task('default', ['lint'], () => (
-  browserify('./lib/index.js')
-    .transform('babelify', {presets: ['es2015']})
+  browserify('./src/index.js')
+    .transform('babelify')
     .bundle()
     .pipe(source('timr.js'))
     .pipe(buffer())

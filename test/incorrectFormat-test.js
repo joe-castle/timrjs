@@ -2,7 +2,7 @@
 
 const expect = require('chai').expect;
 
-const incorrectFormat = require('../lib/utils/incorrectFormat');
+const incorrectFormat = require('../src/utils/incorrectFormat');
 
 describe('Incorrect Format function', () => {
   it('Returns true of the provided time is not the correct format', () => {

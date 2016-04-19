@@ -2,8 +2,8 @@
 
 const expect = require('chai').expect;
 
-const Timr = require('../lib/Timr');
-const store = require('../lib/store');
+const Timr = require('../src/Timr');
+const store = require('../src/store');
 
 describe('Timr Class', () => {
   describe('Timr instantiation', () => {

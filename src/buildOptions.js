@@ -36,8 +36,5 @@ module.exports = options => {
     }
   }
 
-  return Object.assign({
-    outputFormat: 'MM:SS',
-    separator: ':'
-  }, options);
+  return Object.assign({outputFormat: 'MM:SS', separator: ':'}, options);
 };

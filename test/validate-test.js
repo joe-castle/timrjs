@@ -2,7 +2,7 @@
 
 const expect = require('chai').expect;
 
-const validate = require('../lib/validate');
+const validate = require('../src/validate');
 
 describe('Validate function', () => {
   it('Throws an error if provided time is not valid', () => {

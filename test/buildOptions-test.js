@@ -2,7 +2,7 @@
 
 const expect = require('chai').expect;
 
-const buildOptions = require('../lib/buildOptions');
+const buildOptions = require('../src/buildOptions');
 
 describe('Build Options Function', () => {
   it('Returns an object with default options.', () => {
