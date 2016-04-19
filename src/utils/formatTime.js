@@ -7,7 +7,8 @@ const zeroPad = require('./zeroPad');
  *
  * @param {Number} seconds - The seconds to convert.
  * @param {String} separator - The character used to separate the time units.
- * @param {String} output - The format in which to output the time.
+ * @param {String} outputFormat - The way the time is displayed.
+ * @param {String} formatType - The way in which the time string is created.
  *
  * @return {String} The formatted time.
  */

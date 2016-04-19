@@ -79,7 +79,7 @@ const funcWrapper = `/**
 })(<%= contents %>(5));`;
 
 gulp.task('lint', () => (
-  gulp.src(['**/*.js', '!node_modules/**', '!gulpfile.js'])
+  gulp.src(['**/*.js', '!node_modules/**', '!test/*.js', '!gulpfile.js'])
     .pipe(eslint())
     .pipe(eslint.format())
     .pipe(eslint.failAfterError())

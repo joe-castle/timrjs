@@ -38,7 +38,7 @@ module.exports = options => {
         throw errors(forT)('formatType');
       }
       if (!/^[hms]$/i.test(forT)) {
-        throw errors(forT)('invalidFormatType')
+        throw errors(forT)('invalidFormatType');
       }
     }
   }

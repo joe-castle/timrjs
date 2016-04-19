@@ -32,8 +32,10 @@ module.exports = time => {
     if (/^\d+[mh]$/i.test(time)) {
       time = time.replace(/^(\d+)m$/i, '$1:00');
       time = time.replace(/^(\d+)h$/i, '$1:00:00');
-    }
-    else if (isNaN(Number(time)) && require('./utils/incorrectFormat')(time)) {
+    } else if (
+      isNaN(Number(time)) &&
+      require('./utils/incorrectFormat')(time)
+    ) {
       throw errors('invalidTime');
     }
   } else if (typeof time !== 'number' || isNaN(time)) {

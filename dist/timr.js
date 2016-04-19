@@ -1,5 +1,5 @@
 /**
- * TimrJS v0.7.1
+ * TimrJS v0.7.2
  * https://github.com/joesmith100/timrjs
  * https://www.npmjs.com/package/timrjs
  *
@@ -88,18 +88,6 @@ EventEmitter.prototype = {
 
 
   /**
-   * @description The amount of listeners attatched to an event.
-   *
-   * @param {String} event - The event to check.
-   *
-   * @return {Number} The amount of listeners.
-   */
-  listenerCount: function listenerCount(event) {
-    return this._events[event] ? this._events[event].length : 0;
-  },
-
-
-  /**
    * @description Removes all listeners.
    */
   removeAllListeners: function removeAllListeners() {
@@ -126,7 +114,7 @@ var errors = require('./utils/errors');
  */
 var createFormatTime = function createFormatTime(time) {
   return function () {
-    return require('./utils/formatTime')(this[time], this.options.separator, this.options.outputFormat);
+    return require('./utils/formatTime')(this[time], this.options.separator, this.options.outputFormat, this.options.outputStyle);
   };
 };
 
@@ -399,25 +387,36 @@ module.exports = function (options) {
   var errors = require('./utils/errors');
 
   if (options) {
-    var out = options.outputFormat;
+    var outF = options.outputFormat;
+    var forT = options.formatType;
     var sep = options.separator;
 
-    if (out) {
-      if (typeof out !== 'string') {
-        throw errors(out)('outputFormatType');
+    if (outF) {
+      if (typeof outF !== 'string') {
+        throw errors(outF)('outputFormatType');
       }
-      if (!/^(HH:)?(MM:)?SS$/i.test(out)) {
-        throw errors(out)('invalidOutputFormat');
+      if (!/^(HH:)?(MM:)?SS$/i.test(outF)) {
+        throw errors(outF)('invalidOutputFormat');
       }
     }
+
     if (sep) {
       if (typeof sep !== 'string') {
         throw errors(sep)('separatorType');
       }
     }
+
+    if (forT) {
+      if (typeof forT !== 'string') {
+        throw errors(forT)('formatType');
+      }
+      if (!/^[hms]$/i.test(forT)) {
+        throw errors(forT)('invalidFormatType');
+      }
+    }
   }
 
-  return Object.assign({ outputFormat: 'MM:SS', separator: ':' }, options);
+  return Object.assign({ formatType: 'h', outputFormat: 'MM:SS', separator: ':' }, options);
 };
 
 },{"./utils/errors":7}],4:[function(require,module,exports){
@@ -593,11 +592,13 @@ module.exports = function (value) {
   return function (error) {
     return {
       outputFormatType: new TypeError('Expected outputFormat to be a string, instead got: ' + (typeof value === 'undefined' ? 'undefined' : _typeof(value))),
-      invalidOutputFormat: new Error('Expected outputFormat to be: HH:MM:SS, MM:SS (default) or SS, ' + ('instead got: ' + value)),
+      invalidOutputFormat: new Error('Expected outputFormat to be: HH:MM:SS, MM:SS (default) or SS; ' + ('instead got: ' + value)),
+      formatType: new TypeError('Expected formatType to be a string, instead got: ' + (typeof value === 'undefined' ? 'undefined' : _typeof(value))),
+      invalidFormatType: new Error('Expected formatType to be: h, m or s; instead got: ' + value),
       separatorType: new TypeError('Expected separator to be a string, instead got: ' + (typeof value === 'undefined' ? 'undefined' : _typeof(value))),
-      invalidTime: new Error('Expected time format (HH:MM:SS, MM:SS or SS), instead got: ' + value),
+      invalidTime: new Error('Expected a time string, instead got: ' + value),
       invalidTimeType: new TypeError('Expected time to be a string or number, instead got: ' + (typeof value === 'number' ? value : typeof value === 'undefined' ? 'undefined' : _typeof(value))),
-      timeOverADay: new Error('Sorry, we don\'t support any time over 999:59:59.'),
+      maxTime: new Error('Sorry, we don\'t support any time over 999:59:59.'),
       ticker: new TypeError('Expected ticker to be a function, instead got: ' + (typeof value === 'undefined' ? 'undefined' : _typeof(value))),
       finish: new TypeError('Expected finish to be a function, instead got: ' + (typeof value === 'undefined' ? 'undefined' : _typeof(value)))
     }[error];
@@ -614,30 +615,36 @@ var zeroPad = require('./zeroPad');
  *
  * @param {Number} seconds - The seconds to convert.
  * @param {String} separator - The character used to separate the time units.
- * @param {String} output - The format in which to output the time.
+ * @param {String} outputFormat - The way the time is displayed.
+ * @param {String} formatType - The way in which the time string is created.
  *
  * @return {String} The formatted time.
  */
-module.exports = function (seconds, separator, output) {
-  output = output || 'MM:SS';
+module.exports = function (seconds, separator, outputFormat, formatType) {
+  formatType = formatType || 'h';
+  outputFormat = outputFormat || 'MM:SS';
   separator = separator || ':';
+
+  if (formatType === 's') {
+    return '' + seconds;
+  }
 
   var minutes = seconds / 60;
 
-  if (minutes >= 1) {
+  if (minutes >= 1 && /[hm]/i.test(formatType)) {
     var hours = minutes / 60;
     minutes = Math.floor(minutes);
 
-    if (hours >= 1) {
+    if (hours >= 1 && /[h]/i.test(formatType)) {
       hours = Math.floor(hours);
 
       return zeroPad(hours + separator + (minutes - hours * 60) + separator + (seconds - minutes * 60));
     }
 
-    return zeroPad((/^HH:MM:SS$/i.test(output) ? '0' + separator : '') + minutes + separator + (seconds - minutes * 60));
+    return zeroPad((/^HH:MM:SS$/i.test(outputFormat) ? '0' + separator : '') + minutes + separator + (seconds - minutes * 60));
   }
 
-  return zeroPad((/^HH:MM:SS$/i.test(output) ? '0' + separator + '0' + separator : /^MM:SS$/i.test(output) ? '0' + separator : '') + seconds);
+  return zeroPad((/^HH:MM:SS$/i.test(outputFormat) ? '0' + separator + '0' + separator : /^MM:SS$/i.test(outputFormat) ? '0' + separator : '') + seconds);
 };
 
 },{"./zeroPad":11}],9:[function(require,module,exports){
@@ -658,8 +665,8 @@ module.exports = function (time) {
 
   time = time.split(':');
 
-  return time.length > 3 || time.some(function (el, i, arr) {
-    return isNaN(Number(el)) || Number(el) < 0 || Number(el) > (arr.length === 3 && i === 0 ? 999 : 59);
+  return time.length > 3 || time.some(function (el) {
+    return isNaN(Number(el)) || Number(el) < 0;
   });
 };
 
@@ -726,6 +733,9 @@ module.exports = function (str) {
 /**
  * @description Validates the provded time
  *
+ * Additionally, if a pattern is provided, 25h / 25m, than
+ * it is converted here before being passed to timeToSeconds.
+ *
  * @param {String|Number} time - The time to be checked
  *
  * @throws If the provided time is a negative number.
@@ -745,11 +755,14 @@ module.exports = function (time) {
   }
 
   if (Number(time) > 3599999) {
-    throw errors('timeOverADay');
+    throw errors('maxTime');
   }
 
   if (typeof time === 'string') {
-    if (isNaN(Number(time)) && require('./utils/incorrectFormat')(time)) {
+    if (/^\d+[mh]$/i.test(time)) {
+      time = time.replace(/^(\d+)m$/i, '$1:00');
+      time = time.replace(/^(\d+)h$/i, '$1:00:00');
+    } else if (isNaN(Number(time)) && require('./utils/incorrectFormat')(time)) {
       throw errors('invalidTime');
     }
   } else if (typeof time !== 'number' || isNaN(time)) {
