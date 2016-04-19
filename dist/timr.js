@@ -38,8 +38,6 @@
 })((function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 'use strict';
 
-var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
 var EventEmitter = require('events');
 
 var validate = require('./validate');
@@ -95,7 +93,7 @@ Timr.stopwatch = function () {
   }
 };
 
-Timr.prototype = _extends(Object.create(EventEmitter.prototype), {
+Timr.prototype = Object.assign(Object.create(EventEmitter.prototype), {
 
   constructor: Timr,
 
@@ -298,64 +296,48 @@ Timr.prototype = _extends(Object.create(EventEmitter.prototype), {
 
 module.exports = Timr;
 
-},{"./buildOptions":2,"./createFormatTime":3,"./store":5,"./utils/errors":6,"./validate":11,"events":12}],2:[function(require,module,exports){
+},{"./buildOptions":2,"./createFormatTime":3,"./store":7,"./utils/errors":8,"./validate":13,"events":14}],2:[function(require,module,exports){
 'use strict';
-
-/**
- * @description Checks the validity of each option passed.
- *
- * @param {String} option - The options name.
- * @param {String} value - The options value.
- *
- * @throws If the option check fails, it throws a speicifc error.
- *
- * @returns The provided value.
- */
-
-var checkOption = function checkOption(option, value) {
-  var errors = require('./utils/errors')(value);
-
-  if (option === 'outputFormat') {
-    if (typeof value !== 'string') {
-      throw errors('outputFormatType');
-    }
-    if (value !== 'HH:MM:SS' && value !== 'MM:SS' && value !== 'SS') {
-      throw errors('invalidOutputFormat');
-    }
-  }
-
-  if (option === 'separator') {
-    if (typeof value !== 'string') {
-      throw errors('separatorType');
-    }
-  }
-
-  return value;
-};
 
 /**
  * @description Builds an options object from default and custom options.
  *
  * @param {Object} options - Custom options.
- * @returns {Object} Compiled options from default and custom.
+ *
+ * @throws If any option is invalid.
+ *
+ * @return {Object} Compiled options from default and custom.
  */
 
 module.exports = function (options) {
-  var defaultOptions = {
-    outputFormat: 'MM:SS',
-    separator: ':'
-  };
+  var errors = require('./utils/errors');
 
-  for (var option in options) {
-    if (options.hasOwnProperty(option)) {
-      defaultOptions[option] = checkOption(option, options[option]);
+  if (options) {
+    var out = options.outputFormat;
+    var sep = options.separator;
+
+    if (out) {
+      if (typeof out !== 'string') {
+        throw errors(out)('outputFormatType');
+      }
+      if (out !== 'HH:MM:SS' && out !== 'MM:SS' && out !== 'SS') {
+        throw errors(out)('invalidOutputFormat');
+      }
+    }
+    if (sep) {
+      if (typeof sep !== 'string') {
+        throw errors(sep)('separatorType');
+      }
     }
   }
 
-  return defaultOptions;
+  return Object.assign({
+    outputFormat: 'MM:SS',
+    separator: ':'
+  }, options);
 };
 
-},{"./utils/errors":6}],3:[function(require,module,exports){
+},{"./utils/errors":8}],3:[function(require,module,exports){
 'use strict';
 
 /**
@@ -372,8 +354,10 @@ module.exports = function (time) {
   };
 };
 
-},{"./utils/formatTime":7}],4:[function(require,module,exports){
+},{"./utils/formatTime":9}],4:[function(require,module,exports){
 'use strict';
+
+require('./polyfills');
 
 var Timr = require('./Timr');
 var store = require('./store');
@@ -426,7 +410,41 @@ init.removeFromStore = store.removeFromStore;
 
 module.exports = init;
 
-},{"./Timr":1,"./store":5,"./utils/formatTime":7,"./utils/incorrectFormat":8,"./utils/timeToSeconds":9,"./validate":11}],5:[function(require,module,exports){
+},{"./Timr":1,"./polyfills":5,"./store":7,"./utils/formatTime":9,"./utils/incorrectFormat":10,"./utils/timeToSeconds":11,"./validate":13}],5:[function(require,module,exports){
+'use strict';
+
+(function () {
+  'use strict';
+
+  require('./objectAssign');
+})();
+
+},{"./objectAssign":6}],6:[function(require,module,exports){
+'use strict';
+
+// Object.assign polyfill
+(function () {
+  'use strict';
+
+  if (typeof Object.assign !== 'function') {
+    Object.assign = function (target) {
+      var output = Object(target);
+      for (var index = 1; index < arguments.length; index++) {
+        var source = arguments[index];
+        if (source !== undefined && source !== null) {
+          for (var nextKey in source) {
+            if (source.hasOwnProperty(nextKey)) {
+              output[nextKey] = source[nextKey];
+            }
+          }
+        }
+      }
+      return output;
+    };
+  }
+})();
+
+},{}],7:[function(require,module,exports){
 'use strict';
 
 module.exports = function () {
@@ -488,7 +506,7 @@ module.exports = function () {
   };
 }();
 
-},{}],6:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 'use strict';
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
@@ -508,7 +526,7 @@ module.exports = function (value) {
   };
 };
 
-},{}],7:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 'use strict';
 
 var zeroPad = require('./zeroPad');
@@ -544,7 +562,7 @@ module.exports = function (seconds, separator, output) {
   return zeroPad((output === 'HH:MM:SS' ? '0' + separator + '0' + separator : output === 'MM:SS' ? '0' + separator : '') + seconds);
 };
 
-},{"./zeroPad":10}],8:[function(require,module,exports){
+},{"./zeroPad":12}],10:[function(require,module,exports){
 'use strict';
 
 /**
@@ -567,7 +585,7 @@ module.exports = function (time) {
   });
 };
 
-},{}],9:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 'use strict';
 
 /**
@@ -607,7 +625,7 @@ module.exports = function (time) {
   }, 0));
 };
 
-},{}],10:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 'use strict';
 
 /**
@@ -624,7 +642,7 @@ module.exports = function (str) {
   });
 };
 
-},{}],11:[function(require,module,exports){
+},{}],13:[function(require,module,exports){
 'use strict';
 
 /**
@@ -663,7 +681,7 @@ module.exports = function (time) {
   return require('./utils/timeToSeconds')(time);
 };
 
-},{"./utils/errors":6,"./utils/incorrectFormat":8,"./utils/timeToSeconds":9}],12:[function(require,module,exports){
+},{"./utils/errors":8,"./utils/incorrectFormat":10,"./utils/timeToSeconds":11}],14:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a

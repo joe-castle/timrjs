@@ -87,9 +87,7 @@ gulp.task('lint', () => (
 
 gulp.task('default', ['lint'], () => (
   browserify('./lib/index.js')
-    .transform('babelify', {
-      presets: ['es2015'], plugins: ['transform-object-assign']
-    })
+    .transform('babelify', {presets: ['es2015']})
     .bundle()
     .pipe(source('timr.js'))
     .pipe(buffer())
