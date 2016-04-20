@@ -1,7 +1,7 @@
 {
   "name": "timrjs",
-  "description": "Timr is a simple utility for creating timers in JavaScript.",
-  "main": "lib/init.js",
+  "description": "Timr is a simple, event driven utility for creating timers in JavaScript.",
+  "main": "lib/index.js",
   "authors": [
     "Joe Smith <joesmith0488@gmail.com>"
   ],

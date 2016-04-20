@@ -1,5 +1,5 @@
 /**
- * TimrJS v0.7.3
+ * TimrJS v0.7.4
  * https://github.com/joesmith100/timrjs
  * https://www.npmjs.com/package/timrjs
  *
