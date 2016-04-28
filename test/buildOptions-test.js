@@ -7,15 +7,15 @@ const buildOptions = require('../src/buildOptions');
 describe('Build Options Function', () => {
   it('Returns an object with default options.', () => {
     expect(buildOptions()).to.deep.equal(
-      {formatType: 'h', outputFormat: 'MM:SS', separator: ':'}
+      {formatType: 'h', outputFormat: 'mm:ss', separator: ':'}
     );
   });
   it('Returns an object with amended outputFormat option', () => {
-    expect(buildOptions({outputFormat: 'SS'})).to.deep.equal(
-      {formatType: 'h', outputFormat: 'SS', separator: ':'}
+    expect(buildOptions({outputFormat: 'ss'})).to.deep.equal(
+      {formatType: 'h', outputFormat: 'ss', separator: ':'}
     );
-    expect(buildOptions({outputFormat: 'HH:MM:SS'})).to.deep.equal(
-      {formatType: 'h', outputFormat: 'HH:MM:SS', separator: ':'}
+    expect(buildOptions({outputFormat: 'hh:mm:ss'})).to.deep.equal(
+      {formatType: 'h', outputFormat: 'hh:mm:ss', separator: ':'}
     );
   });
   it('Throws an error when outputFormat is not a string', () => {
@@ -29,16 +29,16 @@ describe('Build Options Function', () => {
     expect(buildOptions.bind(buildOptions, {outputFormat: 'invalid'}))
       .to.throw(Error);
     expect(buildOptions.bind(buildOptions, {outputFormat: 'invalid'})).to.throw(
-      'Expected outputFormat to be: HH:MM:SS, MM:SS (default) ' +
-      'or SS; instead got: invalid'
+      'Expected outputFormat to be: hh:mm:ss, mm:ss (default) ' +
+      'or ss; instead got: invalid'
     );
   });
   it('Returns an object with amended separator option', () => {
     expect(buildOptions({separator: '-'})).to.deep.equal(
-      {formatType: 'h', outputFormat: 'MM:SS', separator: '-'}
+      {formatType: 'h', outputFormat: 'mm:ss', separator: '-'}
     );
     expect(buildOptions({separator: 'boop'})).to.deep.equal(
-      {formatType: 'h', outputFormat: 'MM:SS', separator: 'boop'}
+      {formatType: 'h', outputFormat: 'mm:ss', separator: 'boop'}
     );
   });
   it('Throws an error if value provided to separator is not a string', () => {
@@ -62,10 +62,10 @@ describe('Build Options Function', () => {
   });
   it('Returns an object with amended formatType option', () => {
     expect(buildOptions({formatType: 'm'})).to.deep.equal(
-      {formatType: 'm', outputFormat: 'MM:SS', separator: ':'}
+      {formatType: 'm', outputFormat: 'mm:ss', separator: ':'}
     );
     expect(buildOptions({formatType: 's'})).to.deep.equal(
-      {formatType: 's', outputFormat: 'MM:SS', separator: ':'}
+      {formatType: 's', outputFormat: 'mm:ss', separator: ':'}
     );
   });
 });

@@ -14,6 +14,7 @@ npm install timrjs --save
 
 Alternatively you can include the following CDN:
 > https://cdn.jsdelivr.net/timrjs/latest/timr.js
+
 > https://cdn.jsdelivr.net/timrjs/latest/timr.min.js
 
 Or include `node_modules/dist/timr.min.js` on your page with a standalone `<script>` tag.
@@ -32,8 +33,8 @@ Accepts a string or a number; a number is treated as seconds. Examples of accept
  - `'10:00'` - Time units must be separated by a colon.
  - `600` - Equivalent to 10:00.
  - `'50'` - 50 seconds.
- - `'25m'` - Equivalent to '25:00'
- - `'25h'` - Equivalent to '25:00:00'
+ - `'25m'` - Equivalent to 25:00. Can be 25M.
+ - `'25h'` - Equivalent to 25:00:00. Can be 25H.
  - `0` - Sets up a stopwatch style counter, counting up rather than down.
 
 If the provided startTime is invalid an error will be thrown. Times up to 999:59:59 are supported.
@@ -41,11 +42,11 @@ If the provided startTime is invalid an error will be thrown. Times up to 999:59
 **options**
 
 Optional. Object which accepts:
- - `outputFormat` - This option specifies how many 00 should be added to the front of the time string as it counts down from hours to minutes to seconds. Defaults to `'MM:SS'`
+ - `outputFormat` - This option specifies how many 00 should be added to the front of the time string as it counts down from hours to minutes to seconds. Defaults to `'mm:ss'`
    - Accepts the following values (case insensitive):
-     - `'HH:MM:SS'` e.g. output: `'01:00:00'` `'00:43:23'` `'00:00:25'`.
-     - `'MM:SS'` e.g. output: `'01:00:00'` - `'43:23'` - `'00:25'`.
-     - `'SS'` e.g. output: `'01:00:00'` - `'43:23'` - `'25'`.
+     - `'hh:mm:ss'` e.g. output: `'01:00:00'` `'00:43:23'` `'00:00:25'`.
+     - `'mm:ss'` e.g. output: `'01:00:00'` - `'43:23'` - `'00:25'`.
+     - `'ss'` e.g. output: `'01:00:00'` - `'43:23'` - `'25'`.
  - `formatType` - This option specifies whether to format the time string up to hours, up to minutes or just seconds. Defaults to `'h'`
     - Accepts the following values (case insensitive):
       - `'h'` e.g. output: `'02:00:00'`
@@ -56,7 +57,7 @@ Optional. Object which accepts:
      - `'-'` e.g. output: `'10-00'`
      - `'+'` e.g. output: `'10+00'`
      - `'foobar'` e.g. output: `'10foobar00'`
- - `store` - Overrides the global store setting if provided. See: _[#store](#store)_
+ - `store` - Overrides the global store setting if provided. See: _[store](#store)_
    - Accepts `true` or `false`.
 
 ### Usage
@@ -68,13 +69,17 @@ To create a Timr, simply call the function with the desired start time.
 ```js
 const timer = Timr('10:00');
 ```
+To `start`, `pause` and `stop`, call the desired method on the Timr.
 
-To `start`, `pause` and `stop` the timer, call the desired method on the Timr.
+Stopping the timer resets the time back to the startTime. Where as pause will allow you to resume the timer (with start), where it was paused from.
+
 ```js
 timer.start();
 timer.pause();
 timer.stop();
 ```
+> _If start is called whilst the timer is already running, a warning will be logged to the console._
+
 Each Timr emits 2 events, `ticker` and `finish`.
 
 The `ticker` function is called every second the timer ticks down and is provided with the following arguments:
@@ -84,7 +89,8 @@ The `ticker` function is called every second the timer ticks down and is provide
  - `startTime` - The starting time in seconds.
  - `self` - The original Timr object.
 
-_Note: The first time ticker is called will be 1 second after the timer starts. So if you have a 10:00 timer, the first call will be 09:59._
+> _The first time ticker is called will be 1 second after the timer starts. So if you have a 10:00 timer, the first call will be 09:59._
+
 ```js
 timer.ticker((formattedTime, percentDone, currentTime, startTime, self) => {
   console.log(formattedTime);
@@ -99,7 +105,7 @@ timer.ticker((formattedTime, percentDone, currentTime, startTime, self) => {
   // Timr {_events: Object, timer: 6, running: true, options: Object…}
 });
 ```
-_When used as a stopwatch, the ticker will be provided with 3 arguments, `formattedTime`, `currentTime` and `self`._
+> _When used as a stopwatch, the ticker will be provided with 3 arguments, `formattedTime`, `currentTime` and `self`._
 
 The `finish` method is called once, when the timer hits 0. Only 1 argument is provided into the function, the original Timr object.
 ```js
@@ -108,12 +114,12 @@ timer.finish(self => {
   // Timr {_events: Object, timer: 6, running: false, options: Object…}
 });
 ```
-_When used as a stopwatch, the timer will stop and the finish function will fire when the time reaches the maximum supported time `'999:59:59'`_
+> _When used as a stopwatch, the timer will stop and the finish function will fire when the time reaches the maximum supported time `'999:59:59'`_
 
-All the above methods return a reference to the Timr, so calls can be chained.
+All of the above methods return a reference to the Timr, so calls can be chained.
 #### Helper Methods
 There are a number of helper methods available to Timrs.
- - `destroy()` - Clears the timer, removes all event listeners and removes the Timr from the store. Returns a reference to the Timr.
+ - `destroy()` - Stops the timer, removes all event listeners and removes the Timr from the store. Returns a reference to the Timr.
  - `formatTime()` - Returns the currentTime, formatted.
  - `formatStartTime()` - Returns the startTime, formatted.
  - `percentDone()` - Returns the time elapsed in percent.
@@ -156,27 +162,25 @@ const timer = Timr('10:00', {store: false});
 // This Timr won't be stored, regardless of the global setting.
 ```
 **Available Methods**
- - `Timr.getAll` - Returns the array of all stored Timrs.
- - `Timr.startAll` - Starts all stored Timrs.
- - `Timr.pauseAll` - Pauses all stored Timrs.
- - `Timr.stopAll` - Stops all stored Timrs.
- - `Timr.isRunning` - Returns a new array of all stored Timrs that are running.
- - `Timr.removeFromStore` - Removes the provided Timr from the store.
- - `Timr.destroyAll` - Destroys all stored Timrs, clearing them and removing them from the store.
+ - `Timr.getAll()` - Returns the array of all stored Timrs.
+ - `Timr.startAll()` - Starts all stored Timrs.
+ - `Timr.pauseAll()` - Pauses all stored Timrs.
+ - `Timr.stopAll()` - Stops all stored Timrs.
+ - `Timr.isRunning()` - Returns a new array of all stored Timrs that are running.
+ - `Timr.removeFromStore(timr)` - Removes the provided Timr from the store.
+ - `Timr.destroyAll()` - Destroys all stored Timrs.
 
 #### Global Helper Methods
 There are also a number of helper methods available on the Global Timr function. These are all internal functions, but have been exposed for use without having to create a Timr.
- - `Timr.validate` - Validates the startTime and returns it converted into seconds.
+ - `Timr.validate(startTime)` - Validates the startTime and returns it converted into seconds.
    - Checks validity of time string.
    - Ensures provided time is a number or a string.
    - Ensures provided time does not exceed '999:59:59'.
- - `Timr.formatTime` - Converts seconds into a time string. Used by Timrs when outputting their formattedTime.
+ - `Timr.formatTime(seconds, separator, outputFormat, formatType)` - Converts seconds into a time string. Used by Timrs when outputting their formattedTime.
    - `seconds` - Required. The seconds to be converted.
-   - `separator` - See: _[#parameters](#parameters)_
-   - `outputFormat` - See: _[#parameters](#parameters)_
-   - `formatType` - See: _[#parameters](#parameters)_
- - `Timr.timeToSeconds` - Converts a time string into seconds. Must be separated by a colon, e.g. '10:00'. Used in the validate method.
- - `Timr.incorrectFormat` - Checks the format of a time string. Must be separated by a colon, e.g. '10:00'. Used in the validate method.
+   - `separator` `outputFormat` `formatType` - See: _[parameters > options](#parameters)_
+ - `Timr.timeToSeconds(time)` - Converts a time string into seconds. Must be separated by a colon, e.g. '10:00'. Used in the validate method.
+ - `Timr.incorrectFormat(time)` - Checks the format of a time string. Must be separated by a colon, e.g. '10:00'. Used in the validate method.
 
 ```js
 Timr.validate('10:00');

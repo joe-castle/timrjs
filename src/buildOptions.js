@@ -22,7 +22,7 @@ module.exports = options => {
       if (typeof outF !== 'string') {
         throw errors(outF)('outputFormatType');
       }
-      if (!/^(HH:)?(MM:)?SS$/i.test(outF)) {
+      if (!/^(hh:)?(mm:)?ss$/i.test(outF)) {
         throw errors(outF)('invalidOutputFormat');
       }
     }
@@ -44,7 +44,7 @@ module.exports = options => {
   }
 
   return Object.assign(
-    {formatType: 'h', outputFormat: 'MM:SS', separator: ':'},
+    {formatType: 'h', outputFormat: 'mm:ss', separator: ':'},
     options
   );
 };

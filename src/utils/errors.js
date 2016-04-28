@@ -6,7 +6,7 @@ module.exports = value => (
       `Expected outputFormat to be a string, instead got: ${typeof value}`
     ),
     invalidOutputFormat: new Error(
-      'Expected outputFormat to be: HH:MM:SS, MM:SS (default) or SS; ' +
+      'Expected outputFormat to be: hh:mm:ss, mm:ss (default) or ss; ' +
       `instead got: ${value}`
     ),
     formatType: new TypeError(

@@ -14,7 +14,7 @@ const zeroPad = require('./zeroPad');
  */
 module.exports = function(seconds, separator, outputFormat, formatType) {
   formatType = formatType || 'h';
-  outputFormat = outputFormat || 'MM:SS';
+  outputFormat = outputFormat || 'mm:ss';
   separator = separator || ':';
 
   if (formatType === 's') {
