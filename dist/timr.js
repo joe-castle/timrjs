@@ -321,8 +321,19 @@ Timr.prototype = Object.assign(Object.create(EventEmitter.prototype), {
   percentDone: function percentDone() {
     return 100 - Math.round(this.currentTime / this.startTime * 100);
   },
+
+
+  /**
+   * @description Creates / changes options for a Timr.
+   * Merges with existing or default options.
+   *
+   * @param {Object} options - The options to create / change.
+   * @return {Object} Returns a reference to the Timr so calls can be chained.
+   */
   changeOptions: function changeOptions(options) {
     this.options = buildOptions(options, this);
+
+    return this;
   },
 
 
@@ -380,15 +391,6 @@ module.exports = Timr;
 },{"./EventEmitter":1,"./buildOptions":3,"./store":6,"./utils/errors":7,"./utils/formatTime":8,"./validate":12}],3:[function(require,module,exports){
 'use strict';
 
-var _require = require('./store');
-
-var add = _require.add;
-var removeFromStore = _require.removeFromStore;
-
-var _require2 = require('./index');
-
-var store = _require2.store;
-
 /**
  * @description Builds an options object from default and custom options.
  *
@@ -403,20 +405,7 @@ var store = _require2.store;
 module.exports = function (options, timr) {
   var errors = require('./utils/errors');
 
-  // Stores timr if global setting is true.
-  if (store) {
-    add(timr);
-  }
-
   if (options) {
-    // Stores / removes timrs from the store.
-    if (options.store) {
-      add(timr);
-    }
-    if (options.store === false) {
-      removeFromStore(timr);
-    }
-
     var sep = options.separator;
     var outF = options.outputFormat;
     var forT = options.formatType;
@@ -452,7 +441,7 @@ module.exports = function (options, timr) {
   return Object.assign(timr.options || { formatType: 'h', outputFormat: 'mm:ss', separator: ':' }, options);
 };
 
-},{"./index":4,"./store":6,"./utils/errors":7}],4:[function(require,module,exports){
+},{"./utils/errors":7}],4:[function(require,module,exports){
 'use strict';
 
 require('./polyfills');
@@ -461,6 +450,7 @@ var Timr = require('./Timr');
 
 var _require = require('./store');
 
+var add = _require.add;
 var getAll = _require.getAll;
 var startAll = _require.startAll;
 var pauseAll = _require.pauseAll;
@@ -469,8 +459,8 @@ var isRunning = _require.isRunning;
 var removeFromStore = _require.removeFromStore;
 var destroyAll = _require.destroyAll;
 
-console.log('TIMR:', Timr);
-module.exports = Object.assign(
+
+var init = Object.assign(
 /**
  * @description Creates a new Timr object.
  *
@@ -480,7 +470,24 @@ module.exports = Object.assign(
  * @return {Object} A new Timr object.
  */
 function (startTime, options) {
-  return new Timr(startTime, options);
+  var timr = new Timr(startTime, options);
+
+  // Stores timr if options.store is true. Overrides global setting.
+  if (options) {
+    if (options.store) {
+      return add(timr);
+    }
+    if (options.store === false) {
+      return timr;
+    }
+  }
+
+  // Stores timr if global setting is true.
+  if (init.store) {
+    return add(timr);
+  }
+
+  return timr;
 },
 
 // Option to enable storing timrs, defaults to false.
@@ -496,6 +503,7 @@ function (startTime, options) {
 
 // Methods for all stored timrs.
 {
+  add: add,
   getAll: getAll,
   startAll: startAll,
   pauseAll: pauseAll,
@@ -504,6 +512,8 @@ function (startTime, options) {
   removeFromStore: removeFromStore,
   destroyAll: destroyAll
 });
+
+module.exports = init;
 
 },{"./Timr":2,"./polyfills":5,"./store":6,"./utils/formatTime":8,"./utils/incorrectFormat":9,"./utils/timeToSeconds":10,"./validate":12}],5:[function(require,module,exports){
 'use strict';
