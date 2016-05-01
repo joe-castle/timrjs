@@ -123,6 +123,7 @@ There are a number of helper methods available to Timrs.
  - `formatTime()` - Returns the currentTime, formatted.
  - `formatStartTime()` - Returns the startTime, formatted.
  - `percentDone()` - Returns the time elapsed in percent.
+ - `changeOptions(options)` - Merges the provided options into the existing ones. See: _[options](#parameters)_ for available options. The store option does nothing after a Timr is created. See: _[store](#store)_ for adding / removing a timr. Returns a reference to the Timr.
  - `setStartTime(newStartTime)` - Changes the startTime to the one provided and returns it formatted. Will stop the timer if its running. It's also subject to validation, so will throw an error if the provided time is invalid.
  - `getStartTime()` - Returns the startTime in seconds.
  - `getCurrentTime()` - Returns the currentTime in seconds.
@@ -137,6 +138,8 @@ timer.formatStartTime();
 // '10:00'
 timer.percentDone();
 // 0
+timer.changeOptions({separator: '-'});
+// Timr {_events: Object, timer: 6, running: false, options: Object…}
 timer.setStartTime('11:00');
 // '11:00'
 timer.getStartTime();
@@ -162,6 +165,7 @@ const timer = Timr('10:00', {store: false});
 // This Timr won't be stored, regardless of the global setting.
 ```
 **Available Methods**
+ - `Timr.add(timr)` - Adds the provided Timr to the store. If it already exits  in the store, then it won't add it again. Returns the provided Timr.
  - `Timr.getAll()` - Returns the array of all stored Timrs.
  - `Timr.startAll()` - Starts all stored Timrs.
  - `Timr.pauseAll()` - Pauses all stored Timrs.

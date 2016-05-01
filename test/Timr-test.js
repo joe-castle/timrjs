@@ -212,6 +212,25 @@ describe('Timr Class', () => {
       expect(timer.percentDone()).to.equal(33);
     });
   });
+  describe('changeOptions methods', () => {
+    it('Changes the timrs options after creation.', () => {
+      const timer = new Timr(600);
+      expect(timer.formatTime()).to.equal('10:00');
+      timer.changeOptions({separator: '-', outputFormat: 'hh:mm:ss'});
+      expect(timer.formatTime()).to.equal('00-10-00');
+    });
+    it('Changes the timrs options after creation and merges with existing ones.', () => {
+      const timer = new Timr(600, {separator: '-'});
+      expect(timer.formatTime()).to.equal('10-00');
+      timer.changeOptions({separator: '-', outputFormat: 'hh:mm:ss'});
+      expect(timer.formatTime()).to.equal('00-10-00');
+    });
+    it('Returns a reference to the Timr', () => {
+      const timer = new Timr(600).changeOptions();
+      expect(timer).equal(timer);
+      timer.destroy();
+    });
+  });
   describe('setStartTime method', () => {
     it('Changes the startTime after Timr created', () => {
       const timer = new Timr(600);

@@ -26,6 +26,7 @@ const init = Object.assign(
   (startTime, options) => {
     const timr = new Timr(startTime, options);
 
+    // Stores timr if options.store is true. Overrides global setting.
     if (options) {
       if (options.store) {
         return add(timr);
@@ -35,12 +36,16 @@ const init = Object.assign(
       }
     }
 
+    // Stores timr if global setting is true.
     if (init.store) {
       return add(timr);
     }
 
     return timr;
   },
+
+  // Option to enable storing timrs, defaults to false.
+  {store: false},
 
   // Exposed helper methods.
   {
@@ -50,11 +55,9 @@ const init = Object.assign(
     incorrectFormat: require('./utils/incorrectFormat')
   },
 
-  // Option to enable storing timrs, defaults to false.
-  {store: false},
-
   // Methods for all stored timrs.
   {
+    add,
     getAll,
     startAll,
     pauseAll,

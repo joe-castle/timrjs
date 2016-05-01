@@ -17,7 +17,13 @@ module.exports = (function() {
      *
      * @return {Object} The provided timr object.
      */
-    add: timr => (timrs.push(timr), timr),
+    add: timr => {
+      if (timrs.indexOf(timr) === -1) {
+        timrs.push(timr);
+      }
+
+      return timr;
+    },
 
     // Methods associated with all Timrs.
     getAll: () => timrs,

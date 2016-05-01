@@ -2,6 +2,7 @@
 
 const EventEmitter = require('./EventEmitter');
 
+const buildOptions = require('./buildOptions');
 const validate = require('./validate');
 const errors = require('./utils/errors');
 
@@ -37,14 +38,14 @@ function Timr(startTime, options) {
 
   this.timer = null;
   this.running = false;
-  this.options = require('./buildOptions')(options);
   this.startTime = validate(startTime);
   this.currentTime = this.startTime;
+  this.changeOptions(options);
 }
 
 /**
  * @description Countdown function.
- * Bound to a setInterval timer when start() is called.
+ * Bound to a setInterval when start() is called.
  */
 Timr.countdown = function() {
   this.currentTime -= 1;
@@ -66,7 +67,7 @@ Timr.countdown = function() {
 
 /**
  * @description Stopwatch function.
- * Bound to a setInterval timer when start() is called.
+ * Bound to a setInterval when start() is called.
  */
 Timr.stopwatch = function() {
   this.currentTime += 1;
@@ -78,7 +79,7 @@ Timr.stopwatch = function() {
     this
   );
 
-  if (this.currentTime >= 3600000) {
+  if (this.currentTime > 3599999) {
     this.stop();
     this.emit('finish', this);
   }
@@ -231,6 +232,19 @@ Timr.prototype = Object.assign(Object.create(EventEmitter.prototype), {
    */
   percentDone() {
     return 100 - Math.round(this.currentTime / this.startTime * 100);
+  },
+
+  /**
+   * @description Creates / changes options for a Timr.
+   * Merges with existing or default options.
+   *
+   * @param {Object} options - The options to create / change.
+   * @return {Object} Returns a reference to the Timr so calls can be chained.
+   */
+  changeOptions(options) {
+    this.options = buildOptions(options, this);
+
+    return this;
   },
 
   /**

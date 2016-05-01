@@ -4,20 +4,28 @@
  * @description Builds an options object from default and custom options.
  *
  * @param {Object} options - Custom options.
+ * @param {Object} timr - The Timr object.
  *
  * @throws If any option is invalid.
  *
  * @return {Object} Compiled options from default and custom.
  */
-
-module.exports = options => {
+module.exports = (options, timr) => {
   const errors = require('./utils/errors');
 
   if (options) {
+    let sep = options.separator;
     let outF = options.outputFormat;
     let forT = options.formatType;
-    let sep = options.separator;
 
+    // Error checking for seperator.
+    if (sep) {
+      if (typeof sep !== 'string') {
+        throw errors(sep)('separatorType');
+      }
+    }
+
+    // Error checking for outputFormat.
     if (outF) {
       if (typeof outF !== 'string') {
         throw errors(outF)('outputFormatType');
@@ -27,12 +35,7 @@ module.exports = options => {
       }
     }
 
-    if (sep) {
-      if (typeof sep !== 'string') {
-        throw errors(sep)('separatorType');
-      }
-    }
-
+    // Error checking for formatType.
     if (forT) {
       if (typeof forT !== 'string') {
         throw errors(forT)('formatType');
@@ -44,7 +47,7 @@ module.exports = options => {
   }
 
   return Object.assign(
-    {formatType: 'h', outputFormat: 'mm:ss', separator: ':'},
+    timr.options || {formatType: 'h', outputFormat: 'mm:ss', separator: ':'},
     options
   );
 };
