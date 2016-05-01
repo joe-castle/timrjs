@@ -1,5 +1,5 @@
 /**
- * TimrJS v0.7.4
+ * TimrJS v0.7.5
  * https://github.com/joesmith100/timrjs
  * https://www.npmjs.com/package/timrjs
  *
@@ -76,12 +76,15 @@ EventEmitter.prototype = {
    * @param {String} event - The event to emit.
    */
   emit: function emit(event) {
-    var _this = this,
-        _arguments = arguments;
+    var _this = this;
+
+    for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+      args[_key - 1] = arguments[_key];
+    }
 
     if (this._events[event]) {
       this._events[event].forEach(function (listener) {
-        listener.apply(_this, Array.prototype.slice.call(_arguments, 1));
+        listener.apply(_this, args);
       });
     }
   },
@@ -395,7 +398,7 @@ module.exports = function (options) {
       if (typeof outF !== 'string') {
         throw errors(outF)('outputFormatType');
       }
-      if (!/^(HH:)?(MM:)?SS$/i.test(outF)) {
+      if (!/^(hh:)?(mm:)?ss$/i.test(outF)) {
         throw errors(outF)('invalidOutputFormat');
       }
     }
@@ -416,7 +419,7 @@ module.exports = function (options) {
     }
   }
 
-  return Object.assign({ formatType: 'h', outputFormat: 'MM:SS', separator: ':' }, options);
+  return Object.assign({ formatType: 'h', outputFormat: 'mm:ss', separator: ':' }, options);
 };
 
 },{"./utils/errors":7}],4:[function(require,module,exports){
@@ -592,7 +595,7 @@ module.exports = function (value) {
   return function (error) {
     return {
       outputFormatType: new TypeError('Expected outputFormat to be a string, instead got: ' + (typeof value === 'undefined' ? 'undefined' : _typeof(value))),
-      invalidOutputFormat: new Error('Expected outputFormat to be: HH:MM:SS, MM:SS (default) or SS; ' + ('instead got: ' + value)),
+      invalidOutputFormat: new Error('Expected outputFormat to be: hh:mm:ss, mm:ss (default) or ss; ' + ('instead got: ' + value)),
       formatType: new TypeError('Expected formatType to be a string, instead got: ' + (typeof value === 'undefined' ? 'undefined' : _typeof(value))),
       invalidFormatType: new Error('Expected formatType to be: h, m or s; instead got: ' + value),
       separatorType: new TypeError('Expected separator to be a string, instead got: ' + (typeof value === 'undefined' ? 'undefined' : _typeof(value))),
@@ -622,7 +625,7 @@ var zeroPad = require('./zeroPad');
  */
 module.exports = function (seconds, separator, outputFormat, formatType) {
   formatType = formatType || 'h';
-  outputFormat = outputFormat || 'MM:SS';
+  outputFormat = outputFormat || 'mm:ss';
   separator = separator || ':';
 
   if (formatType === 's') {

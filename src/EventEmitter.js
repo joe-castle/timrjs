@@ -36,13 +36,10 @@ EventEmitter.prototype = {
    *
    * @param {String} event - The event to emit.
    */
-  emit(event) {
+  emit(event, ...args) {
     if (this._events[event]) {
       this._events[event].forEach(listener => {
-        listener.apply(
-          this,
-          Array.prototype.slice.call(arguments, 1)
-        );
+        listener.apply(this, args);
       });
     }
   },

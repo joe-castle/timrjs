@@ -5,7 +5,7 @@ const expect = require('chai').expect;
 const incorrectFormat = require('../src/utils/incorrectFormat');
 
 describe('Incorrect Format function', () => {
-  it('Returns true of the provided time is not the correct format', () => {
+  it('Returns true if the provided time is not the correct format', () => {
     expect(incorrectFormat('10-00')).to.equal(true);
     expect(incorrectFormat('10:10:10:00')).to.equal(true);
     expect(incorrectFormat('10:-10')).to.equal(true);
