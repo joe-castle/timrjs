@@ -6,7 +6,8 @@
   "scripts": {
     "test": "mocha --watch --timeout 5000 --compilers js:babel-register",
     "clean": "rimraf dist/ && rimraf lib/",
-    "bundle": "npm run clean && gulp",
+    "lint": "gulp lint",
+    "build": "npm run clean && gulp",
     "deploy:github": "git push origin master",
     "deploy": "npm publish && npm run deploy:github"
   },

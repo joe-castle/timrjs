@@ -73,7 +73,7 @@ const addProdErrors = pipeFactory(
 );
 
 gulp.task('lint', () => (
-  gulp.src(['**/*.js', '!node_modules/**', '!test/*.js', '!gulpfile.js'])
+  gulp.src('./src/**/*.js')
     .pipe(eslint())
     .pipe(eslint.format())
     .pipe(eslint.failAfterError())
@@ -100,5 +100,5 @@ gulp.task('default', ['lint', 'babel'], () => (
     .on('error', gutil.log)
     .pipe(wrap(minCom))
     .pipe(rename('timr.min.js'))
-    .pipe(gulp.dest('./dist/'))
+    .pipe(gulp.dest('dist'))
 ));

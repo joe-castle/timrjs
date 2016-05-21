@@ -359,7 +359,7 @@ Timr.prototype = Object.assign(Object.create(EventEmitter.prototype), {
   /**
    * @description Gets the Timrs startTime.
    *
-   * @return {Number} Current time in seconds
+   * @return {Number} Start time in seconds.
    */
   getStartTime: function getStartTime() {
     return this.startTime;
@@ -369,7 +369,7 @@ Timr.prototype = Object.assign(Object.create(EventEmitter.prototype), {
   /**
    * @description Gets the Timrs currentTime.
    *
-   * @return {Number} Current time in seconds
+   * @return {Number} Current time in seconds.
    */
   getCurrentTime: function getCurrentTime() {
     return this.currentTime;
