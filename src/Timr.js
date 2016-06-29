@@ -103,9 +103,9 @@ Timr.prototype = Object.assign(Object.create(EventEmitter.prototype), {
       const startFn = () => {
         this.running = true;
 
-        this.timer = this.startTime > 0
-        ? setInterval(Timr.countdown.bind(this), 1000)
-        : setInterval(Timr.stopwatch.bind(this), 1000);
+        this.timer = this.startTime > 0 ?
+        setInterval(Timr.countdown.bind(this), 1000) :
+        setInterval(Timr.stopwatch.bind(this), 1000);
       };
 
       if (delay) {

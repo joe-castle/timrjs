@@ -1,5 +1,5 @@
 /**
- * TimrJS v0.7.5
+ * TimrJS v0.7.6
  * https://github.com/joesmith100/timrjs
  * https://www.npmjs.com/package/timrjs
  *
@@ -178,15 +178,27 @@ Timr.prototype = Object.assign(Object.create(EventEmitter.prototype), {
   /**
    * @description Starts the timr.
    *
+   * @param {Number} [delay] - Optional delay in ms to start the timer
+   *
    * @return {Object} Returns a reference to the Timr so calls can be chained.
    */
-  start: function start() {
+  start: function start(delay) {
+    var _this = this;
+
     if (this.running && typeof console !== 'undefined' && typeof console.warn === 'function') {
       console.warn('Timer already running', this);
     } else {
-      this.running = true;
+      var startFn = function startFn() {
+        _this.running = true;
 
-      this.timer = this.startTime > 0 ? setInterval(Timr.countdown.bind(this), 1000) : setInterval(Timr.stopwatch.bind(this), 1000);
+        _this.timer = _this.startTime > 0 ? setInterval(Timr.countdown.bind(_this), 1000) : setInterval(Timr.stopwatch.bind(_this), 1000);
+      };
+
+      if (delay) {
+        setTimeout(startFn, delay);
+      } else {
+        startFn();
+      }
     }
 
     return this;
