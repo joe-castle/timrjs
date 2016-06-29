@@ -92,20 +92,27 @@ Timr.prototype = Object.assign(Object.create(EventEmitter.prototype), {
   /**
    * @description Starts the timr.
    *
+   * @param {Number} [delay] - Optional delay in ms to start the timer
+   *
    * @return {Object} Returns a reference to the Timr so calls can be chained.
    */
-  start() {
-    if (this.running &&
-      typeof console !== 'undefined' &&
-      typeof console.warn === 'function'
-    ) {
+  start(delay) {
+    if (this.running && typeof console !== 'undefined' && typeof console.warn === 'function') {
       console.warn('Timer already running', this);
     } else {
-      this.running = true;
+      const startFn = () => {
+        this.running = true;
 
-      this.timer = this.startTime > 0 ?
-        setInterval(Timr.countdown.bind(this), 1000) :
-        setInterval(Timr.stopwatch.bind(this), 1000);
+        this.timer = this.startTime > 0
+        ? setInterval(Timr.countdown.bind(this), 1000)
+        : setInterval(Timr.stopwatch.bind(this), 1000);
+      };
+
+      if (delay) {
+        setTimeout(startFn, delay);
+      } else {
+        startFn();
+      }
     }
 
     return this;

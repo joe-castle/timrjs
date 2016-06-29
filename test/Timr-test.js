@@ -28,6 +28,15 @@ describe('Timr Class', () => {
           done();
         });
     });
+    it('Starts the timer after a delay', done => {
+      const startTime = Date.now()
+      const timer = new Timr(600).start(1000)
+        .ticker(formattedTime => {
+          expect(Date.now() - startTime >= 2000)
+          timer.stop()
+          done();
+        })
+    });
     it('Returns a reference to the Timr', () => {
       const timer = new Timr(600).start();
       expect(timer).equal(timer);
