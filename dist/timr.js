@@ -36,6 +36,91 @@
   }
 })((function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 'use strict';
+/* eslint-disable no-unused-vars */
+var hasOwnProperty = Object.prototype.hasOwnProperty;
+var propIsEnumerable = Object.prototype.propertyIsEnumerable;
+
+function toObject(val) {
+	if (val === null || val === undefined) {
+		throw new TypeError('Object.assign cannot be called with null or undefined');
+	}
+
+	return Object(val);
+}
+
+function shouldUseNative() {
+	try {
+		if (!Object.assign) {
+			return false;
+		}
+
+		// Detect buggy property enumeration order in older V8 versions.
+
+		// https://bugs.chromium.org/p/v8/issues/detail?id=4118
+		var test1 = new String('abc');  // eslint-disable-line
+		test1[5] = 'de';
+		if (Object.getOwnPropertyNames(test1)[0] === '5') {
+			return false;
+		}
+
+		// https://bugs.chromium.org/p/v8/issues/detail?id=3056
+		var test2 = {};
+		for (var i = 0; i < 10; i++) {
+			test2['_' + String.fromCharCode(i)] = i;
+		}
+		var order2 = Object.getOwnPropertyNames(test2).map(function (n) {
+			return test2[n];
+		});
+		if (order2.join('') !== '0123456789') {
+			return false;
+		}
+
+		// https://bugs.chromium.org/p/v8/issues/detail?id=3056
+		var test3 = {};
+		'abcdefghijklmnopqrst'.split('').forEach(function (letter) {
+			test3[letter] = letter;
+		});
+		if (Object.keys(Object.assign({}, test3)).join('') !==
+				'abcdefghijklmnopqrst') {
+			return false;
+		}
+
+		return true;
+	} catch (e) {
+		// We don't expect any of the above to throw, but better to be safe.
+		return false;
+	}
+}
+
+module.exports = shouldUseNative() ? Object.assign : function (target, source) {
+	var from;
+	var to = toObject(target);
+	var symbols;
+
+	for (var s = 1; s < arguments.length; s++) {
+		from = Object(arguments[s]);
+
+		for (var key in from) {
+			if (hasOwnProperty.call(from, key)) {
+				to[key] = from[key];
+			}
+		}
+
+		if (Object.getOwnPropertySymbols) {
+			symbols = Object.getOwnPropertySymbols(from);
+			for (var i = 0; i < symbols.length; i++) {
+				if (propIsEnumerable.call(from, symbols[i])) {
+					to[symbols[i]] = from[symbols[i]];
+				}
+			}
+		}
+	}
+
+	return to;
+};
+
+},{}],2:[function(require,module,exports){
+"use strict";
 
 /**
  * @description Creates an EventEmitter.
@@ -45,9 +130,8 @@
  * This is only intended for internal use, as there is
  * no real error checking.
  */
-
 function EventEmitter() {
-  this._events = {};
+  this.events = {};
 }
 
 EventEmitter.prototype = {
@@ -61,11 +145,11 @@ EventEmitter.prototype = {
    * @param {Function} listener - The event listener.
    */
   on: function on(event, listener) {
-    if (!this._events[event]) {
-      this._events[event] = [];
+    if (!this.events[event]) {
+      this.events[event] = [];
     }
 
-    this._events[event].push(listener);
+    this.events[event].push(listener);
   },
 
 
@@ -82,8 +166,8 @@ EventEmitter.prototype = {
       args[_key - 1] = arguments[_key];
     }
 
-    if (this._events[event]) {
-      this._events[event].forEach(function (listener) {
+    if (this.events[event]) {
+      this.events[event].forEach(function (listener) {
         listener.apply(_this, args);
       });
     }
@@ -94,13 +178,13 @@ EventEmitter.prototype = {
    * @description Removes all listeners.
    */
   removeAllListeners: function removeAllListeners() {
-    this._events = {};
+    this.events = {};
   }
 };
 
 module.exports = EventEmitter;
 
-},{}],2:[function(require,module,exports){
+},{}],3:[function(require,module,exports){
 'use strict';
 
 var EventEmitter = require('./EventEmitter');
@@ -108,6 +192,9 @@ var EventEmitter = require('./EventEmitter');
 var buildOptions = require('./buildOptions');
 var validate = require('./validate');
 var errors = require('./utils/errors');
+var removeFromStore = require('./store').removeFromStore;
+var formatTime = require('./utils/formatTime');
+var objectAssign = require('object-assign');
 
 /**
  * @description Factory function for formatTime and formatStartTime
@@ -117,8 +204,8 @@ var errors = require('./utils/errors');
  * @return {Function} Formattime function closed over above value.
  */
 var createFormatTime = function createFormatTime(time) {
-  return function () {
-    return require('./utils/formatTime')(this[time], this.options.separator, this.options.outputFormat, this.options.formatType);
+  return function createdFormatTime() {
+    return formatTime(this[time], this.options.separator, this.options.outputFormat, this.options.formatType);
   };
 };
 
@@ -145,7 +232,7 @@ function Timr(startTime, options) {
  * @description Countdown function.
  * Bound to a setInterval when start() is called.
  */
-Timr.countdown = function () {
+Timr.countdown = function countdown() {
   this.currentTime -= 1;
 
   this.emit('ticker', this.formatTime(), this.percentDone(), this.currentTime, this.startTime, this);
@@ -160,7 +247,7 @@ Timr.countdown = function () {
  * @description Stopwatch function.
  * Bound to a setInterval when start() is called.
  */
-Timr.stopwatch = function () {
+Timr.stopwatch = function stopwatch() {
   this.currentTime += 1;
 
   this.emit('ticker', this.formatTime(), this.currentTime, this);
@@ -171,7 +258,7 @@ Timr.stopwatch = function () {
   }
 };
 
-Timr.prototype = Object.assign(Object.create(EventEmitter.prototype), {
+Timr.prototype = objectAssign(Object.create(EventEmitter.prototype), {
 
   constructor: Timr,
 
@@ -255,7 +342,7 @@ Timr.prototype = Object.assign(Object.create(EventEmitter.prototype), {
   destroy: function destroy() {
     this.clear().removeAllListeners();
 
-    require('./store').removeFromStore(this);
+    removeFromStore(this);
 
     return this;
   },
@@ -400,8 +487,11 @@ Timr.prototype = Object.assign(Object.create(EventEmitter.prototype), {
 
 module.exports = Timr;
 
-},{"./EventEmitter":1,"./buildOptions":3,"./store":6,"./utils/errors":7,"./utils/formatTime":8,"./validate":12}],3:[function(require,module,exports){
+},{"./EventEmitter":2,"./buildOptions":4,"./store":6,"./utils/errors":7,"./utils/formatTime":8,"./validate":12,"object-assign":1}],4:[function(require,module,exports){
 'use strict';
+
+var errors = require('./utils/errors');
+var objectAssign = require('object-assign');
 
 /**
  * @description Builds an options object from default and custom options.
@@ -413,10 +503,7 @@ module.exports = Timr;
  *
  * @return {Object} Compiled options from default and custom.
  */
-
 module.exports = function (options, timr) {
-  var errors = require('./utils/errors');
-
   if (options) {
     var sep = options.separator;
     var outF = options.outputFormat;
@@ -450,13 +537,17 @@ module.exports = function (options, timr) {
     }
   }
 
-  return Object.assign(timr.options || { formatType: 'h', outputFormat: 'mm:ss', separator: ':' }, options);
+  return objectAssign(timr.options || { formatType: 'h', outputFormat: 'mm:ss', separator: ':' }, options);
 };
 
-},{"./utils/errors":7}],4:[function(require,module,exports){
+},{"./utils/errors":7,"object-assign":1}],5:[function(require,module,exports){
 'use strict';
 
-require('./polyfills');
+var validate = require('./validate');
+var formatTime = require('./utils/formatTime');
+var timeToSeconds = require('./utils/timeToSeconds');
+var incorrectFormat = require('./utils/incorrectFormat');
+var objectAssign = require('object-assign');
 
 var Timr = require('./Timr');
 
@@ -472,7 +563,7 @@ var removeFromStore = _require.removeFromStore;
 var destroyAll = _require.destroyAll;
 
 
-var init = Object.assign(
+var init = objectAssign(
 /**
  * @description Creates a new Timr object.
  *
@@ -507,10 +598,10 @@ function (startTime, options) {
 
 // Exposed helper methods.
 {
-  validate: require('./validate'),
-  formatTime: require('./utils/formatTime'),
-  timeToSeconds: require('./utils/timeToSeconds'),
-  incorrectFormat: require('./utils/incorrectFormat')
+  validate: validate,
+  formatTime: formatTime,
+  timeToSeconds: timeToSeconds,
+  incorrectFormat: incorrectFormat
 },
 
 // Methods for all stored timrs.
@@ -527,39 +618,8 @@ function (startTime, options) {
 
 module.exports = init;
 
-},{"./Timr":2,"./polyfills":5,"./store":6,"./utils/formatTime":8,"./utils/incorrectFormat":9,"./utils/timeToSeconds":10,"./validate":12}],5:[function(require,module,exports){
-'use strict';
-
-(function () {
-  'use strict';
-
-  /**
-   * @description Object.assign polyfill
-   *
-   * @param {Object} target - The object to copy properties to
-   *
-   * @return {Object} The modified target object.
-   */
-
-  Object.assign = Object.assign || function (target) {
-    var output = Object(target);
-
-    for (var index = 1; index < arguments.length; index++) {
-      var source = arguments[index];
-      if (source !== undefined && source !== null) {
-        for (var nextKey in source) {
-          if (source.hasOwnProperty(nextKey)) {
-            output[nextKey] = source[nextKey];
-          }
-        }
-      }
-    }
-    return output;
-  };
-})();
-
-},{}],6:[function(require,module,exports){
-'use strict';
+},{"./Timr":3,"./store":6,"./utils/formatTime":8,"./utils/incorrectFormat":9,"./utils/timeToSeconds":10,"./validate":12,"object-assign":1}],6:[function(require,module,exports){
+"use strict";
 
 module.exports = function () {
   // Array to store all timrs.
@@ -661,7 +721,7 @@ var zeroPad = require('./zeroPad');
  *
  * @return {String} The formatted time.
  */
-module.exports = function (seconds, separator, outputFormat, formatType) {
+module.exports = function formatTime(seconds, separator, outputFormat, formatType) {
   formatType = formatType || 'h';
   outputFormat = outputFormat || 'mm:ss';
   separator = separator || ':';
@@ -726,7 +786,6 @@ module.exports = function (time) {
  *
  * @return {Number} - The time in seconds.
  */
-
 module.exports = function (time) {
   if (typeof time === 'number' && !isNaN(time)) {
     return Math.round(time);
@@ -753,7 +812,7 @@ module.exports = function (time) {
 };
 
 },{}],11:[function(require,module,exports){
-'use strict';
+"use strict";
 
 /**
  * @description Pads out single digit numbers in a string
@@ -762,15 +821,18 @@ module.exports = function (time) {
  * @param {String} str - String to be padded.
  * @return {String} A 0 padded string or the the original string.
  */
-
 module.exports = function (str) {
   return str.replace(/\d+/g, function (match) {
-    return Number(match) < 10 ? '0' + match : match;
+    return Number(match) < 10 ? "0" + match : match;
   });
 };
 
 },{}],12:[function(require,module,exports){
 'use strict';
+
+var errors = require('./utils/errors');
+var timeToSeconds = require('./utils/timeToSeconds');
+var incorrectFormat = require('./utils/incorrectFormat');
 
 /**
  * @description Validates the provded time
@@ -790,28 +852,28 @@ module.exports = function (str) {
  */
 
 module.exports = function (time) {
-  var errors = require('./utils/errors')(time);
+  var error = errors(time);
 
   if (Number(time) < 0) {
-    throw errors('invalidTime');
+    throw error('invalidTime');
   }
 
   if (Number(time) > 3599999) {
-    throw errors('maxTime');
+    throw error('maxTime');
   }
 
   if (typeof time === 'string') {
     if (/^\d+[mh]$/i.test(time)) {
       time = time.replace(/^(\d+)m$/i, '$1:00');
       time = time.replace(/^(\d+)h$/i, '$1:00:00');
-    } else if (isNaN(Number(time)) && require('./utils/incorrectFormat')(time)) {
-      throw errors('invalidTime');
+    } else if (isNaN(Number(time)) && incorrectFormat(time)) {
+      throw error('invalidTime');
     }
   } else if (typeof time !== 'number' || isNaN(time)) {
-    throw errors('invalidTimeType');
+    throw error('invalidTimeType');
   }
 
-  return require('./utils/timeToSeconds')(time);
+  return timeToSeconds(time);
 };
 
-},{"./utils/errors":7,"./utils/incorrectFormat":9,"./utils/timeToSeconds":10}]},{},[4])(4));
+},{"./utils/errors":7,"./utils/incorrectFormat":9,"./utils/timeToSeconds":10}]},{},[5])(5));

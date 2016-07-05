@@ -2,7 +2,7 @@ const validate = require('./validate');
 const formatTime = require('./utils/formatTime');
 const timeToSeconds = require('./utils/timeToSeconds');
 const incorrectFormat = require('./utils/incorrectFormat');
-const objectAssign = require('object-assign')
+const objectAssign = require('object-assign');
 
 const Timr = require('./Timr');
 const {
