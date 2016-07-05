@@ -1,5 +1,5 @@
 /**
- * TimrJS v0.7.6
+ * TimrJS v0.7.7
  * https://github.com/joesmith100/timrjs
  * https://www.npmjs.com/package/timrjs
  *
@@ -693,6 +693,7 @@ module.exports = function (seconds, separator, outputFormat, formatType) {
 
 /**
  * @description Checks the provided time for correct formatting.
+ * See incorrectFormat-test.js for examples of correct and incorrect formatting.
  *
  * @param {String} time - The provided time string.
  *

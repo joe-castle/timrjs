@@ -6,6 +6,11 @@ Compatible with Browsers and NodeJS.
 
 Additionally, the compiled versions support RequireJS.
 
+[![build status](https://img.shields.io/travis/joesmith100/timrjs.svg?style=flat-square)](https://travis-ci.org/joesmith100/timrjs)
+[![npm version](https://img.shields.io/npm/v/timrjs.svg?style=flat-square)](https://www.npmjs.com/package/timrjs)
+[![npm downloads](https://img.shields.io/npm/dm/timrjs.svg?style=flat-square)](https://www.npmjs.com/package/timrjs)
+[![npm license](https://img.shields.io/npm/l/timrjs.svg?style=flat-square)](https://www.npmjs.com/package/timrjs)
+
 ### Installation
 Install with npm or Bower.
 ```
@@ -74,10 +79,12 @@ To `start`, `pause` and `stop`, call the desired method on the Timr.
 Stopping the timer resets the time back to the startTime. Where as pause will allow you to resume the timer (with start), where it was paused from.
 
 ```js
-timer.start();
+timer.start(delay);
+// Optional delay in ms before the timer starts
 timer.pause();
 timer.stop();
 ```
+
 > _If start is called whilst the timer is already running, a warning will be logged to the console._
 
 Each Timr emits 2 events, `ticker` and `finish`.
@@ -89,7 +96,7 @@ The `ticker` function is called every second the timer ticks down and is provide
  - `startTime` - The starting time in seconds.
  - `self` - The original Timr object.
 
-> _The first time ticker is called will be 1 second after the timer starts. So if you have a 10:00 timer, the first call will be 09:59._
+> _The first time ticker is called will be 1 second after the timer starts. So if you have a 10:00 timer, the first call will emit 09:59._
 
 ```js
 timer.ticker((formattedTime, percentDone, currentTime, startTime, self) => {

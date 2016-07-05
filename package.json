@@ -1,13 +1,15 @@
 {
   "name": "timrjs",
-  "version": "0.7.6",
+  "version": "0.7.7",
   "description": "Timr is a simple, event driven utility for creating timers in JavaScript.",
   "main": "lib/index.js",
   "scripts": {
-    "test": "mocha --watch --timeout 5000 --compilers js:babel-register",
+    "test": "mocha --timeout 5000 --compilers js:babel-register",
+    "test:watch": "npm test -- --watch",
     "clean": "rimraf dist/ && rimraf lib/",
     "lint": "gulp lint",
-    "build": "npm run clean && gulp",
+    "build": "NODE_ENV=production gulp",
+    "predeploy": "npm run clean && npm run build",
     "deploy:github": "git push origin master",
     "deploy": "npm publish && npm run deploy:github"
   },
