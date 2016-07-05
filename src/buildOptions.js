@@ -1,4 +1,4 @@
-'use strict';
+const errors = require('./utils/errors');
 
 /**
  * @description Builds an options object from default and custom options.
@@ -11,12 +11,10 @@
  * @return {Object} Compiled options from default and custom.
  */
 module.exports = (options, timr) => {
-  const errors = require('./utils/errors');
-
   if (options) {
-    let sep = options.separator;
-    let outF = options.outputFormat;
-    let forT = options.formatType;
+    const sep = options.separator;
+    const outF = options.outputFormat;
+    const forT = options.formatType;
 
     // Error checking for seperator.
     if (sep) {
@@ -47,7 +45,7 @@ module.exports = (options, timr) => {
   }
 
   return Object.assign(
-    timr.options || {formatType: 'h', outputFormat: 'mm:ss', separator: ':'},
+    timr.options || { formatType: 'h', outputFormat: 'mm:ss', separator: ':' },
     options
   );
 };

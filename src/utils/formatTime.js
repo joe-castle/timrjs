@@ -1,5 +1,3 @@
-'use strict';
-
 const zeroPad = require('./zeroPad');
 
 /**
@@ -12,7 +10,7 @@ const zeroPad = require('./zeroPad');
  *
  * @return {String} The formatted time.
  */
-module.exports = function(seconds, separator, outputFormat, formatType) {
+module.exports = function formatTime(seconds, separator, outputFormat, formatType) {
   formatType = formatType || 'h';
   outputFormat = outputFormat || 'mm:ss';
   separator = separator || ':';

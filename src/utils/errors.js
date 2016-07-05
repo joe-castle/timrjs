@@ -1,5 +1,3 @@
-'use strict';
-
 module.exports = value => (
   error => ({
     outputFormatType: new TypeError(
@@ -34,6 +32,6 @@ module.exports = value => (
     ),
     finish: new TypeError(
       `Expected finish to be a function, instead got: ${typeof value}`
-    )
+    ),
   }[error])
 );

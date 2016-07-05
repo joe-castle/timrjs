@@ -1,6 +1,9 @@
-'use strict';
-
 require('./polyfills');
+
+const validate = require('./validate');
+const formatTime = require('./utils/formatTime');
+const timeToSeconds = require('./utils/timeToSeconds');
+const incorrectFormat = require('./utils/incorrectFormat');
 
 const Timr = require('./Timr');
 const {
@@ -11,7 +14,7 @@ const {
   stopAll,
   isRunning,
   removeFromStore,
-  destroyAll
+  destroyAll,
 } = require('./store');
 
 const init = Object.assign(
@@ -45,14 +48,14 @@ const init = Object.assign(
   },
 
   // Option to enable storing timrs, defaults to false.
-  {store: false},
+  { store: false },
 
   // Exposed helper methods.
   {
-    validate: require('./validate'),
-    formatTime: require('./utils/formatTime'),
-    timeToSeconds: require('./utils/timeToSeconds'),
-    incorrectFormat: require('./utils/incorrectFormat')
+    validate,
+    formatTime,
+    timeToSeconds,
+    incorrectFormat,
   },
 
   // Methods for all stored timrs.
@@ -64,7 +67,7 @@ const init = Object.assign(
     stopAll,
     isRunning,
     removeFromStore,
-    destroyAll
+    destroyAll,
   }
 );
 

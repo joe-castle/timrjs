@@ -1,5 +1,3 @@
-'use strict';
-
 /**
  * @description Checks the provided time for correct formatting.
  * See incorrectFormat-test.js for examples of correct and incorrect formatting.

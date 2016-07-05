@@ -1,10 +1,10 @@
-'use strict';
-
 const EventEmitter = require('./EventEmitter');
 
 const buildOptions = require('./buildOptions');
 const validate = require('./validate');
 const errors = require('./utils/errors');
+const removeFromStore = require('./store').removeFromStore;
+const formatTime = require('./utils/formatTime');
 
 /**
  * @description Factory function for formatTime and formatStartTime
@@ -14,8 +14,8 @@ const errors = require('./utils/errors');
  * @return {Function} Formattime function closed over above value.
  */
 const createFormatTime = time => (
-  function() {
-    return require('./utils/formatTime')(
+  function createdFormatTime() {
+    return formatTime(
       this[time],
       this.options.separator,
       this.options.outputFormat,
@@ -47,7 +47,7 @@ function Timr(startTime, options) {
  * @description Countdown function.
  * Bound to a setInterval when start() is called.
  */
-Timr.countdown = function() {
+Timr.countdown = function countdown() {
   this.currentTime -= 1;
 
   this.emit(
@@ -69,7 +69,7 @@ Timr.countdown = function() {
  * @description Stopwatch function.
  * Bound to a setInterval when start() is called.
  */
-Timr.stopwatch = function() {
+Timr.stopwatch = function stopwatch() {
   this.currentTime += 1;
 
   this.emit(
@@ -165,7 +165,7 @@ Timr.prototype = Object.assign(Object.create(EventEmitter.prototype), {
   destroy() {
     this.clear().removeAllListeners();
 
-    require('./store').removeFromStore(this);
+    removeFromStore(this);
 
     return this;
   },
@@ -297,7 +297,7 @@ Timr.prototype = Object.assign(Object.create(EventEmitter.prototype), {
    */
   isRunning() {
     return this.running;
-  }
+  },
 });
 
 module.exports = Timr;

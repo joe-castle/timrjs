@@ -1,6 +1,4 @@
-(function() {
-  'use strict';
-
+(function () {
   /**
    * @description Object.assign polyfill
    *
@@ -8,13 +6,13 @@
    *
    * @return {Object} The modified target object.
    */
-  Object.assign = Object.assign || function(target) {
-    var output = Object(target);
+  Object.assign = Object.assign || function assign(target, ...args) {
+    const output = Object(target);
 
-    for (var index = 1; index < arguments.length; index++) {
-      var source = arguments[index];
+    for (let index = 1; index < args.length; index++) {
+      const source = args[index];
       if (source !== undefined && source !== null) {
-        for (var nextKey in source) {
+        for (const nextKey in source) {
           if (source.hasOwnProperty(nextKey)) {
             output[nextKey] = source[nextKey];
           }
@@ -23,4 +21,4 @@
     }
     return output;
   };
-})();
+}());

@@ -80,12 +80,12 @@ describe('Timr Class', () => {
       timer.ticker(() => {});
       timer.finish(() => {});
 
-      expect(timer._events.ticker.length).to.equal(2);
-      expect(timer._events.finish.length).to.equal(1);
+      expect(timer.events.ticker.length).to.equal(2);
+      expect(timer.events.finish.length).to.equal(1);
 
       timer.destroy();
 
-      expect(timer._events).to.be.empty;
+      expect(timer.events).to.be.empty;
     });
     it('Removes the timer from the store', () => {
       const timer = store.add(new Timr(600));

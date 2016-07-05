@@ -1,5 +1,3 @@
-'use strict';
-
 /**
  * @description Creates an EventEmitter.
  *
@@ -9,7 +7,7 @@
  * no real error checking.
  */
 function EventEmitter() {
-  this._events = {};
+  this.events = {};
 }
 
 EventEmitter.prototype = {
@@ -23,11 +21,11 @@ EventEmitter.prototype = {
    * @param {Function} listener - The event listener.
    */
   on(event, listener) {
-    if (!this._events[event]) {
-      this._events[event] = [];
+    if (!this.events[event]) {
+      this.events[event] = [];
     }
 
-    this._events[event].push(listener);
+    this.events[event].push(listener);
   },
 
   /**
@@ -37,8 +35,8 @@ EventEmitter.prototype = {
    * @param {String} event - The event to emit.
    */
   emit(event, ...args) {
-    if (this._events[event]) {
-      this._events[event].forEach(listener => {
+    if (this.events[event]) {
+      this.events[event].forEach(listener => {
         listener.apply(this, args);
       });
     }
@@ -48,8 +46,8 @@ EventEmitter.prototype = {
    * @description Removes all listeners.
    */
   removeAllListeners() {
-    this._events = {};
-  }
+    this.events = {};
+  },
 };
 
 module.exports = EventEmitter;

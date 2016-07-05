@@ -1,18 +1,7 @@
 {
-  "extends": [
-    "eslint:recommended",
-    "google"
-  ],
-  "parserOption": {
-    "ecmaVersion": 6
-  },
-  "env": {
-    "browser": true,
-    "mocha": true,
-    "node": true
-  },
+  "extends": "airbnb-base",
   rules: {
-    "no-nested-ternary": 0,
-    "no-console": 0
+    "no-nested-ternary": 1,
+    "no-param-reassign": 1
   }
 }

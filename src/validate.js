@@ -1,4 +1,6 @@
-'use strict';
+const errors = require('./utils/errors');
+const timeToSeconds = require('./utils/timeToSeconds');
+const incorrectFormat = require('./utils/incorrectFormat');
 
 /**
  * @description Validates the provded time
@@ -18,14 +20,14 @@
  */
 
 module.exports = time => {
-  const errors = require('./utils/errors')(time);
+  const error = errors(time);
 
   if (Number(time) < 0) {
-    throw errors('invalidTime');
+    throw error('invalidTime');
   }
 
   if (Number(time) > 3599999) {
-    throw errors('maxTime');
+    throw error('maxTime');
   }
 
   if (typeof time === 'string') {
@@ -34,13 +36,13 @@ module.exports = time => {
       time = time.replace(/^(\d+)h$/i, '$1:00:00');
     } else if (
       isNaN(Number(time)) &&
-      require('./utils/incorrectFormat')(time)
+      incorrectFormat(time)
     ) {
-      throw errors('invalidTime');
+      throw error('invalidTime');
     }
   } else if (typeof time !== 'number' || isNaN(time)) {
-    throw errors('invalidTimeType');
+    throw error('invalidTimeType');
   }
 
-  return require('./utils/timeToSeconds')(time);
+  return timeToSeconds(time);
 };

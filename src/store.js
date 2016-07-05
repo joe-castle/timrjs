@@ -1,6 +1,4 @@
-'use strict';
-
-module.exports = (function() {
+module.exports = (function () {
   // Array to store all timrs.
   let timrs = [];
 
@@ -37,6 +35,6 @@ module.exports = (function() {
     destroyAll: () => {
       timrs.forEach(timr => timr.destroy());
       timrs = [];
-    }
+    },
   };
-})();
+}());

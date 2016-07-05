@@ -1,5 +1,3 @@
-'use strict';
-
 /**
  * @description Pads out single digit numbers in a string
  * with a 0 at the beginning. Primarly used for time units - 00:00:00.

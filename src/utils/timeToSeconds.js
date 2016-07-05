@@ -1,5 +1,3 @@
-'use strict';
-
 /**
  * @description Converts time format (HH:MM:SS) into seconds.
  *

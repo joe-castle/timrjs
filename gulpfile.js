@@ -11,6 +11,7 @@ const source = require('vinyl-source-stream');
 const eslint = require('gulp-eslint');
 const through2 = require('through2');
 const browserify = require('browserify');
+const friendlyFormatter = require('eslint-friendly-formatter');
 
 const version = require('./package.json').version;
 
@@ -75,7 +76,7 @@ const addProdErrors = pipeFactory(
 gulp.task('lint', () => (
   gulp.src('./src/**/*.js')
     .pipe(eslint())
-    .pipe(eslint.format())
+    .pipe(eslint.format(friendlyFormatter))
     .pipe(eslint.failAfterError())
 ));
 
