@@ -1,4 +1,5 @@
 const errors = require('./utils/errors');
+const objectAssign = require('object-assign');
 
 /**
  * @description Builds an options object from default and custom options.
@@ -44,7 +45,7 @@ module.exports = (options, timr) => {
     }
   }
 
-  return Object.assign(
+  return objectAssign(
     timr.options || { formatType: 'h', outputFormat: 'mm:ss', separator: ':' },
     options
   );

@@ -1,9 +1,8 @@
-require('./polyfills');
-
 const validate = require('./validate');
 const formatTime = require('./utils/formatTime');
 const timeToSeconds = require('./utils/timeToSeconds');
 const incorrectFormat = require('./utils/incorrectFormat');
+const objectAssign = require('object-assign')
 
 const Timr = require('./Timr');
 const {
@@ -17,7 +16,7 @@ const {
   destroyAll,
 } = require('./store');
 
-const init = Object.assign(
+const init = objectAssign(
   /**
    * @description Creates a new Timr object.
    *

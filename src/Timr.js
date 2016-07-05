@@ -5,6 +5,7 @@ const validate = require('./validate');
 const errors = require('./utils/errors');
 const removeFromStore = require('./store').removeFromStore;
 const formatTime = require('./utils/formatTime');
+const objectAssign = require('object-assign');
 
 /**
  * @description Factory function for formatTime and formatStartTime
@@ -85,7 +86,7 @@ Timr.stopwatch = function stopwatch() {
   }
 };
 
-Timr.prototype = Object.assign(Object.create(EventEmitter.prototype), {
+Timr.prototype = objectAssign(Object.create(EventEmitter.prototype), {
 
   constructor: Timr,
 
