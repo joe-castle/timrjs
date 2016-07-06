@@ -1,5 +1,3 @@
-const zeroPad = require('./zeroPad');
-
 /**
  * @description Converts seconds to time format.
  *
@@ -10,10 +8,21 @@ const zeroPad = require('./zeroPad');
  *
  * @return {String} The formatted time.
  */
-module.exports = function formatTime(seconds, separator, outputFormat, formatType) {
-  formatType = formatType || 'h';
-  outputFormat = outputFormat || 'mm:ss';
-  separator = separator || ':';
+function formatTime(seconds, separator = ':', outputFormat = 'mm:ss', formatType = 'h') {
+
+  /**
+   * @description Creates a timestring.
+   * Created inside formatTime to have access to its arguments,
+   *
+   * @param {Array} [...args] - All arguments to be processed
+   *
+   * @return {String} The compiled time string.
+   */
+  function createTimeString(...args) {
+    return args.filter(value => value !== false)
+      .map(value => value < 10 ? `0${value}` : value)
+      .join(separator)
+  }
 
   if (formatType === 's') {
     return `${seconds}`;
@@ -28,26 +37,25 @@ module.exports = function formatTime(seconds, separator, outputFormat, formatTyp
     if (hours >= 1 && /[h]/i.test(formatType)) {
       hours = Math.floor(hours);
 
-      return zeroPad(
-        hours +
-        separator +
-        (minutes - hours * 60) +
-        separator +
-        (seconds - minutes * 60)
+      return createTimeString(
+        hours,
+        minutes - hours * 60,
+        seconds - minutes * 60
       );
     }
 
-    return zeroPad(
-      (/^HH:MM:SS$/i.test(outputFormat) ? `0${separator}` : '') +
-      minutes +
-      separator +
-      (seconds - minutes * 60)
+    return createTimeString(
+      /HH:MM:SS/i.test(outputFormat) && 0,
+      minutes,
+      seconds - minutes * 60
     );
   }
 
-  return zeroPad(
-    (/^HH:MM:SS$/i.test(outputFormat) ? `0${separator}0${separator}` :
-    /^MM:SS$/i.test(outputFormat) ? `0${separator}` : '') +
+  return createTimeString(
+    /HH:MM:SS/i.test(outputFormat) && 0,
+    /MM:SS/i.test(outputFormat) && 0,
     seconds
   );
 };
+
+module.exports = formatTime;

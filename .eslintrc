@@ -4,7 +4,6 @@
     "mocha": true
   },
   "rules": {
-    "no-nested-ternary": 1,
     "no-param-reassign": 1
   }
 }
