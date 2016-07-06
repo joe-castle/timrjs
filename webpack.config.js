@@ -4,7 +4,7 @@ const webpack = require('webpack');
 const version = require('./package.json').version;
 
 const env = process.env.NODE_ENV;
-let bannerText `/**
+let bannerText = `/**
   * TimrJS v${version}
   * https://github.com/joesmith100/timrjs
   * https://www.npmjs.com/package/timrjs
@@ -34,12 +34,14 @@ const config = {
   },
 };
 
-if (env) {
+if (env === 'production') {
   bannerText = `/* TimrJS v${version} | (c) 2016 Joe Smith | https://github.com/joesmith100/timrjs */`;
-  
+
   config.plugins.push(new webpack.optimize.UglifyJsPlugin());
 }
 
-config.plugins.push(new webpack.BannerPlugin(bannerText));
+config.plugins.push(
+  new webpack.BannerPlugin(bannerText, { raw: true })
+);
 
 module.exports = config;
