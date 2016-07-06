@@ -27,7 +27,7 @@ const funcWrapper = `/**
  * https://github.com/joesmith100/timrjs
  * https://www.npmjs.com/package/timrjs
  *
- * Compatible with Browsers, NodeJS (CommonJS) and RequireJS.
+ * Compatible with Browsers, Node.js (CommonJS) and RequireJS.
  *
  * Copyright (c) 2016 Joe Smith
  * Released under the MIT license
