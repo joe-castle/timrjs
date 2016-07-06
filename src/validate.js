@@ -27,9 +27,12 @@ module.exports = time => {
   }
 
   invariant(
-    typeof time === 'number' || typeof time === 'string' ||
-    (!isNaN(time) && time !== Infinity),
-    `Expected time to be a string or number, instead got: ${typeof time}`
+    (!isNaN(time) && time !== Infinity && time !== -Infinity) &&
+    typeof time === 'number' || typeof time === 'string',
+    `Expected time to be a string or number, instead got: ${
+      // Passes correct type, including null, NaN and Infinity
+      typeof time === 'number' || time === null ? time : typeof time
+    }`
   );
 
   invariant(
@@ -37,37 +40,15 @@ module.exports = time => {
     `Expected a time string or a number, instead got: ${time}`
   );
 
-  // invariant(
-  //   incorrectFormat(time),
-  //   `IN: Expected a time string or a number, instead got: ${time}`
-  // );
+  invariant(
+    correctFormat(time),
+    `Expected a time string or a number, instead got: ${time}`
+  );
 
   invariant(
     timeToSeconds(time) <= 3599999,
     'Sorry, we don\'t support any time over 999:59:59.'
   );
-
-  // if (Number(time) < 0) {
-  //   throw error('invalidTime');
-  // }
-  //
-  // if (Number(time) > 3599999) {
-  //   throw error('maxTime');
-  // }
-  //
-  // if (typeof time === 'string') {
-  //   if (/^\d+[mh]$/i.test(time)) {
-  //     time = time.replace(/^(\d+)m$/i, '$1:00');
-  //     time = time.replace(/^(\d+)h$/i, '$1:00:00');
-  //   } else if (
-  //     isNaN(Number(time)) &&
-  //     incorrectFormat(time)
-  //   ) {
-  //     throw error('invalidTime');
-  //   }
-  // } else if (typeof time !== 'number' || isNaN(time)) {
-  //   throw error('invalidTimeType');
-  // }
 
   return timeToSeconds(time);
 };

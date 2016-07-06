@@ -8,6 +8,10 @@
  */
 
 module.exports = time => {
+  if (typeof time === 'number') {
+    return true;
+  }
+
   if (typeof time !== 'string') {
     return false;
   }
