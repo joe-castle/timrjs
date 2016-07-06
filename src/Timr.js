@@ -1,5 +1,4 @@
 const objectAssign = require('object-assign');
-const invariant = require('invariant');
 
 const EventEmitter = require('./EventEmitter');
 
@@ -186,10 +185,9 @@ Timr.prototype = objectAssign(Object.create(EventEmitter.prototype), {
    * @return {Object} Returns a reference to the Timr so calls can be chained.
    */
   ticker(fn) {
-    invariant(
-      typeof fn === 'function',
-      `Expected ticker to be a function, instead got: ${typeof fn}`
-    );
+    if(typeof fn !== 'function') {
+      throw new Error(`Expected ticker to be a function, instead got: ${typeof fn}`)
+    }
 
     this.on('ticker', fn);
 
@@ -210,10 +208,9 @@ Timr.prototype = objectAssign(Object.create(EventEmitter.prototype), {
    * @return {Object} Returns a reference to the Timr so calls can be chained.
    */
   finish(fn) {
-    invariant(
-      typeof fn === 'function',
-      `Expected finish to be a function, instead got: ${typeof fn}`
-    );
+    if(typeof fn !== 'function') {
+      throw new Error(`Expected finish to be a function, instead got: ${typeof fn}`)
+    }
 
     this.on('finish', fn);
 

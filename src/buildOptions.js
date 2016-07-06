@@ -1,5 +1,4 @@
 const objectAssign = require('object-assign');
-const invariant = require('invariant');
 
 /**
  * @description Builds an options object from default and custom options.
@@ -17,36 +16,41 @@ module.exports = (options, timr) => {
 
     // Error checking for separator.
     if (separator) {
-      invariant(
-        typeof separator === 'string',
-        `Expected separator to be a string, instead got: ${typeof separator}`
-      );
+      if(typeof separator !== 'string') {
+        throw new Error(
+          `Expected separator to be a string, instead got: ${typeof separator}`
+        );
+      }
     }
 
     // Error checking for outputFormat.
     if (outputFormat) {
-      invariant(
-        typeof outputFormat === 'string',
-        `Expected outputFormat to be a string, instead got: ${typeof outputFormat}`
-      );
+      if(typeof outputFormat !== 'string') {
+        throw new Error(
+          `Expected outputFormat to be a string, instead got: ${typeof outputFormat}`
+        );
+      }
 
-      invariant(
-        /^(hh:)?(mm:)?ss$/i.test(outputFormat),
-        `Expected outputFormat to be: hh:mm:ss, mm:ss (default) or ss; instead got: ${outputFormat}`
-      );
+      if (!/^(hh:)?(mm:)?ss$/i.test(outputFormat)) {
+        throw new Error(
+          `Expected outputFormat to be: hh:mm:ss, mm:ss (default) or ss; instead got: ${outputFormat}`
+        );
+      }
     }
 
     // Error checking for formatType.
     if (formatType) {
-      invariant(
-        typeof formatType === 'string',
-        `Expected formatType to be a string, instead got: ${typeof formatType}`
-      );
+      if (typeof formatType !== 'string') {
+        throw new Error(
+          `Expected formatType to be a string, instead got: ${typeof formatType}`
+        );
+      }
 
-      invariant(
-        /^[hms]$/i.test(formatType),
-        `Expected formatType to be: h, m or s; instead got: ${formatType}`
-      );
+      if(!/^[hms]$/i.test(formatType)) {
+        throw new Error(
+          `Expected formatType to be: h, m or s; instead got: ${formatType}`
+        );
+      }
     }
   }
 

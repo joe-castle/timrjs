@@ -1,5 +1,3 @@
-const invariant = require('invariant');
-
 const timeToSeconds = require('./utils/timeToSeconds');
 const correctFormat = require('./utils/correctFormat');
 
@@ -26,29 +24,30 @@ module.exports = time => {
     time = time.replace(/^(\d+)h$/i, '$1:00:00');
   }
 
-  invariant(
-    (!isNaN(time) && time !== Infinity && time !== -Infinity) &&
-    typeof time === 'number' || typeof time === 'string',
-    `Expected time to be a string or number, instead got: ${
-      // Passes correct type, including null, NaN and Infinity
-      typeof time === 'number' || time === null ? time : typeof time
-    }`
-  );
+  if (
+    !((!isNaN(time) && time !== Infinity && time !== -Infinity)
+    && typeof time === 'number'
+    || typeof time === 'string')
+  ) {
+    throw new Error(
+      `Expected time to be a string or number, instead got: ${
+        // Passes correct type, including null, NaN and Infinity
+        typeof time === 'number' || time === null ? time : typeof time
+      }`
+    );
+  }
 
-  invariant(
-    isNaN(Number(time)) || Number(time) >= 0,
-    `Expected a time string or a number, instead got: ${time}`
-  );
+  if (!(isNaN(Number(time)) || Number(time) >= 0)) {
+    throw new Error(`Expected a time string or a number, instead got: ${time}`)
+  }
 
-  invariant(
-    correctFormat(time),
-    `Expected a time string or a number, instead got: ${time}`
-  );
+  if (!correctFormat(time)) {
+    throw new Error( `Expected a time string or a number, instead got: ${time}`)
+  }
 
-  invariant(
-    timeToSeconds(time) <= 3599999,
-    'Sorry, we don\'t support any time over 999:59:59.'
-  );
+  if (timeToSeconds(time) > 3599999) {
+    throw new Error('Sorry, we don\'t support any time over 999:59:59.')
+  }
 
   return timeToSeconds(time);
 };
