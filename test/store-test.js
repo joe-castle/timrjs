@@ -1,7 +1,7 @@
-const expect = require('chai').expect;
+import { expect } from 'chai';
 
-const store = require('../src/store');
-const Timr = require('../src/Timr');
+import store from '../src/store';
+import Timr from '../src/Timr';
 
 describe('Store', () => {
   afterEach(() => {

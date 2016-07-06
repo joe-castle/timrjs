@@ -1,10 +1,13 @@
-const validate = require('./validate');
-const formatTime = require('./utils/formatTime');
-const timeToSeconds = require('./utils/timeToSeconds');
-const correctFormat = require('./utils/correctFormat');
-const objectAssign = require('object-assign');
+import objectAssign from 'object-assign';
 
-const Timr = require('./Timr');
+import validate from './validate';
+import formatTime from './utils/formatTime';
+import timeToSeconds from './utils/timeToSeconds';
+import correctFormat from './utils/correctFormat';
+import store from './store';
+
+import Timr from './Timr';
+
 const {
   add,
   getAll,
@@ -14,7 +17,7 @@ const {
   isRunning,
   removeFromStore,
   destroyAll,
-} = require('./store');
+} = store;
 
 const init = objectAssign(
   /**
@@ -70,4 +73,4 @@ const init = objectAssign(
   }
 );
 
-module.exports = init;
+export default init;

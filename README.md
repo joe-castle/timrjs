@@ -207,9 +207,9 @@ Timr.formatTime(600);
 // '10:00'
 Timr.formatTime(600, '-');
 // '10-00'
-Timr.formatTime(600, null, 'HH:MM:SS');
+Timr.formatTime(600, undefined, 'HH:MM:SS');
 // '00:10:00'
-Timr.formatTime(7200, null, null, 'm');
+Timr.formatTime(7200, undefined, undefined, 'm');
 // '120:00'
 
 Timr.timeToSeconds('10:00');

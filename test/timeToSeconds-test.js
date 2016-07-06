@@ -1,6 +1,6 @@
-const expect = require('chai').expect;
+import { expect } from 'chai';
 
-const timeToSeconds = require('../src/utils/timeToSeconds');
+import timeToSeconds from '../src/utils/timeToSeconds';
 
 describe('Time To Seconds function', () => {
   it('Returns the converted the provided time (string) to seconds (number)',

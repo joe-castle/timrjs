@@ -1,12 +1,13 @@
-const chai = require('chai');
-const dirtyChai = require('dirty-chai');
+import chai from 'chai';
+import dirtyChai from 'dirty-chai';
+
+import init from '../src/index';
+import Timr from '../src/Timr';
 
 chai.use(dirtyChai);
 
-const expect = chai.expect;
+const { expect } = chai;
 
-const init = require('../src/index');
-const Timr = require('../src/Timr');
 
 describe('Index function', () => {
   afterEach(() => {

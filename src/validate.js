@@ -1,5 +1,5 @@
-const timeToSeconds = require('./utils/timeToSeconds');
-const correctFormat = require('./utils/correctFormat');
+import timeToSeconds from './utils/timeToSeconds';
+import correctFormat from './utils/correctFormat';
 
 /**
  * @description Validates the provded time
@@ -17,8 +17,7 @@ const correctFormat = require('./utils/correctFormat');
  * @returns {Number} - The original number or the converted number if
  * a time string was provided.
  */
-
-module.exports = time => {
+export default function validate(time) {
   if (/^\d+[mh]$/i.test(time)) {
     time = time.replace(/^(\d+)m$/i, '$1:00');
     time = time.replace(/^(\d+)h$/i, '$1:00:00');
@@ -50,4 +49,4 @@ module.exports = time => {
   }
 
   return timeToSeconds(time);
-};
+}

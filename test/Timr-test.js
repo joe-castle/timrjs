@@ -1,12 +1,12 @@
-const chai = require('chai');
-const dirtyChai = require('dirty-chai');
+import chai from 'chai';
+import dirtyChai from 'dirty-chai';
+
+import Timr from '../src/Timr';
+import store from '../src/store';
 
 chai.use(dirtyChai);
 
-const expect = chai.expect;
-
-const Timr = require('../src/Timr');
-const store = require('../src/store');
+const { expect } = chai;
 
 describe('Timr Class', () => {
   describe('Timr instantiation', () => {

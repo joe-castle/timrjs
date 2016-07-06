@@ -9,7 +9,7 @@
  *
  * @return {Number} - The time in seconds.
  */
-module.exports = time => {
+export default function timeToSeconds(time) {
   if (typeof time === 'number' && !isNaN(time)) {
     return Math.round(time);
   }
@@ -34,4 +34,4 @@ module.exports = time => {
       return prev + Number(curr);
     }, 0)
   );
-};
+}

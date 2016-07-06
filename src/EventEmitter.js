@@ -50,4 +50,4 @@ EventEmitter.prototype = {
   },
 };
 
-module.exports = EventEmitter;
+export default EventEmitter;

@@ -1,6 +1,6 @@
-const expect = require('chai').expect;
+import { expect } from 'chai';
 
-const buildOptions = require('../src/buildOptions');
+import buildOptions from '../src/buildOptions';
 
 describe('Build Options Function', () => {
   it('Returns an object with default options.', () => {

@@ -8,8 +8,7 @@
  *
  * @return {String} The formatted time.
  */
-function formatTime(seconds, separator = ':', outputFormat = 'mm:ss', formatType = 'h') {
-
+export default function formatTime(seconds, separator = ':', outputFormat = 'mm:ss', formatType = 'h') {
   /**
    * @description Creates a timestring.
    * Created inside formatTime to have access to its arguments,
@@ -20,8 +19,8 @@ function formatTime(seconds, separator = ':', outputFormat = 'mm:ss', formatType
    */
   function createTimeString(...args) {
     return args.filter(value => value !== false)
-      .map(value => value < 10 ? `0${value}` : value)
-      .join(separator)
+      .map((value) => (value < 10 ? `0${value}` : value))
+      .join(separator);
   }
 
   if (formatType === 's') {
@@ -56,6 +55,4 @@ function formatTime(seconds, separator = ':', outputFormat = 'mm:ss', formatType
     /MM:SS/i.test(outputFormat) && 0,
     seconds
   );
-};
-
-module.exports = formatTime;
+}

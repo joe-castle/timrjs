@@ -1,4 +1,4 @@
-const objectAssign = require('object-assign');
+import objectAssign from 'object-assign';
 
 /**
  * @description Builds an options object from default and custom options.
@@ -10,7 +10,7 @@ const objectAssign = require('object-assign');
  *
  * @return {Object} Compiled options from default and custom.
  */
-module.exports = (options, timr) => {
+export default function buildOptions(options, timr) {
   if (options) {
     const { separator, outputFormat, formatType } = options;
 
@@ -33,7 +33,7 @@ module.exports = (options, timr) => {
 
       if (!/^(hh:)?(mm:)?ss$/i.test(outputFormat)) {
         throw new Error(
-        `Expected outputFormat to be: hh:mm:ss, mm:ss (default) or ss; instead got: ${outputFormat}`
+          `Expected outputFormat to be: hh:mm:ss, mm:ss (default) or ss; instead got: ${outputFormat}`
         );
       }
     }
@@ -58,4 +58,4 @@ module.exports = (options, timr) => {
     timr.options || { formatType: 'h', outputFormat: 'mm:ss', separator: ':' },
     options
   );
-};
+}

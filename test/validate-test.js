@@ -1,6 +1,6 @@
-const expect = require('chai').expect;
+import { expect } from 'chai';
 
-const validate = require('../src/validate');
+import validate from '../src/validate';
 
 describe('Validate function', () => {
   it('Throws an error if provided time is not valid', () => {

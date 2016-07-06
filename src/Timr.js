@@ -1,11 +1,11 @@
-const objectAssign = require('object-assign');
+import objectAssign from 'object-assign';
 
-const EventEmitter = require('./EventEmitter');
+import EventEmitter from './EventEmitter';
 
-const buildOptions = require('./buildOptions');
-const validate = require('./validate');
-const removeFromStore = require('./store').removeFromStore;
-const formatTime = require('./utils/formatTime');
+import buildOptions from './buildOptions';
+import validate from './validate';
+import store from './store';
+import formatTime from './utils/formatTime';
 
 /**
  * @description Factory function for formatTime and formatStartTime
@@ -166,7 +166,7 @@ Timr.prototype = objectAssign(Object.create(EventEmitter.prototype), {
   destroy() {
     this.clear().removeAllListeners();
 
-    removeFromStore(this);
+    store.removeFromStore(this);
 
     return this;
   },
@@ -301,4 +301,4 @@ Timr.prototype = objectAssign(Object.create(EventEmitter.prototype), {
   },
 });
 
-module.exports = Timr;
+export default Timr;

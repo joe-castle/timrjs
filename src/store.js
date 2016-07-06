@@ -1,4 +1,4 @@
-module.exports = (function () {
+export default (function () {
   // Array to store all timrs.
   let timrs = [];
 

@@ -334,11 +334,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ },
 /* 4 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ function(module, exports) {
 
 	'use strict';
-
-	var zeroPad = __webpack_require__(10);
 
 	/**
 	 * @description Converts seconds to time format.
@@ -350,10 +348,30 @@ return /******/ (function(modules) { // webpackBootstrap
 	 *
 	 * @return {String} The formatted time.
 	 */
-	module.exports = function formatTime(seconds, separator, outputFormat, formatType) {
-	  formatType = formatType || 'h';
-	  outputFormat = outputFormat || 'mm:ss';
-	  separator = separator || ':';
+	function formatTime(seconds) {
+	  var separator = arguments.length <= 1 || arguments[1] === undefined ? ':' : arguments[1];
+	  var outputFormat = arguments.length <= 2 || arguments[2] === undefined ? 'mm:ss' : arguments[2];
+	  var formatType = arguments.length <= 3 || arguments[3] === undefined ? 'h' : arguments[3];
+
+	  /**
+	   * @description Creates a timestring.
+	   * Created inside formatTime to have access to its arguments,
+	   *
+	   * @param {Array} [...args] - All arguments to be processed
+	   *
+	   * @return {String} The compiled time string.
+	   */
+	  function createTimeString() {
+	    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+	      args[_key] = arguments[_key];
+	    }
+
+	    return args.filter(function (value) {
+	      return value !== false;
+	    }).map(function (value) {
+	      return value < 10 ? '0' + value : value;
+	    }).join(separator);
+	  }
 
 	  if (formatType === 's') {
 	    return '' + seconds;
@@ -368,14 +386,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	    if (hours >= 1 && /[h]/i.test(formatType)) {
 	      hours = Math.floor(hours);
 
-	      return zeroPad(hours + separator + (minutes - hours * 60) + separator + (seconds - minutes * 60));
+	      return createTimeString(hours, minutes - hours * 60, seconds - minutes * 60);
 	    }
 
-	    return zeroPad((/^HH:MM:SS$/i.test(outputFormat) ? '0' + separator : '') + minutes + separator + (seconds - minutes * 60));
+	    return createTimeString(/HH:MM:SS/i.test(outputFormat) && 0, minutes, seconds - minutes * 60);
 	  }
 
-	  return zeroPad((/^HH:MM:SS$/i.test(outputFormat) ? '0' + separator + '0' + separator : /^MM:SS$/i.test(outputFormat) ? '0' + separator : '') + seconds);
-	};
+	  return createTimeString(/HH:MM:SS/i.test(outputFormat) && 0, /MM:SS/i.test(outputFormat) && 0, seconds);
+	}
+
+	module.exports = formatTime;
 
 /***/ },
 /* 5 */
@@ -908,25 +928,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 
 	  return objectAssign(timr.options || { formatType: 'h', outputFormat: 'mm:ss', separator: ':' }, options);
-	};
-
-/***/ },
-/* 10 */
-/***/ function(module, exports) {
-
-	"use strict";
-
-	/**
-	 * @description Pads out single digit numbers in a string
-	 * with a 0 at the beginning. Primarly used for time units - 00:00:00.
-	 *
-	 * @param {String} str - String to be padded.
-	 * @return {String} A 0 padded string or the the original string.
-	 */
-	module.exports = function (str) {
-	  return str.replace(/\d+/g, function (match) {
-	    return Number(match) < 10 ? "0" + match : match;
-	  });
 	};
 
 /***/ }

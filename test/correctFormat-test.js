@@ -1,6 +1,6 @@
-const expect = require('chai').expect;
+import { expect } from 'chai';
 
-const correctFormat = require('../src/utils/correctFormat');
+import correctFormat from '../src/utils/correctFormat';
 
 describe('Correct Format function', () => {
   it('Returns true if the provided time is in the correct format', () => {
