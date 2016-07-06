@@ -39,7 +39,7 @@ describe('Index function', () => {
     expect(init.validate).to.exist();
     expect(init.formatTime).to.exist();
     expect(init.timeToSeconds).to.exist();
-    expect(init.incorrectFormat).to.exist();
+    expect(init.correctFormat).to.exist();
     expect(init.store).to.exist();
     expect(init.getAll).to.exist();
     expect(init.startAll).to.exist();

@@ -1,7 +1,7 @@
 const invariant = require('invariant');
 
 const timeToSeconds = require('./utils/timeToSeconds');
-const incorrectFormat = require('./utils/incorrectFormat');
+const correctFormat = require('./utils/correctFormat');
 
 /**
  * @description Validates the provded time
@@ -37,10 +37,10 @@ module.exports = time => {
     `Expected a time string or a number, instead got: ${time}`
   );
 
-  invariant(
-    incorrectFormat(time),
-    `IN: Expected a time string or a number, instead got: ${time}`
-  );
+  // invariant(
+  //   incorrectFormat(time),
+  //   `IN: Expected a time string or a number, instead got: ${time}`
+  // );
 
   invariant(
     timeToSeconds(time) <= 3599999,
