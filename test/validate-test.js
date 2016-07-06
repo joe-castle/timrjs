@@ -14,8 +14,11 @@ describe('Validate function', () => {
     expect(validate.bind(validate, NaN)).to.throw(
       'Expected time to be a string or number, instead got: NaN'
     );
+    expect(validate.bind(validate, Infinity)).to.throw(
+      'Expected time to be a string or number, instead got: NaN'
+    );
   });
-  it('Throws if the provided time in seconds is over a 999:59:59', () => {
+  it('Throws if the provided time is over a 999:59:59', () => {
     expect(validate.bind(validate, 3600000)).to.throw(Error);
     expect(validate.bind(validate, '3600000')).to.throw(Error);
     expect(validate.bind(validate, '3600000')).to.throw(
