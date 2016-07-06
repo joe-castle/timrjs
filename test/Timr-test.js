@@ -1,6 +1,9 @@
-'use strict';
+const chai = require('chai');
+const dirtyChai = require('dirty-chai');
 
-const expect = require('chai').expect;
+chai.use(dirtyChai);
+
+const expect = chai.expect;
 
 const Timr = require('../src/Timr');
 const store = require('../src/store');
@@ -29,13 +32,13 @@ describe('Timr Class', () => {
         });
     });
     it('Starts the timer after a delay', done => {
-      const startTime = Date.now()
+      const startTime = Date.now();
       const timer = new Timr(600).start(1000)
-        .ticker(formattedTime => {
-          expect(Date.now() - startTime >= 2000)
-          timer.stop()
+        .ticker(() => {
+          expect(Date.now() - startTime >= 2000);
+          timer.stop();
           done();
-        })
+        });
     });
     it('Returns a reference to the Timr', () => {
       const timer = new Timr(600).start();
@@ -85,7 +88,7 @@ describe('Timr Class', () => {
 
       timer.destroy();
 
-      expect(timer.events).to.be.empty;
+      expect(timer.events).to.be.empty();
     });
     it('Removes the timer from the store', () => {
       const timer = store.add(new Timr(600));
@@ -181,14 +184,13 @@ describe('Timr Class', () => {
     });
     it(`Returns the currentTime formatted into a time string
       with a modified outputFormat`, () => {
-      expect(new Timr(600, {outputFormat: 'HH:MM:SS'}).formatTime())
-      .to.equal('00:10:00');
-      expect(new Timr(50, {outputFormat: 'SS'}).formatTime()).to.equal('50');
+      expect(new Timr(600, { outputFormat: 'HH:MM:SS' }).formatTime()).to.equal('00:10:00');
+      expect(new Timr(50, { outputFormat: 'SS' }).formatTime()).to.equal('50');
     });
     it(`Returns the currentTime formatted into a time string
       with a modifided separator`, () => {
-      expect(new Timr(600, {separator: '-'}).formatTime()).to.equal('10-00');
-      expect(new Timr(600, {separator: 'boop'}).formatTime())
+      expect(new Timr(600, { separator: '-' }).formatTime()).to.equal('10-00');
+      expect(new Timr(600, { separator: 'boop' }).formatTime())
         .to.equal('10boop00');
     });
   });
@@ -200,16 +202,16 @@ describe('Timr Class', () => {
     });
     it(`Returns the startTime formatted into a time string
       with a modified outputFormat`, () => {
-      expect(new Timr(600, {outputFormat: 'HH:MM:SS'}).formatStartTime())
+      expect(new Timr(600, { outputFormat: 'HH:MM:SS' }).formatStartTime())
         .to.equal('00:10:00');
-      expect(new Timr(50, {outputFormat: 'SS'}).formatStartTime())
+      expect(new Timr(50, { outputFormat: 'SS' }).formatStartTime())
         .to.equal('50');
     });
     it(`Returns the startTime formatted into a time string
       with a modifided separator`, () => {
-      expect(new Timr(600, {separator: '-'}).formatStartTime())
+      expect(new Timr(600, { separator: '-' }).formatStartTime())
         .to.equal('10-00');
-      expect(new Timr(600, {separator: 'boop'}).formatStartTime())
+      expect(new Timr(600, { separator: 'boop' }).formatStartTime())
         .to.equal('10boop00');
     });
   });
@@ -225,13 +227,13 @@ describe('Timr Class', () => {
     it('Changes the timrs options after creation.', () => {
       const timer = new Timr(600);
       expect(timer.formatTime()).to.equal('10:00');
-      timer.changeOptions({separator: '-', outputFormat: 'hh:mm:ss'});
+      timer.changeOptions({ separator: '-', outputFormat: 'hh:mm:ss' });
       expect(timer.formatTime()).to.equal('00-10-00');
     });
     it('Changes the timrs options after creation and merges with existing ones.', () => {
-      const timer = new Timr(600, {separator: '-'});
+      const timer = new Timr(600, { separator: '-' });
       expect(timer.formatTime()).to.equal('10-00');
-      timer.changeOptions({separator: '-', outputFormat: 'hh:mm:ss'});
+      timer.changeOptions({ separator: '-', outputFormat: 'hh:mm:ss' });
       expect(timer.formatTime()).to.equal('00-10-00');
     });
     it('Returns a reference to the Timr', () => {

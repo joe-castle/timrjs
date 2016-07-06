@@ -1,5 +1,3 @@
-'use strict';
-
 const expect = require('chai').expect;
 
 const zeroPad = require('../src/utils/zeroPad');

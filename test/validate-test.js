@@ -1,5 +1,3 @@
-'use strict';
-
 const expect = require('chai').expect;
 
 const validate = require('../src/validate');
@@ -21,7 +19,7 @@ describe('Validate function', () => {
     expect(validate.bind(validate, 3600000)).to.throw(Error);
     expect(validate.bind(validate, '3600000')).to.throw(Error);
     expect(validate.bind(validate, '3600000')).to.throw(
-      `Sorry, we don't support any time over 999:59:59.`
+      'Sorry, we don\'t support any time over 999:59:59.'
     );
   });
   it('Does not throw an error when the time is valid', () => {
