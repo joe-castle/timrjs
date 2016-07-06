@@ -8,24 +8,6 @@ import store from './store';
 import formatTime from './utils/formatTime';
 
 /**
- * @description Factory function for formatTime and formatStartTime
- *
- * @param {String} time - Either 'currentTime' or 'startTime'
- *
- * @return {Function} Formattime function closed over above value.
- */
-const createFormatTime = time => (
-  function createdFormatTime() {
-    return formatTime(
-      this[time],
-      this.options.separator,
-      this.options.outputFormat,
-      this.options.formatType
-    );
-  }
-);
-
-/**
  * @description Creates a Timr.
  *
  * @param {String|Number} startTime - The starting time for the timr object.
@@ -104,9 +86,9 @@ Timr.prototype = objectAssign(Object.create(EventEmitter.prototype), {
       const startFn = () => {
         this.running = true;
 
-        this.timer = this.startTime > 0 ?
-        setInterval(Timr.countdown.bind(this), 1000) :
-        setInterval(Timr.stopwatch.bind(this), 1000);
+        this.timer = this.startTime > 0
+          ? setInterval(Timr.countdown.bind(this), 1000)
+          : setInterval(Timr.stopwatch.bind(this), 1000);
       };
 
       if (delay) {
@@ -223,14 +205,14 @@ Timr.prototype = objectAssign(Object.create(EventEmitter.prototype), {
    *
    * @return {String} The formatted time.
    */
-  formatTime: createFormatTime('currentTime'),
-
-  /**
-   * @description Converts startTime to time format.
-   *
-   * @return {String} The formatted startTime.
-   */
-  formatStartTime: createFormatTime('startTime'),
+  formatTime(time = 'currentTime') {
+    return formatTime(
+      this[time],
+      this.options.separator,
+      this.options.outputFormat,
+      this.options.formatType
+    );
+  },
 
   /**
    * @description Returns the time elapsed in percent.
