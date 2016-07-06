@@ -67,27 +67,51 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
-	var validate = __webpack_require__(6);
-	var formatTime = __webpack_require__(4);
-	var timeToSeconds = __webpack_require__(5);
-	var correctFormat = __webpack_require__(3);
-	var objectAssign = __webpack_require__(1);
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
 
-	var Timr = __webpack_require__(8);
+	var _objectAssign = __webpack_require__(1);
 
-	var _require = __webpack_require__(2);
+	var _objectAssign2 = _interopRequireDefault(_objectAssign);
 
-	var add = _require.add;
-	var getAll = _require.getAll;
-	var startAll = _require.startAll;
-	var pauseAll = _require.pauseAll;
-	var stopAll = _require.stopAll;
-	var isRunning = _require.isRunning;
-	var removeFromStore = _require.removeFromStore;
-	var destroyAll = _require.destroyAll;
+	var _validate = __webpack_require__(6);
+
+	var _validate2 = _interopRequireDefault(_validate);
+
+	var _formatTime = __webpack_require__(4);
+
+	var _formatTime2 = _interopRequireDefault(_formatTime);
+
+	var _timeToSeconds = __webpack_require__(5);
+
+	var _timeToSeconds2 = _interopRequireDefault(_timeToSeconds);
+
+	var _correctFormat = __webpack_require__(3);
+
+	var _correctFormat2 = _interopRequireDefault(_correctFormat);
+
+	var _store = __webpack_require__(2);
+
+	var _store2 = _interopRequireDefault(_store);
+
+	var _Timr = __webpack_require__(8);
+
+	var _Timr2 = _interopRequireDefault(_Timr);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var add = _store2.default.add;
+	var getAll = _store2.default.getAll;
+	var startAll = _store2.default.startAll;
+	var pauseAll = _store2.default.pauseAll;
+	var stopAll = _store2.default.stopAll;
+	var isRunning = _store2.default.isRunning;
+	var removeFromStore = _store2.default.removeFromStore;
+	var destroyAll = _store2.default.destroyAll;
 
 
-	var init = objectAssign(
+	var init = (0, _objectAssign2.default)(
 	/**
 	 * @description Creates a new Timr object.
 	 *
@@ -97,7 +121,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @return {Object} A new Timr object.
 	 */
 	function (startTime, options) {
-	  var timr = new Timr(startTime, options);
+	  var timr = new _Timr2.default(startTime, options);
 
 	  // Stores timr if options.store is true. Overrides global setting.
 	  if (options) {
@@ -122,10 +146,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	// Exposed helper methods.
 	{
-	  validate: validate,
-	  formatTime: formatTime,
-	  timeToSeconds: timeToSeconds,
-	  correctFormat: correctFormat
+	  validate: _validate2.default,
+	  formatTime: _formatTime2.default,
+	  timeToSeconds: _timeToSeconds2.default,
+	  correctFormat: _correctFormat2.default
 	},
 
 	// Methods for all stored timrs.
@@ -140,7 +164,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  destroyAll: destroyAll
 	});
 
-	module.exports = init;
+	exports.default = init;
 
 /***/ },
 /* 1 */
@@ -237,7 +261,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	"use strict";
 
-	module.exports = function () {
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	exports.default = function () {
 	  // Array to store all timrs.
 	  var timrs = [];
 
@@ -306,6 +334,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.default = correctFormat;
 	/**
 	 * @description Checks the provided time for correct formatting.
 	 * See incorrectFormat-test.js for examples of correct and incorrect formatting.
@@ -315,7 +347,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @returns {Boolean} True if format is correct, false otherwise.
 	 */
 
-	module.exports = function (time) {
+	function correctFormat(time) {
 	  if (typeof time === 'number') {
 	    return true;
 	  }
@@ -330,7 +362,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  return time.length <= 3 && time.every(function (el) {
 	    return !isNaN(Number(el)) && Number(el) >= 0;
 	  });
-	};
+	}
 
 /***/ },
 /* 4 */
@@ -338,6 +370,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.default = formatTime;
 	/**
 	 * @description Converts seconds to time format.
 	 *
@@ -395,14 +431,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	  return createTimeString(/HH:MM:SS/i.test(outputFormat) && 0, /MM:SS/i.test(outputFormat) && 0, seconds);
 	}
 
-	module.exports = formatTime;
-
 /***/ },
 /* 5 */
 /***/ function(module, exports) {
 
 	'use strict';
 
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.default = timeToSeconds;
 	/**
 	 * @description Converts time format (HH:MM:SS) into seconds.
 	 *
@@ -414,7 +452,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 *
 	 * @return {Number} - The time in seconds.
 	 */
-	module.exports = function (time) {
+	function timeToSeconds(time) {
 	  if (typeof time === 'number' && !isNaN(time)) {
 	    return Math.round(time);
 	  }
@@ -437,7 +475,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    return prev + Number(curr);
 	  }, 0));
-	};
+	}
 
 /***/ },
 /* 6 */
@@ -445,10 +483,23 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
 	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
 
-	var timeToSeconds = __webpack_require__(5);
-	var correctFormat = __webpack_require__(3);
+	exports.default = validate;
+
+	var _timeToSeconds = __webpack_require__(5);
+
+	var _timeToSeconds2 = _interopRequireDefault(_timeToSeconds);
+
+	var _correctFormat = __webpack_require__(3);
+
+	var _correctFormat2 = _interopRequireDefault(_correctFormat);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	/**
 	 * @description Validates the provded time
@@ -466,8 +517,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @returns {Number} - The original number or the converted number if
 	 * a time string was provided.
 	 */
-
-	module.exports = function (time) {
+	function validate(time) {
 	  if (/^\d+[mh]$/i.test(time)) {
 	    time = time.replace(/^(\d+)m$/i, '$1:00');
 	    time = time.replace(/^(\d+)h$/i, '$1:00:00');
@@ -483,16 +533,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	    throw new Error('Expected a time string or a number, instead got: ' + time);
 	  }
 
-	  if (!correctFormat(time)) {
+	  if (!(0, _correctFormat2.default)(time)) {
 	    throw new Error('Expected a time string or a number, instead got: ' + time);
 	  }
 
-	  if (timeToSeconds(time) > 3599999) {
+	  if ((0, _timeToSeconds2.default)(time) > 3599999) {
 	    throw new Error('Sorry, we don\'t support any time over 999:59:59.');
 	  }
 
-	  return timeToSeconds(time);
-	};
+	  return (0, _timeToSeconds2.default)(time);
+	}
 
 /***/ },
 /* 7 */
@@ -500,6 +550,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	"use strict";
 
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
 	/**
 	 * @description Creates an EventEmitter.
 	 *
@@ -560,7 +613,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 	};
 
-	module.exports = EventEmitter;
+	exports.default = EventEmitter;
 
 /***/ },
 /* 8 */
@@ -568,16 +621,37 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
 	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
 
-	var objectAssign = __webpack_require__(1);
+	var _objectAssign = __webpack_require__(1);
 
-	var EventEmitter = __webpack_require__(7);
+	var _objectAssign2 = _interopRequireDefault(_objectAssign);
 
-	var buildOptions = __webpack_require__(9);
-	var validate = __webpack_require__(6);
-	var removeFromStore = __webpack_require__(2).removeFromStore;
-	var formatTime = __webpack_require__(4);
+	var _EventEmitter = __webpack_require__(7);
+
+	var _EventEmitter2 = _interopRequireDefault(_EventEmitter);
+
+	var _buildOptions = __webpack_require__(9);
+
+	var _buildOptions2 = _interopRequireDefault(_buildOptions);
+
+	var _validate = __webpack_require__(6);
+
+	var _validate2 = _interopRequireDefault(_validate);
+
+	var _store = __webpack_require__(2);
+
+	var _store2 = _interopRequireDefault(_store);
+
+	var _formatTime = __webpack_require__(4);
+
+	var _formatTime2 = _interopRequireDefault(_formatTime);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	/**
 	 * @description Factory function for formatTime and formatStartTime
@@ -588,7 +662,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 	var createFormatTime = function createFormatTime(time) {
 	  return function createdFormatTime() {
-	    return formatTime(this[time], this.options.separator, this.options.outputFormat, this.options.formatType);
+	    return (0, _formatTime2.default)(this[time], this.options.separator, this.options.outputFormat, this.options.formatType);
 	  };
 	};
 
@@ -602,11 +676,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * or, incorrect format.
 	 */
 	function Timr(startTime, options) {
-	  EventEmitter.call(this);
+	  _EventEmitter2.default.call(this);
 
 	  this.timer = null;
 	  this.running = false;
-	  this.startTime = validate(startTime);
+	  this.startTime = (0, _validate2.default)(startTime);
 	  this.currentTime = this.startTime;
 	  this.changeOptions(options);
 	}
@@ -641,7 +715,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 	};
 
-	Timr.prototype = objectAssign(Object.create(EventEmitter.prototype), {
+	Timr.prototype = (0, _objectAssign2.default)(Object.create(_EventEmitter2.default.prototype), {
 
 	  constructor: Timr,
 
@@ -725,7 +799,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  destroy: function destroy() {
 	    this.clear().removeAllListeners();
 
-	    removeFromStore(this);
+	    _store2.default.removeFromStore(this);
 
 	    return this;
 	  },
@@ -813,7 +887,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	   * @return {Object} Returns a reference to the Timr so calls can be chained.
 	   */
 	  changeOptions: function changeOptions(options) {
-	    this.options = buildOptions(options, this);
+	    this.options = (0, _buildOptions2.default)(options, this);
 
 	    return this;
 	  },
@@ -832,7 +906,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  setStartTime: function setStartTime(startTime) {
 	    this.clear();
 
-	    this.startTime = this.currentTime = validate(startTime);
+	    this.startTime = this.currentTime = (0, _validate2.default)(startTime);
 
 	    return this.formatTime();
 	  },
@@ -868,7 +942,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 	});
 
-	module.exports = Timr;
+	exports.default = Timr;
 
 /***/ },
 /* 9 */
@@ -876,9 +950,19 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
 	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
 
-	var objectAssign = __webpack_require__(1);
+	exports.default = buildOptions;
+
+	var _objectAssign = __webpack_require__(1);
+
+	var _objectAssign2 = _interopRequireDefault(_objectAssign);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	/**
 	 * @description Builds an options object from default and custom options.
@@ -890,7 +974,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 *
 	 * @return {Object} Compiled options from default and custom.
 	 */
-	module.exports = function (options, timr) {
+	function buildOptions(options, timr) {
 	  if (options) {
 	    var separator = options.separator;
 	    var outputFormat = options.outputFormat;
@@ -906,10 +990,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    // Error checking for outputFormat.
 	    if (outputFormat) {
-	      if (typeof outputFormat !== 'string') {
-	        throw new Error('Expected outputFormat to be a string, instead got: ' + (typeof outputFormat === 'undefined' ? 'undefined' : _typeof(outputFormat)));
-	      }
-
 	      if (!/^(hh:)?(mm:)?ss$/i.test(outputFormat)) {
 	        throw new Error('Expected outputFormat to be: hh:mm:ss, mm:ss (default) or ss; instead got: ' + outputFormat);
 	      }
@@ -917,18 +997,14 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    // Error checking for formatType.
 	    if (formatType) {
-	      if (typeof formatType !== 'string') {
-	        throw new Error('Expected formatType to be a string, instead got: ' + (typeof formatType === 'undefined' ? 'undefined' : _typeof(formatType)));
-	      }
-
 	      if (!/^[hms]$/i.test(formatType)) {
 	        throw new Error('Expected formatType to be: h, m or s; instead got: ' + formatType);
 	      }
 	    }
 	  }
 
-	  return objectAssign(timr.options || { formatType: 'h', outputFormat: 'mm:ss', separator: ':' }, options);
-	};
+	  return (0, _objectAssign2.default)(timr.options || { formatType: 'h', outputFormat: 'mm:ss', separator: ':' }, options);
+	}
 
 /***/ }
 /******/ ])

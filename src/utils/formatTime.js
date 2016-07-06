@@ -8,7 +8,12 @@
  *
  * @return {String} The formatted time.
  */
-export default function formatTime(seconds, separator = ':', outputFormat = 'mm:ss', formatType = 'h') {
+export default function formatTime(
+  seconds,
+  separator = ':',
+  outputFormat = 'mm:ss',
+  formatType = 'h'
+) {
   /**
    * @description Creates a timestring.
    * Created inside formatTime to have access to its arguments,

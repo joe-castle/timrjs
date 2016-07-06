@@ -27,7 +27,7 @@ export default function buildOptions(options, timr) {
     if (outputFormat) {
       if (!/^(hh:)?(mm:)?ss$/i.test(outputFormat)) {
         throw new Error(
-          `Expected outputFormat to be: hh:mm:ss, mm:ss (default) or ss; instead got: ${outputFormat}`
+        `Expected outputFormat to be: hh:mm:ss, mm:ss (default) or ss; instead got: ${outputFormat}`
         );
       }
     }
