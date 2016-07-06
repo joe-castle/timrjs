@@ -61,6 +61,7 @@
     "webpack": "^1.13.1"
   },
   "dependencies": {
+    "invariant": "^2.2.1",
     "object-assign": "^4.1.0"
   }
 }

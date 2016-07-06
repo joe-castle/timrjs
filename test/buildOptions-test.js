@@ -19,17 +19,14 @@ describe('Build Options Function', () => {
   });
 
   it('Throws an error when outputFormat is not a string', () => {
-    expect(buildOptions.bind(buildOptions, { outputFormat: {} })).to.throw(TypeError);
     expect(buildOptions.bind(buildOptions, { outputFormat: {} })).to.throw(
       'Expected outputFormat to be a string, instead got: object'
     );
   });
 
   it('Throws an error when outputFormat is invalid', () => {
-    expect(buildOptions.bind(buildOptions, { outputFormat: 'invalid' })).to.throw(Error);
     expect(buildOptions.bind(buildOptions, { outputFormat: 'invalid' })).to.throw(
-      'Expected outputFormat to be: hh:mm:ss, mm:ss (default) ' +
-      'or ss; instead got: invalid'
+      'Expected outputFormat to be: hh:mm:ss, mm:ss (default) or ss; instead got: invalid'
     );
   });
 
@@ -43,21 +40,18 @@ describe('Build Options Function', () => {
   });
 
   it('Throws an error if value provided to separator is not a string', () => {
-    expect(buildOptions.bind(buildOptions, { separator: () => {} })).to.throw(TypeError);
     expect(buildOptions.bind(buildOptions, { separator: () => {} })).to.throw(
       'Expected separator to be a string, instead got: function'
     );
   });
 
   it('Throws an error if formatType is not a string', () => {
-    expect(buildOptions.bind(buildOptions, { formatType: 5 })).to.throw(TypeError);
     expect(buildOptions.bind(buildOptions, { formatType: 5 })).to.throw(
       'Expected formatType to be a string, instead got: number'
     );
   });
 
   it('Throws an error if formatType is not h, m or s', () => {
-    expect(buildOptions.bind(buildOptions, { formatType: 'hey' })).to.throw(Error);
     expect(buildOptions.bind(buildOptions, { formatType: 'hey' })).to.throw(
       'Expected formatType to be: h, m or s; instead got: hey'
     );

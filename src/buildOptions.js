@@ -1,5 +1,5 @@
-const errors = require('./utils/errors');
 const objectAssign = require('object-assign');
+const invariant = require('invariant');
 
 /**
  * @description Builds an options object from default and custom options.
@@ -13,35 +13,40 @@ const objectAssign = require('object-assign');
  */
 module.exports = (options, timr) => {
   if (options) {
-    const sep = options.separator;
-    const outF = options.outputFormat;
-    const forT = options.formatType;
+    const { separator, outputFormat, formatType } = options;
 
-    // Error checking for seperator.
-    if (sep) {
-      if (typeof sep !== 'string') {
-        throw errors(sep)('separatorType');
-      }
+    // Error checking for separator.
+    if (separator) {
+      invariant(
+        typeof separator === 'string',
+        `Expected separator to be a string, instead got: ${typeof separator}`
+      );
     }
 
     // Error checking for outputFormat.
-    if (outF) {
-      if (typeof outF !== 'string') {
-        throw errors(outF)('outputFormatType');
-      }
-      if (!/^(hh:)?(mm:)?ss$/i.test(outF)) {
-        throw errors(outF)('invalidOutputFormat');
-      }
+    if (outputFormat) {
+      invariant(
+        typeof outputFormat === 'string',
+        `Expected outputFormat to be a string, instead got: ${typeof outputFormat}`
+      );
+
+      invariant(
+        /^(hh:)?(mm:)?ss$/i.test(outputFormat),
+        `Expected outputFormat to be: hh:mm:ss, mm:ss (default) or ss; instead got: ${outputFormat}`
+      );
     }
 
     // Error checking for formatType.
-    if (forT) {
-      if (typeof forT !== 'string') {
-        throw errors(forT)('formatType');
-      }
-      if (!/^[hms]$/i.test(forT)) {
-        throw errors(forT)('invalidFormatType');
-      }
+    if (formatType) {
+      invariant(
+        typeof formatType === 'string',
+        `Expected formatType to be a string, instead got: ${typeof formatType}`
+      );
+
+      invariant(
+        /^[hms]$/i.test(formatType),
+        `Expected formatType to be: h, m or s; instead got: ${formatType}`
+      );
     }
   }
 
