@@ -36,7 +36,7 @@ describe('Validate function', () => {
     expect(validate.bind(validate, '600')).to.not.throw(Error);
     expect(validate.bind(validate, '10:00')).to.not.throw(Error);
   });
-  it(`Returns the original number or the converted number if a time string was provided`, () => {
+  it('Returns the original number or the converted number if a time string was provided', () => {
     expect(validate(600)).to.equal(600);
     expect(validate('10:00')).to.equal(600);
     expect(validate('10m')).to.equal(600);

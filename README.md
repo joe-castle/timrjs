@@ -191,7 +191,7 @@ There are also a number of helper methods available on the Global Timr function.
    - `seconds` - Required. The seconds to be converted.
    - `separator` `outputFormat` `formatType` - See: _[parameters > options](#parameters)_
  - `Timr.timeToSeconds(time)` - Converts a time string into seconds. Must be separated by a colon, e.g. '10:00'. Used in the validate method.
- - `Timr.incorrectFormat(time)` - Checks the format of a time string. Must be separated by a colon, e.g. '10:00'. Used in the validate method.
+ - `Timr.correctFormat(time)` - Checks the format of a time string. Must be separated by a colon, e.g. '10:00'. Used in the validate method.
 
 ```js
 Timr.validate('10:00');
@@ -217,14 +217,14 @@ Timr.timeToSeconds('10:00');
 Timr.timeToSeconds('1:34:23');
 // 5663
 
-Timr.incorrectFormat('10:00');
-// false
-Timr.incorrectFormat('25:00:00');
-// false
-Timr.incorrectFormat('invalid');
+Timr.correctFormat('10:00');
 // true
-Timr.incorrectFormat('14:-5:28');
+Timr.correctFormat('25:00:00');
 // true
+Timr.correctFormat('invalid');
+// false
+Timr.correctFormat('14:-5:28');
+// false
 ```
 ### Bugs
 This is my first contribution to the Open Source community so I fully expect there to be bugs.

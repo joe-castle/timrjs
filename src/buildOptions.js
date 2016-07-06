@@ -16,7 +16,7 @@ module.exports = (options, timr) => {
 
     // Error checking for separator.
     if (separator) {
-      if(typeof separator !== 'string') {
+      if (typeof separator !== 'string') {
         throw new Error(
           `Expected separator to be a string, instead got: ${typeof separator}`
         );
@@ -25,7 +25,7 @@ module.exports = (options, timr) => {
 
     // Error checking for outputFormat.
     if (outputFormat) {
-      if(typeof outputFormat !== 'string') {
+      if (typeof outputFormat !== 'string') {
         throw new Error(
           `Expected outputFormat to be a string, instead got: ${typeof outputFormat}`
         );
@@ -33,7 +33,7 @@ module.exports = (options, timr) => {
 
       if (!/^(hh:)?(mm:)?ss$/i.test(outputFormat)) {
         throw new Error(
-          `Expected outputFormat to be: hh:mm:ss, mm:ss (default) or ss; instead got: ${outputFormat}`
+        `Expected outputFormat to be: hh:mm:ss, mm:ss (default) or ss; instead got: ${outputFormat}`
         );
       }
     }
@@ -46,7 +46,7 @@ module.exports = (options, timr) => {
         );
       }
 
-      if(!/^[hms]$/i.test(formatType)) {
+      if (!/^[hms]$/i.test(formatType)) {
         throw new Error(
           `Expected formatType to be: h, m or s; instead got: ${formatType}`
         );
