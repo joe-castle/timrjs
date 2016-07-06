@@ -34,7 +34,9 @@ const config = {
 if (env === 'production') {
   bannerText = `/* TimrJS v${version} | (c) 2016 Joe Smith | https://github.com/joesmith100/timrjs */`;
 
-  config.plugins.push(new webpack.optimize.UglifyJsPlugin());
+  config.plugins.push(
+    new webpack.optimize.UglifyJsPlugin()
+  );
 }
 
 config.plugins.push(
