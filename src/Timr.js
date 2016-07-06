@@ -1,11 +1,12 @@
+const objectAssign = require('object-assign');
+const invariant = require('invariant');
+
 const EventEmitter = require('./EventEmitter');
 
 const buildOptions = require('./buildOptions');
 const validate = require('./validate');
-const errors = require('./utils/errors');
 const removeFromStore = require('./store').removeFromStore;
 const formatTime = require('./utils/formatTime');
-const objectAssign = require('object-assign');
 
 /**
  * @description Factory function for formatTime and formatStartTime
@@ -185,9 +186,10 @@ Timr.prototype = objectAssign(Object.create(EventEmitter.prototype), {
    * @return {Object} Returns a reference to the Timr so calls can be chained.
    */
   ticker(fn) {
-    if (typeof fn !== 'function') {
-      throw errors(fn)('ticker');
-    }
+    invariant(
+      typeof fn === 'function',
+      `Expected ticker to be a function, instead got: ${typeof fn}`
+    );
 
     this.on('ticker', fn);
 
@@ -208,9 +210,10 @@ Timr.prototype = objectAssign(Object.create(EventEmitter.prototype), {
    * @return {Object} Returns a reference to the Timr so calls can be chained.
    */
   finish(fn) {
-    if (typeof fn !== 'function') {
-      throw errors(fn)('finish');
-    }
+    invariant(
+      typeof fn === 'function',
+      `Expected finish to be a function, instead got: ${typeof fn}`
+    );
 
     this.on('finish', fn);
 

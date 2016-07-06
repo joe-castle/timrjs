@@ -16,7 +16,6 @@ describe('Timr Class', () => {
       expect(new Timr(0).currentTime).to.equal(0);
     });
     it('Throws an error if startTime is not a string or number', () => {
-      expect(() => new Timr()).to.throw(TypeError);
       expect(() => new Timr()).to.throw(
         'Expected time to be a string or number, instead got: undefined'
       );
@@ -134,7 +133,6 @@ describe('Timr Class', () => {
       });
     it(`Throws an error if the ticker method is called with no
       function provided as the first argument`, () => {
-      expect(new Timr(600).ticker.bind()).to.throw(TypeError);
       expect(new Timr(600).ticker.bind()).to.throw(
         'Expected ticker to be a function, instead got: undefined'
       );
@@ -165,8 +163,6 @@ describe('Timr Class', () => {
     });
     it(`Throws an error if the finish method is called with no
       function provided as the first argument`, () => {
-      expect(new Timr(600).finish.bind(Timr.prototype.finish))
-        .to.throw(TypeError);
       expect(new Timr(600).finish.bind(Timr.prototype.finish)).to.throw(
         'Expected finish to be a function, instead got: undefined'
       );

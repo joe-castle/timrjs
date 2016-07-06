@@ -1,3 +1,5 @@
+const invariant = require('invariant');
+
 const errors = require('./utils/errors');
 const timeToSeconds = require('./utils/timeToSeconds');
 const incorrectFormat = require('./utils/incorrectFormat');
