@@ -18,35 +18,37 @@ import correctFormat from './utils/correctFormat';
  * a time string was provided.
  */
 export default function validate(time) {
-  if (/^\d+[mh]$/i.test(time)) {
-    time = time.replace(/^(\d+)m$/i, '$1:00');
-    time = time.replace(/^(\d+)h$/i, '$1:00:00');
+  let newTime = time;
+
+  if (/^\d+[mh]$/i.test(newTime)) {
+    newTime = newTime.replace(/^(\d+)m$/i, '$1:00');
+    newTime = newTime.replace(/^(\d+)h$/i, '$1:00:00');
   }
 
   if (
-    !((!isNaN(time) && time !== Infinity && time !== -Infinity)
-    && typeof time === 'number'
-    || typeof time === 'string')
+    !((!isNaN(newTime) && newTime !== Infinity && newTime !== -Infinity)
+    && typeof newTime === 'number'
+    || typeof newTime === 'string')
   ) {
     throw new Error(
       `Expected time to be a string or number, instead got: ${
         // Passes correct type, including null, NaN and Infinity
-        typeof time === 'number' || time === null ? time : typeof time
+        typeof newTime === 'number' || newTime === null ? newTime : typeof newTime
       }`
     );
   }
 
-  if (!(isNaN(Number(time)) || Number(time) >= 0)) {
-    throw new Error(`Time cannot be a negative number, got: ${time}`);
+  if (!(isNaN(Number(newTime)) || Number(newTime) >= 0)) {
+    throw new Error(`Time cannot be a negative number, got: ${newTime}`);
   }
 
-  if (!correctFormat(time)) {
-    throw new Error(`Expected time to be in (hh:mm:ss) format, instead got: ${time}`);
+  if (!correctFormat(newTime)) {
+    throw new Error(`Expected time to be in (hh:mm:ss) format, instead got: ${newTime}`);
   }
 
-  if (timeToSeconds(time) > 3599999) {
+  if (timeToSeconds(newTime) > 3599999) {
     throw new Error('Sorry, we don\'t support any time over 999:59:59.');
   }
 
-  return timeToSeconds(time);
+  return timeToSeconds(newTime);
 }

@@ -1,4 +1,4 @@
-export default (function () {
+export default (function store() {
   // Array to store all timrs.
   let timrs = [];
 

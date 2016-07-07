@@ -8,16 +8,18 @@
  */
 
 export default function correctFormat(time) {
-  if (typeof time === 'number') {
+  let newTime = time;
+
+  if (typeof newTime === 'number') {
     return true;
   }
 
-  if (typeof time !== 'string') {
+  if (typeof newTime !== 'string') {
     return false;
   }
 
-  time = time.split(':');
+  newTime = newTime.split(':');
 
   // No more than 3 units (hh:mm:ss) and every unit is a number and is not a negative number.
-  return time.length <= 3 && time.every(el => !isNaN(Number(el)) && Number(el) >= 0);
+  return newTime.length <= 3 && newTime.every(el => !isNaN(Number(el)) && Number(el) >= 0);
 }

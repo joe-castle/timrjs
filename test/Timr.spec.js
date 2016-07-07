@@ -1,5 +1,6 @@
 import chai from 'chai';
 import dirtyChai from 'dirty-chai';
+import sinon from 'sinon';
 
 import Timr from '../src/Timr';
 import store from '../src/store';
@@ -42,6 +43,23 @@ describe('Timr Class', () => {
           done();
         });
     });
+    /* eslint-disable no-console */
+    after(() => {
+      console.warn.restore();
+    });
+
+    it(`If a timer is running and the user tries to start it again,
+      a warning in the console is logged`, () => {
+      sinon.stub(console, 'warn');
+
+      new Timr(600)
+        .start()
+        .start()
+        .destroy();
+
+      expect(console.warn.calledWith('Timer already running')).to.be.true();
+    });
+    /* eslint-disable no-console */
 
     it('Returns a reference to the Timr', () => {
       const timer = new Timr(600).start();

@@ -3,7 +3,5 @@
   "env": {
     "mocha": true
   },
-  "rules": {
-    "no-param-reassign": 1
-  }
+  "rules": {}
 }

@@ -80,9 +80,11 @@ Timr.prototype = objectAssign(Object.create(EventEmitter.prototype), {
    * @return {Object} Returns a reference to the Timr so calls can be chained.
    */
   start(delay) {
+    /* eslint-disable no-console */
     if (this.running && typeof console !== 'undefined' && typeof console.warn === 'function') {
       console.warn('Timer already running', this);
     } else {
+    /* eslint-disable no-console */
       const startFn = () => {
         this.running = true;
 

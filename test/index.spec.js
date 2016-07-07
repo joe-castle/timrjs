@@ -46,7 +46,8 @@ describe('Index function', () => {
     expect(init.getAll()).to.be.of.length(2);
   });
 
-  it('Exposes helper methods', () => {
+  it('Exposes the top level api', () => {
+    expect(init).to.be.a('function');
     expect(init.validate).to.exist();
     expect(init.formatTime).to.exist();
     expect(init.timeToSeconds).to.exist();
