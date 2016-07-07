@@ -44,7 +44,7 @@ describe('Index function', () => {
     init(0, { store: false });
 
     expect(init.getAll()).to.be.of.length(2);
-  })
+  });
 
   it('Exposes helper methods', () => {
     expect(init.validate).to.exist();

@@ -66,7 +66,7 @@ Optional. Object which accepts:
  - `store` - Overrides the global store setting if provided. See: _[store](#store)_
    - Accepts `true` or `false`.
 
-### Usage
+### Basic Usage
 Import Timr into your project.
 ```js
 import Timr from 'timrjs';
@@ -124,30 +124,44 @@ timer.finish(self => {
 ```
 > _When used as a stopwatch, the timer will stop and the finish function will fire when the time reaches the maximum supported time `'999:59:59'`_
 
-All of the above methods return a reference to the Timr, so calls can be chained.
-#### Helper Methods
-There are a number of helper methods available to Timrs.
- - `destroy()` - Stops the timer, removes all event listeners and removes the Timr from the store. Returns a reference to the Timr.
- - `formatTime()` - Returns the currentTime, formatted.
- - `formatStartTime()` - Returns the startTime, formatted.
+All of the above methods return a reference to the timr, so calls can be chained.
+#### API
+The following methods are available on all timrs.
+ - `start(delay)` - Starts the timer. Optionally delays starting by the provided ms.
+ - `pause()` - Pauses the timer.
+ - `stop()` - Stops the timer.
+ - `destroy()` - Stops the timer, removes all event listeners and removes the timr from the store.
+ - `ticker(fn)` - The provided function executes every second the timer ticks down.
+ - `finish(fn)` - The provided function executes once the timer finishes.
+ - `formatTime(time)` - Returns the currentTime, formatted. Optionally accepts 'startTime', which will return the startTime formatted.
  - `percentDone()` - Returns the time elapsed in percent.
- - `changeOptions(options)` - Merges the provided options into the existing ones. See: _[options](#parameters)_ for available options. The store option does nothing after a Timr is created. See: _[store](#store)_ for adding / removing a timr. Returns a reference to the Timr.
+ - `changeOptions(options)` - Merges the provided options into the existing ones. See: _[options](#parameters)_ for available options. The store option does nothing after a timr is created. See: _[store](#store)_ for adding / removing a timr.
  - `setStartTime(newStartTime)` - Changes the startTime to the one provided and returns it formatted. Will stop the timer if its running. It's also subject to validation, so will throw an error if the provided time is invalid.
  - `getStartTime()` - Returns the startTime in seconds.
  - `getCurrentTime()` - Returns the currentTime in seconds.
  - `isRunning()` - Returns true if the timer is running, false otherwise.
 
 ```js
+timer.start();
+// Returns a reference to the timr.
+timer.pause();
+// Returns a reference to the timr.
+timer.stop();
+// Returns a reference to the timr.
 timer.destroy();
-// Timr {_events: Object, timer: 6, running: false, options: Object…}
+// Returns a reference to the timr.
+timer.ticker(ft => console.log(ft));
+// Returns a reference to the timr.
+timer.finish(() => console.log('All done!'));
+// Returns a reference to the timr.
 timer.formatTime();
 // '10:00'
-timer.formatStartTime();
+timer.formatTime('startTime');
 // '10:00'
 timer.percentDone();
 // 0
-timer.changeOptions({separator: '-'});
-// Timr {_events: Object, timer: 6, running: false, options: Object…}
+timer.changeOptions({ separator: '-' });
+// Returns a reference to the timr.
 timer.setStartTime('11:00');
 // '11:00'
 timer.getStartTime();
@@ -157,9 +171,9 @@ timer.getCurrentTime();
 timer.isRunning();
 // false
 ```
-### Global Timr Features
+### Top Level API
 #### Store
-The store is an array that stores all Timr objects created, providing some useful methods that can be run on all Timrs at once.
+The store is a singleton object that stores all Timr objects created, providing some useful methods that can be run on all Timrs at once.
 
 By default this feature is disabled, to enable, set the store variable to true after importing Timr.
 ```js
@@ -169,7 +183,7 @@ Timr.store = true;
 ```
 Each Timr can override this setting on creation by setting the store option:
 ```js
-const timer = Timr('10:00', {store: false});
+const timer = Timr('10:00', { store: false });
 // This Timr won't be stored, regardless of the global setting.
 ```
 **Available Methods**
@@ -182,11 +196,12 @@ const timer = Timr('10:00', {store: false});
  - `Timr.removeFromStore(timr)` - Removes the provided Timr from the store.
  - `Timr.destroyAll()` - Destroys all stored Timrs.
 
-#### Global Helper Methods
-There are also a number of helper methods available on the Global Timr function. These are all internal functions, but have been exposed for use without having to create a Timr.
+#### Utilities
+The following methods are availble on the imported Timr object.
  - `Timr.validate(startTime)` - Validates the startTime and returns it converted into seconds.
-   - Checks validity of time string.
    - Ensures provided time is a number or a string.
+   - Ensures it is not a negative number.
+   - Checks validity of time string.
    - Ensures provided time does not exceed '999:59:59'.
  - `Timr.formatTime(seconds, separator, outputFormat, formatType)` - Converts seconds into a time string. Used by Timrs when outputting their formattedTime.
    - `seconds` - Required. The seconds to be converted.

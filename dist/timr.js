@@ -1,14 +1,14 @@
 /**
-  * TimrJS v0.8.0
-  * https://github.com/joesmith100/timrjs
-  * https://www.npmjs.com/package/timrjs
-  *
-  * Compatible with Browsers, Node.js (CommonJS) and RequireJS.
-  *
-  * Copyright (c) 2016 Joe Smith
-  * Released under the MIT license
-  * https://github.com/joesmith100/timrjs/blob/master/LICENSE
-  */
+ * TimrJS v0.8.0
+ * https://github.com/joesmith100/timrjs
+ * https://www.npmjs.com/package/timrjs
+ *
+ * Compatible with Browsers, Node.js (CommonJS) and RequireJS.
+ *
+ * Copyright (c) 2016 Joe Smith
+ * Released under the MIT license
+ * https://github.com/joesmith100/timrjs/blob/master/LICENSE
+ */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
@@ -526,11 +526,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 
 	  if (!(isNaN(Number(time)) || Number(time) >= 0)) {
-	    throw new Error('Expected a time string or a number, instead got: ' + time);
+	    throw new Error('Time cannot be a negative number, got: ' + time);
 	  }
 
 	  if (!(0, _correctFormat2.default)(time)) {
-	    throw new Error('Expected a time string or a number, instead got: ' + time);
+	    throw new Error('Expected time to be in (hh:mm:ss) format, instead got: ' + time);
 	  }
 
 	  if ((0, _timeToSeconds2.default)(time) > 3599999) {
