@@ -200,8 +200,10 @@ Timr.prototype = objectAssign(Object.create(EventEmitter.prototype), {
   },
 
   /**
-   * @description Converts currentTime to time format.
+   * @description Converts seconds to time format.
    * This is provided to the ticker method as the first argument.
+   *
+   * @param {String} [time=currentTime] - option do format the startTime
    *
    * @return {String} The formatted time.
    */

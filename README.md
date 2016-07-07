@@ -2,7 +2,7 @@
 
 Timr is a simple, event driven utility for creating timers in JavaScript.
 
-Compatible with Browsers and NodeJS.
+Compatible with Browsers and Node.js.
 
 Additionally, the compiled versions support RequireJS.
 
@@ -24,7 +24,7 @@ Alternatively you can include the following CDN:
 
 Or include `node_modules/dist/timr.min.js` on your page with a standalone `<script>` tag.
 
-Both of these will expose a single global method `Timr`. Alternatively, they will define a module if you are using RequireJS `require(['timrjs'])`.
+Both of these will expose a single global method `Timr`. Alternatively, they will define a module if you are using RequireJS `require(['Timr'])`.
 
 ### Syntax
 ```
