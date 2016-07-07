@@ -73,4 +73,4 @@ const init = objectAssign(
   }
 );
 
-export default init;
+module.exports = init;

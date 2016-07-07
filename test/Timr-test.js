@@ -143,7 +143,7 @@ describe('Timr Class', () => {
             done();
           }
         );
-    });
+      });
 
     it(`Throws an error if the ticker method is called with no
       function provided as the first argument`, () => {
@@ -218,18 +218,15 @@ describe('Timr Class', () => {
       expect(new Timr(9600).formatTime('startTime')).to.equal('02:40:00');
     });
 
-    it(`Returns the startTime formatted into a time stringwith a modified outputFormat`, () => {
+    it('Returns the startTime formatted into a time stringwith a modified outputFormat', () => {
       expect(new Timr(600, { outputFormat: 'HH:MM:SS' }).formatTime('startTime'))
-      .to.equal('00:10:00');
-      expect(new Timr(50, { outputFormat: 'SS' }).formatTime('startTime'))
-      .to.equal('50');
+        .to.equal('00:10:00');
+      expect(new Timr(50, { outputFormat: 'SS' }).formatTime('startTime')).to.equal('50');
     });
 
-    it(`Returns the startTime formatted into a time stringwith a modifided separator`, () => {
-        expect(new Timr(600, { separator: '-' }).formatTime('startTime'))
-        .to.equal('10-00');
-        expect(new Timr(600, { separator: 'boop' }).formatTime('startTime'))
-        .to.equal('10boop00');
+    it('Returns the startTime formatted into a time stringwith a modifided separator', () => {
+      expect(new Timr(600, { separator: '-' }).formatTime('startTime')).to.equal('10-00');
+      expect(new Timr(600, { separator: 'boop' }).formatTime('startTime')).to.equal('10boop00');
     });
   });
 
