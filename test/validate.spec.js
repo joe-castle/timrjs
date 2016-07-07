@@ -4,12 +4,14 @@ import validate from '../src/validate';
 
 describe('Validate function', () => {
   it('Throws an error if provided time is not valid', () => {
-    expect(validate.bind(validate, 'boom')).to.throw(Error);
     expect(validate.bind(validate, 'boom')).to.throw(
-      'Expected a time string or a number, instead got: boom'
+      'Expected time to be in (hh:mm:ss) format, instead got: boom'
     );
     expect(validate.bind(validate, {})).to.throw(
       'Expected time to be a string or number, instead got: object'
+    );
+    expect(validate.bind(validate, -1)).to.throw(
+      'Time cannot be a negative number, got: -1'
     );
     expect(validate.bind(validate, NaN)).to.throw(
       'Expected time to be a string or number, instead got: NaN'

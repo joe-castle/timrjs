@@ -36,6 +36,16 @@ describe('Index function', () => {
     expect(init.getAll()).to.be.of.length(3);
   });
 
+  it('Does not add a timr to the store with the global store setting of true', () => {
+    init.store = true;
+
+    init('10:00');
+    init(600);
+    init(0, { store: false });
+
+    expect(init.getAll()).to.be.of.length(2);
+  })
+
   it('Exposes helper methods', () => {
     expect(init.validate).to.exist();
     expect(init.formatTime).to.exist();

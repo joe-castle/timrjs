@@ -37,11 +37,11 @@ export default function validate(time) {
   }
 
   if (!(isNaN(Number(time)) || Number(time) >= 0)) {
-    throw new Error(`Expected a time string or a number, instead got: ${time}`);
+    throw new Error(`Time cannot be a negative number, got: ${time}`);
   }
 
   if (!correctFormat(time)) {
-    throw new Error(`Expected a time string or a number, instead got: ${time}`);
+    throw new Error(`Expected time to be in (hh:mm:ss) format, instead got: ${time}`);
   }
 
   if (timeToSeconds(time) > 3599999) {

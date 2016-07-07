@@ -297,6 +297,12 @@ describe('Timr Class', () => {
     });
   });
 
+  describe('getStartTime method', () => {
+    it('Returns the currentTime in seconds', () => {
+      expect(new Timr(600).getStartTime()).to.equal(600);
+    });
+  });
+
   describe('getCurrentTime method', () => {
     it('Returns the currentTime in seconds', () => {
       expect(new Timr(600).getCurrentTime()).to.equal(600);
