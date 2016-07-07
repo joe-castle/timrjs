@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 
-import timeToSeconds from '../src/utils/timeToSeconds';
+import timeToSeconds from '../src/timeToSeconds';
 
 describe('Time To Seconds function', () => {
   it('Returns the converted the provided time (string) to seconds (number)',

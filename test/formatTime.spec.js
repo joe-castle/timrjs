@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 
-import formatTime from '../src/utils/formatTime';
+import formatTime from '../src/formatTime';
 
 describe('Format Time function', () => {
   it('Returns the currentTime formatted into a time string', () => {

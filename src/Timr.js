@@ -5,7 +5,7 @@ import EventEmitter from './EventEmitter';
 import buildOptions from './buildOptions';
 import validate from './validate';
 import store from './store';
-import formatTime from './utils/formatTime';
+import formatTime from './formatTime';
 
 /**
  * @description Creates a Timr.

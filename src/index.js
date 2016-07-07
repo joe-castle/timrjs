@@ -1,9 +1,9 @@
 import objectAssign from 'object-assign';
 
 import validate from './validate';
-import formatTime from './utils/formatTime';
-import timeToSeconds from './utils/timeToSeconds';
-import correctFormat from './utils/correctFormat';
+import formatTime from './formatTime';
+import timeToSeconds from './timeToSeconds';
+import correctFormat from './correctFormat';
 import store from './store';
 
 import Timr from './Timr';

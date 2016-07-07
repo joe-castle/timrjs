@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 
-import correctFormat from '../src/utils/correctFormat';
+import correctFormat from '../src/correctFormat';
 
 describe('Correct Format function', () => {
   it('Returns true if the provided time is in the correct format', () => {

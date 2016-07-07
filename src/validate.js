@@ -1,5 +1,5 @@
-import timeToSeconds from './utils/timeToSeconds';
-import correctFormat from './utils/correctFormat';
+import timeToSeconds from './timeToSeconds';
+import correctFormat from './correctFormat';
 
 /**
  * @description Validates the provded time

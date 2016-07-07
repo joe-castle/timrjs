@@ -75,7 +75,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _validate2 = _interopRequireDefault(_validate);
 
-	var _formatTime = __webpack_require__(4);
+	var _formatTime = __webpack_require__(3);
 
 	var _formatTime2 = _interopRequireDefault(_formatTime);
 
@@ -83,11 +83,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _timeToSeconds2 = _interopRequireDefault(_timeToSeconds);
 
-	var _correctFormat = __webpack_require__(3);
+	var _correctFormat = __webpack_require__(2);
 
 	var _correctFormat2 = _interopRequireDefault(_correctFormat);
 
-	var _store = __webpack_require__(2);
+	var _store = __webpack_require__(4);
 
 	var _store2 = _interopRequireDefault(_store);
 
@@ -255,79 +255,6 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 2 */
 /***/ function(module, exports) {
 
-	"use strict";
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	exports.default = function () {
-	  // Array to store all timrs.
-	  var timrs = [];
-
-	  return {
-	    /**
-	     * @description A function that stores all timr objects created.
-	     * This feature is disabled by default, Timr.store = true to enable.
-	     *
-	     * Can also be disabled/enabled on an individual basis.
-	     * Each timr object accepts store as an option, true or false.
-	     * This overides the global Timr.store option.
-	     *
-	     * @param {Object} timr - A timr object.
-	     *
-	     * @return {Object} The provided timr object.
-	     */
-	    add: function add(timr) {
-	      if (timrs.indexOf(timr) === -1) {
-	        timrs.push(timr);
-	      }
-
-	      return timr;
-	    },
-
-	    // Methods associated with all Timrs.
-	    getAll: function getAll() {
-	      return timrs;
-	    },
-	    startAll: function startAll() {
-	      return timrs.forEach(function (timr) {
-	        return timr.start();
-	      });
-	    },
-	    pauseAll: function pauseAll() {
-	      return timrs.forEach(function (timr) {
-	        return timr.pause();
-	      });
-	    },
-	    stopAll: function stopAll() {
-	      return timrs.forEach(function (timr) {
-	        return timr.stop();
-	      });
-	    },
-	    isRunning: function isRunning() {
-	      return timrs.filter(function (timr) {
-	        return timr.isRunning();
-	      });
-	    },
-	    removeFromStore: function removeFromStore(timr) {
-	      timrs = timrs.filter(function (x) {
-	        return x !== timr;
-	      });
-	    },
-	    destroyAll: function destroyAll() {
-	      timrs.forEach(function (timr) {
-	        return timr.destroy();
-	      });
-	      timrs = [];
-	    }
-	  };
-	}();
-
-/***/ },
-/* 3 */
-/***/ function(module, exports) {
-
 	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
@@ -344,24 +271,26 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 
 	function correctFormat(time) {
-	  if (typeof time === 'number') {
+	  var newTime = time;
+
+	  if (typeof newTime === 'number') {
 	    return true;
 	  }
 
-	  if (typeof time !== 'string') {
+	  if (typeof newTime !== 'string') {
 	    return false;
 	  }
 
-	  time = time.split(':');
+	  newTime = newTime.split(':');
 
 	  // No more than 3 units (hh:mm:ss) and every unit is a number and is not a negative number.
-	  return time.length <= 3 && time.every(function (el) {
+	  return newTime.length <= 3 && newTime.every(function (el) {
 	    return !isNaN(Number(el)) && Number(el) >= 0;
 	  });
 	}
 
 /***/ },
-/* 4 */
+/* 3 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -428,6 +357,79 @@ return /******/ (function(modules) { // webpackBootstrap
 	}
 
 /***/ },
+/* 4 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	exports.default = function store() {
+	  // Array to store all timrs.
+	  var timrs = [];
+
+	  return {
+	    /**
+	     * @description A function that stores all timr objects created.
+	     * This feature is disabled by default, Timr.store = true to enable.
+	     *
+	     * Can also be disabled/enabled on an individual basis.
+	     * Each timr object accepts store as an option, true or false.
+	     * This overides the global Timr.store option.
+	     *
+	     * @param {Object} timr - A timr object.
+	     *
+	     * @return {Object} The provided timr object.
+	     */
+	    add: function add(timr) {
+	      if (timrs.indexOf(timr) === -1) {
+	        timrs.push(timr);
+	      }
+
+	      return timr;
+	    },
+
+	    // Methods associated with all Timrs.
+	    getAll: function getAll() {
+	      return timrs;
+	    },
+	    startAll: function startAll() {
+	      return timrs.forEach(function (timr) {
+	        return timr.start();
+	      });
+	    },
+	    pauseAll: function pauseAll() {
+	      return timrs.forEach(function (timr) {
+	        return timr.pause();
+	      });
+	    },
+	    stopAll: function stopAll() {
+	      return timrs.forEach(function (timr) {
+	        return timr.stop();
+	      });
+	    },
+	    isRunning: function isRunning() {
+	      return timrs.filter(function (timr) {
+	        return timr.isRunning();
+	      });
+	    },
+	    removeFromStore: function removeFromStore(timr) {
+	      timrs = timrs.filter(function (x) {
+	        return x !== timr;
+	      });
+	    },
+	    destroyAll: function destroyAll() {
+	      timrs.forEach(function (timr) {
+	        return timr.destroy();
+	      });
+	      timrs = [];
+	    }
+	  };
+	}();
+
+/***/ },
 /* 5 */
 /***/ function(module, exports) {
 
@@ -491,7 +493,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _timeToSeconds2 = _interopRequireDefault(_timeToSeconds);
 
-	var _correctFormat = __webpack_require__(3);
+	var _correctFormat = __webpack_require__(2);
 
 	var _correctFormat2 = _interopRequireDefault(_correctFormat);
 
@@ -514,30 +516,32 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * a time string was provided.
 	 */
 	function validate(time) {
-	  if (/^\d+[mh]$/i.test(time)) {
-	    time = time.replace(/^(\d+)m$/i, '$1:00');
-	    time = time.replace(/^(\d+)h$/i, '$1:00:00');
+	  var newTime = time;
+
+	  if (/^\d+[mh]$/i.test(newTime)) {
+	    newTime = newTime.replace(/^(\d+)m$/i, '$1:00');
+	    newTime = newTime.replace(/^(\d+)h$/i, '$1:00:00');
 	  }
 
-	  if (!(!isNaN(time) && time !== Infinity && time !== -Infinity && typeof time === 'number' || typeof time === 'string')) {
+	  if (!(!isNaN(newTime) && newTime !== Infinity && newTime !== -Infinity && typeof newTime === 'number' || typeof newTime === 'string')) {
 	    throw new Error('Expected time to be a string or number, instead got: ' + (
 	    // Passes correct type, including null, NaN and Infinity
-	    typeof time === 'number' || time === null ? time : typeof time === 'undefined' ? 'undefined' : _typeof(time)));
+	    typeof newTime === 'number' || newTime === null ? newTime : typeof newTime === 'undefined' ? 'undefined' : _typeof(newTime)));
 	  }
 
-	  if (!(isNaN(Number(time)) || Number(time) >= 0)) {
-	    throw new Error('Time cannot be a negative number, got: ' + time);
+	  if (!(isNaN(Number(newTime)) || Number(newTime) >= 0)) {
+	    throw new Error('Time cannot be a negative number, got: ' + newTime);
 	  }
 
-	  if (!(0, _correctFormat2.default)(time)) {
-	    throw new Error('Expected time to be in (hh:mm:ss) format, instead got: ' + time);
+	  if (!(0, _correctFormat2.default)(newTime)) {
+	    throw new Error('Expected time to be in (hh:mm:ss) format, instead got: ' + newTime);
 	  }
 
-	  if ((0, _timeToSeconds2.default)(time) > 3599999) {
+	  if ((0, _timeToSeconds2.default)(newTime) > 3599999) {
 	    throw new Error('Sorry, we don\'t support any time over 999:59:59.');
 	  }
 
-	  return (0, _timeToSeconds2.default)(time);
+	  return (0, _timeToSeconds2.default)(newTime);
 	}
 
 /***/ },
@@ -639,11 +643,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _validate2 = _interopRequireDefault(_validate);
 
-	var _store = __webpack_require__(2);
+	var _store = __webpack_require__(4);
 
 	var _store2 = _interopRequireDefault(_store);
 
-	var _formatTime2 = __webpack_require__(4);
+	var _formatTime2 = __webpack_require__(3);
 
 	var _formatTime3 = _interopRequireDefault(_formatTime2);
 
@@ -712,9 +716,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	  start: function start(delay) {
 	    var _this = this;
 
+	    /* eslint-disable no-console */
 	    if (this.running && typeof console !== 'undefined' && typeof console.warn === 'function') {
 	      console.warn('Timer already running', this);
 	    } else {
+	      /* eslint-disable no-console */
 	      var startFn = function startFn() {
 	        _this.running = true;
 
