@@ -13,6 +13,7 @@ describe('Store', () => {
     expect(store.add(timer)).to.equal(timer);
     expect(store.getAll()[0]).to.equal(timer);
   });
+
   it('Starts all the timers.', done => {
     const timer = new Timr(600)
       .ticker(formattedTime => {
@@ -23,6 +24,7 @@ describe('Store', () => {
     store.add(timer);
     store.startAll();
   });
+
   it('Pauses all the timers.', done => {
     const timer = new Timr(600)
       .ticker(() => {
@@ -35,6 +37,7 @@ describe('Store', () => {
     store.add(timer);
     store.startAll();
   });
+
   it('Stops all the timers.', done => {
     const timer = new Timr(600)
       .ticker(formattedTime => {
@@ -47,6 +50,7 @@ describe('Store', () => {
     store.add(timer);
     store.startAll();
   });
+
   it('Returns an array of all the timrs that are running', () => {
     const timer = new Timr(600);
     store.add(timer);

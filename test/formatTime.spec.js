@@ -9,7 +9,7 @@ describe('Format Time function', () => {
     expect(formatTime(9600)).to.equal('02:40:00');
   });
 
-  it('Returns the currentTime formatted into a time string witha modified outputFormat', () => {
+  it('Returns the currentTime formatted into a time string with a modified outputFormat', () => {
     expect(formatTime(600, undefined, 'HH:MM:SS')).to.equal('00:10:00');
     expect(formatTime(50, undefined, 'SS')).to.equal('50');
   });

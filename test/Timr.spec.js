@@ -5,6 +5,7 @@ import sinon from 'sinon';
 import Timr from '../src/Timr';
 import store from '../src/store';
 
+// Turns methods like to.be.true into to.be.true() to stop eslint failing
 chai.use(dirtyChai);
 
 const { expect } = chai;
@@ -43,13 +44,14 @@ describe('Timr Class', () => {
           done();
         });
     });
+
     /* eslint-disable no-console */
     after(() => {
       console.warn.restore();
     });
 
-    it(`If a timer is running and the user tries to start it again,
-      a warning in the console is logged`, () => {
+    it('If a timer is running and the user tries to start it again, ' +
+      'a warning in the console is logged', () => {
       sinon.stub(console, 'warn');
 
       new Timr(600)
@@ -134,9 +136,9 @@ describe('Timr Class', () => {
   });
 
   describe('ticker method', () => {
-    it(`Fires the ticker function every second the timer runs,
-      returning the formattedTime, precentDone, currentTime,
-      startTime and the original Timr object.`, done => {
+    it('Fires the ticker function every second the timer runs, ' +
+      'returning the formattedTime, precentDone, currentTime, ' +
+      'startTime and the original Timr object.', done => {
       const timer = new Timr(600).start()
         .ticker((formattedTime, percentDone, currentTime, startTime, self) => {
           expect(formattedTime).to.equal('09:59');
@@ -149,22 +151,21 @@ describe('Timr Class', () => {
         });
     });
 
-    it(`As a stopwatch, fires the ticker function every second the timer runs,
-      returning the formattedTime, currentTime and original Timr object.`,
-      done => {
-        const timer = new Timr(0).start().ticker(
-          (formattedTime, currentTime, self) => {
-            expect(formattedTime).to.equal('00:01');
-            expect(currentTime).to.equal(1);
-            expect(self).to.equal(timer);
-            timer.stop();
-            done();
-          }
-        );
-      });
+    it('As a stopwatch, fires the ticker function every second the timer runs, ' +
+      'returning the formattedTime, currentTime and original Timr object.', done => {
+      const timer = new Timr(0).start().ticker(
+        (formattedTime, currentTime, self) => {
+          expect(formattedTime).to.equal('00:01');
+          expect(currentTime).to.equal(1);
+          expect(self).to.equal(timer);
+          timer.stop();
+          done();
+        }
+      );
+    });
 
-    it(`Throws an error if the ticker method is called with no
-      function provided as the first argument`, () => {
+    it('Throws an error if the ticker method is called with no ' +
+      'function provided as the first argument', () => {
       expect(new Timr(600).ticker.bind()).to.throw(
         'Expected ticker to be a function, instead got: undefined'
       );
@@ -177,8 +178,8 @@ describe('Timr Class', () => {
   });
 
   describe('finish method', () => {
-    it(`Fires the finish function when the timer finishes
-    and provides the original Timr object.`, done => {
+    it('Fires the finish function when the timer finishes ' +
+      'and provides the original Timr object.', done => {
       const timer = new Timr(1).start();
       timer.finish(self => {
         expect(self).to.equal(timer);
@@ -186,8 +187,8 @@ describe('Timr Class', () => {
       });
     });
 
-    it(`As a stopwatch, fires the finish function when the
-      timer reaches the maximum supported time, 999:59:59`, done => {
+    it('As a stopwatch, fires the finish function when the ' +
+      'timer reaches the maximum supported time, 999:59:59', done => {
       const timer = new Timr(0).start();
       timer.ticker(() => {
         timer.currentTime = 3600000;
@@ -197,8 +198,8 @@ describe('Timr Class', () => {
       });
     });
 
-    it(`Throws an error if the finish method is called with no
-      function provided as the first argument`, () => {
+    it('Throws an error if the finish method is called with no ' +
+      'function provided as the first argument', () => {
       expect(new Timr(600).finish.bind(Timr.prototype.finish)).to.throw(
         'Expected finish to be a function, instead got: undefined'
       );
@@ -217,14 +218,14 @@ describe('Timr Class', () => {
       expect(new Timr(9600).formatTime()).to.equal('02:40:00');
     });
 
-    it(`Returns the currentTime formatted into a time string
-      with a modified outputFormat`, () => {
+    it('Returns the currentTime formatted into a time string ' +
+      'with a modified outputFormat', () => {
       expect(new Timr(600, { outputFormat: 'HH:MM:SS' }).formatTime()).to.equal('00:10:00');
       expect(new Timr(50, { outputFormat: 'SS' }).formatTime()).to.equal('50');
     });
 
-    it(`Returns the currentTime formatted into a time string
-      with a modifided separator`, () => {
+    it('Returns the currentTime formatted into a time string ' +
+      'with a modifided separator', () => {
       expect(new Timr(600, { separator: '-' }).formatTime()).to.equal('10-00');
       expect(new Timr(600, { separator: 'boop' }).formatTime())
         .to.equal('10boop00');
@@ -289,8 +290,8 @@ describe('Timr Class', () => {
       expect(timer.startTime).to.equal(600);
     });
 
-    it(`Clears the existing timer and sets the
-      currentTime and startTime to the new starTime`, done => {
+    it('Clears the existing timer and sets the ' +
+      'currentTime and startTime to the new starTime', done => {
       const timer = new Timr(600).start();
       timer.ticker((ft, pd, ct) => {
         expect(ct).to.equal(599);
