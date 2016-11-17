@@ -94,7 +94,7 @@ Timr.prototype = objectAssign(Object.create(EventEmitter.prototype), {
       };
 
       if (delay) {
-        setTimeout(startFn, delay);
+        this.delayTimer = setTimeout(startFn, delay);
       } else {
         startFn();
       }
@@ -134,6 +134,7 @@ Timr.prototype = objectAssign(Object.create(EventEmitter.prototype), {
    */
   clear() {
     clearInterval(this.timer);
+    clearTimeout(this.delayTimer);
 
     this.running = false;
 

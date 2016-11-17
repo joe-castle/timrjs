@@ -12,7 +12,7 @@ Additionally, the compiled versions support RequireJS.
 [![npm downloads](https://img.shields.io/npm/dm/timrjs.svg?style=flat-square)](https://www.npmjs.com/package/timrjs)
 [![npm license](https://img.shields.io/npm/l/timrjs.svg?style=flat-square)](https://www.npmjs.com/package/timrjs)
 
-### Installation
+## Installation
 Install with npm or Bower.
 ```
 npm install timrjs --save
@@ -27,12 +27,12 @@ Or include `node_modules/dist/timr.min.js` on your page with a standalone `<scri
 
 Both of these will expose a single global method `Timr`. Alternatively, they will define a module if you are using RequireJS `require(['Timr'])`.
 
-### Syntax
+## Syntax
 ```
 Timr(startTime[, options]]);
 ```
 
-#### Parameters
+### Parameters
 **startTime**
 
 Accepts a string or a number; a number is treated as seconds. Examples of accepted syntax:
@@ -66,7 +66,7 @@ Optional. Object which accepts:
  - `store` - Overrides the global store setting if provided. See: _[store](#store)_
    - Accepts `true` or `false`.
 
-### Basic Usage
+## Basic Usage
 Import Timr into your project.
 ```js
 import Timr from 'timrjs';
@@ -125,7 +125,7 @@ timer.finish(self => {
 > _When used as a stopwatch, the timer will stop and the finish function will fire when the time reaches the maximum supported time `'999:59:59'`_
 
 All of the above methods return a reference to the timr, so calls can be chained.
-#### API
+### API
 The following methods are available on all timrs.
  - `start(delay)` - Starts the timer. Optionally delays starting by the provided ms.
  - `pause()` - Pauses the timer.
@@ -171,8 +171,8 @@ timer.getCurrentTime();
 timer.isRunning();
 // false
 ```
-### Top Level API
-#### Store
+## Top Level API
+### Store
 The store is a singleton object that stores all Timr objects created, providing some useful methods that can be run on all Timrs at once.
 
 By default this feature is disabled, to enable, set the store variable to true after importing Timr.
@@ -196,7 +196,7 @@ const timer = Timr('10:00', { store: false });
  - `Timr.removeFromStore(timr)` - Removes the provided Timr from the store.
  - `Timr.destroyAll()` - Destroys all stored Timrs.
 
-#### Utilities
+### Utilities
 The following methods are availble on the imported Timr object.
  - `Timr.validate(startTime)` - Validates the startTime and returns it converted into seconds.
    - Ensures provided time is a number or a string.
