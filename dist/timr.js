@@ -1,5 +1,5 @@
 /**
- * TimrJS v0.8.0
+ * TimrJS v0.8.1
  * https://github.com/joesmith100/timrjs
  * https://www.npmjs.com/package/timrjs
  *
@@ -728,7 +728,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      };
 
 	      if (delay) {
-	        setTimeout(startFn, delay);
+	        this.delayTimer = setTimeout(startFn, delay);
 	      } else {
 	        startFn();
 	      }
@@ -771,6 +771,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	   */
 	  clear: function clear() {
 	    clearInterval(this.timer);
+	    clearTimeout(this.delayTimer);
 
 	    this.running = false;
 
