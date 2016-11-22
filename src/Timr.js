@@ -4,7 +4,6 @@ import EventEmitter from './EventEmitter';
 
 import buildOptions from './buildOptions';
 import validate from './validate';
-import store from './store';
 import formatTime from './formatTime';
 
 /**
@@ -144,14 +143,18 @@ Timr.prototype = objectAssign(Object.create(EventEmitter.prototype), {
   /**
    * @description Destroys the timr,
    * clearing the interval, removing all event listeners and removing,
-   * from the store.
+   * from the store (if it's in one).
    *
    * @return {Object} Returns a reference to the Timr so calls can be chained.
    */
   destroy() {
     this.clear().removeAllListeners();
 
-    store.removeFromStore(this);
+    // removeFromStore is added when the timr is added to a store,
+    // so need to check if it's in a store before removing it.
+    if (typeof this.removeFromStore === 'function') {
+      this.removeFromStore();
+    }
 
     return this;
   },

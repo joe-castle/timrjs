@@ -4,9 +4,7 @@ import buildOptions from './buildOptions';
  * @description Converts seconds to time format.
  *
  * @param {Number} seconds - The seconds to convert.
- * @param {String} separator - The character used to separate the time units.
- * @param {String} outputFormat - The way the time is displayed.
- * @param {String} formatType - The way in which the time string is created.
+ * @param {Object} [options] - The options to build the string.
  *
  * @return {String} The formatted time.
  */
@@ -26,7 +24,7 @@ export default function formatTime(seconds, options) {
       .filter(value => value !== false)
       .map(value => (value < 10 ? `0${value}` : value))
       .join(separator);
-  }
+  };
 
   if (formatType === 's') {
     return `${seconds}`;

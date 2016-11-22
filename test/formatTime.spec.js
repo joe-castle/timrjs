@@ -29,7 +29,7 @@ describe('Format Time function', () => {
     expect(formatTime(5500, { formatType: 'm', outputFormat: 'HH:MM:SS', separator: '-' }))
       .to.equal('00-91-40');
     expect(formatTime(5500, { outputFormat: 'MM:SS', separator: '_' })).to.equal('01_31_40');
-    expect(formatTime(5500, { formatType: 's', outputFormat: 'SS', separator: '()' } ))
+    expect(formatTime(5500, { formatType: 's', outputFormat: 'SS', separator: '()' }))
       .to.equal('5500');
     expect(formatTime(5500, { formatType: 'h', outputFormat: 'HH:MM:SS', separator: '$' }))
       .to.equal('01$31$40');

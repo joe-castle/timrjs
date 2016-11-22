@@ -1,5 +1,5 @@
 /**
- * TimrJS v0.8.1
+ * TimrJS v0.9.0
  * https://github.com/joesmith100/timrjs
  * https://www.npmjs.com/package/timrjs
  *
@@ -71,41 +71,31 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _objectAssign2 = _interopRequireDefault(_objectAssign);
 
-	var _validate = __webpack_require__(6);
+	var _validate = __webpack_require__(7);
 
 	var _validate2 = _interopRequireDefault(_validate);
 
-	var _formatTime = __webpack_require__(3);
+	var _formatTime = __webpack_require__(5);
 
 	var _formatTime2 = _interopRequireDefault(_formatTime);
 
-	var _timeToSeconds = __webpack_require__(5);
+	var _timeToSeconds = __webpack_require__(6);
 
 	var _timeToSeconds2 = _interopRequireDefault(_timeToSeconds);
 
-	var _correctFormat = __webpack_require__(2);
+	var _correctFormat = __webpack_require__(4);
 
 	var _correctFormat2 = _interopRequireDefault(_correctFormat);
 
-	var _store = __webpack_require__(4);
+	var _createStore = __webpack_require__(9);
 
-	var _store2 = _interopRequireDefault(_store);
+	var _createStore2 = _interopRequireDefault(_createStore);
 
-	var _Timr = __webpack_require__(8);
+	var _Timr = __webpack_require__(2);
 
 	var _Timr2 = _interopRequireDefault(_Timr);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var add = _store2.default.add;
-	var getAll = _store2.default.getAll;
-	var startAll = _store2.default.startAll;
-	var pauseAll = _store2.default.pauseAll;
-	var stopAll = _store2.default.stopAll;
-	var isRunning = _store2.default.isRunning;
-	var removeFromStore = _store2.default.removeFromStore;
-	var destroyAll = _store2.default.destroyAll;
-
 
 	var init = (0, _objectAssign2.default)(
 	/**
@@ -117,47 +107,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @return {Object} A new Timr object.
 	 */
 	function (startTime, options) {
-	  var timr = new _Timr2.default(startTime, options);
-
-	  // Stores timr if options.store is true. Overrides global setting.
-	  if (options) {
-	    if (options.store) {
-	      return add(timr);
-	    }
-	    if (options.store === false) {
-	      return timr;
-	    }
-	  }
-
-	  // Stores timr if global setting is true.
-	  if (init.store) {
-	    return add(timr);
-	  }
-
-	  return timr;
+	  return new _Timr2.default(startTime, options);
 	},
-
-	// Option to enable storing timrs, defaults to false.
-	{ store: false },
 
 	// Exposed helper methods.
 	{
 	  validate: _validate2.default,
 	  formatTime: _formatTime2.default,
 	  timeToSeconds: _timeToSeconds2.default,
-	  correctFormat: _correctFormat2.default
-	},
-
-	// Methods for all stored timrs.
-	{
-	  add: add,
-	  getAll: getAll,
-	  startAll: startAll,
-	  pauseAll: pauseAll,
-	  stopAll: stopAll,
-	  isRunning: isRunning,
-	  removeFromStore: removeFromStore,
-	  destroyAll: destroyAll
+	  correctFormat: _correctFormat2.default,
+	  createStore: _createStore2.default
 	});
 
 	module.exports = init;
@@ -253,370 +212,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ },
 /* 2 */
-/***/ function(module, exports) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	exports.default = correctFormat;
-	/**
-	 * @description Checks the provided time for correct formatting.
-	 * See incorrectFormat-test.js for examples of correct and incorrect formatting.
-	 *
-	 * @param {String} time - The provided time string.
-	 *
-	 * @returns {Boolean} True if format is correct, false otherwise.
-	 */
-
-	function correctFormat(time) {
-	  var newTime = time;
-
-	  if (typeof newTime === 'number') {
-	    return true;
-	  }
-
-	  if (typeof newTime !== 'string') {
-	    return false;
-	  }
-
-	  newTime = newTime.split(':');
-
-	  // No more than 3 units (hh:mm:ss) and every unit is a number and is not a negative number.
-	  return newTime.length <= 3 && newTime.every(function (el) {
-	    return !isNaN(Number(el)) && Number(el) >= 0;
-	  });
-	}
-
-/***/ },
-/* 3 */
-/***/ function(module, exports) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	exports.default = formatTime;
-	/**
-	 * @description Converts seconds to time format.
-	 *
-	 * @param {Number} seconds - The seconds to convert.
-	 * @param {String} separator - The character used to separate the time units.
-	 * @param {String} outputFormat - The way the time is displayed.
-	 * @param {String} formatType - The way in which the time string is created.
-	 *
-	 * @return {String} The formatted time.
-	 */
-	function formatTime(seconds) {
-	  var separator = arguments.length <= 1 || arguments[1] === undefined ? ':' : arguments[1];
-	  var outputFormat = arguments.length <= 2 || arguments[2] === undefined ? 'mm:ss' : arguments[2];
-	  var formatType = arguments.length <= 3 || arguments[3] === undefined ? 'h' : arguments[3];
-
-	  /**
-	   * @description Creates a timestring.
-	   * Created inside formatTime to have access to its arguments,
-	   *
-	   * @param {Array} [...args] - All arguments to be processed
-	   *
-	   * @return {String} The compiled time string.
-	   */
-	  function createTimeString() {
-	    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-	      args[_key] = arguments[_key];
-	    }
-
-	    return args.filter(function (value) {
-	      return value !== false;
-	    }).map(function (value) {
-	      return value < 10 ? '0' + value : value;
-	    }).join(separator);
-	  }
-
-	  if (formatType === 's') {
-	    return '' + seconds;
-	  }
-
-	  var minutes = seconds / 60;
-
-	  if (minutes >= 1 && /[hm]/i.test(formatType)) {
-	    var hours = minutes / 60;
-	    minutes = Math.floor(minutes);
-
-	    if (hours >= 1 && /[h]/i.test(formatType)) {
-	      hours = Math.floor(hours);
-
-	      return createTimeString(hours, minutes - hours * 60, seconds - minutes * 60);
-	    }
-
-	    return createTimeString(/HH:MM:SS/i.test(outputFormat) && 0, minutes, seconds - minutes * 60);
-	  }
-
-	  return createTimeString(/HH:MM:SS/i.test(outputFormat) && 0, /MM:SS/i.test(outputFormat) && 0, seconds);
-	}
-
-/***/ },
-/* 4 */
-/***/ function(module, exports) {
-
-	"use strict";
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	exports.default = function store() {
-	  // Array to store all timrs.
-	  var timrs = [];
-
-	  return {
-	    /**
-	     * @description A function that stores all timr objects created.
-	     * This feature is disabled by default, Timr.store = true to enable.
-	     *
-	     * Can also be disabled/enabled on an individual basis.
-	     * Each timr object accepts store as an option, true or false.
-	     * This overides the global Timr.store option.
-	     *
-	     * @param {Object} timr - A timr object.
-	     *
-	     * @return {Object} The provided timr object.
-	     */
-	    add: function add(timr) {
-	      if (timrs.indexOf(timr) === -1) {
-	        timrs.push(timr);
-	      }
-
-	      return timr;
-	    },
-
-	    // Methods associated with all Timrs.
-	    getAll: function getAll() {
-	      return timrs;
-	    },
-	    startAll: function startAll() {
-	      return timrs.forEach(function (timr) {
-	        return timr.start();
-	      });
-	    },
-	    pauseAll: function pauseAll() {
-	      return timrs.forEach(function (timr) {
-	        return timr.pause();
-	      });
-	    },
-	    stopAll: function stopAll() {
-	      return timrs.forEach(function (timr) {
-	        return timr.stop();
-	      });
-	    },
-	    isRunning: function isRunning() {
-	      return timrs.filter(function (timr) {
-	        return timr.isRunning();
-	      });
-	    },
-	    removeFromStore: function removeFromStore(timr) {
-	      timrs = timrs.filter(function (x) {
-	        return x !== timr;
-	      });
-	    },
-	    destroyAll: function destroyAll() {
-	      timrs.forEach(function (timr) {
-	        return timr.destroy();
-	      });
-	      timrs = [];
-	    }
-	  };
-	}();
-
-/***/ },
-/* 5 */
-/***/ function(module, exports) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	exports.default = timeToSeconds;
-	/**
-	 * @description Converts time format (HH:MM:SS) into seconds.
-	 *
-	 * Automatically rounds the returned number to avoid errors
-	 * with floating point values.
-	 *
-	 * @param {String|Number} time - The time to be converted.
-	 * If a number is provided it will simply return that number.
-	 *
-	 * @return {Number} - The time in seconds.
-	 */
-	function timeToSeconds(time) {
-	  if (typeof time === 'number' && !isNaN(time)) {
-	    return Math.round(time);
-	  }
-
-	  return Math.round(time.split(':').reduce(function (prev, curr, index, arr) {
-	    if (arr.length === 3) {
-	      if (index === 0) {
-	        return prev + Number(curr) * 60 * 60;
-	      }
-	      if (index === 1) {
-	        return prev + Number(curr) * 60;
-	      }
-	    }
-
-	    if (arr.length === 2) {
-	      if (index === 0) {
-	        return prev + Number(curr) * 60;
-	      }
-	    }
-
-	    return prev + Number(curr);
-	  }, 0));
-	}
-
-/***/ },
-/* 6 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
-
-	exports.default = validate;
-
-	var _timeToSeconds = __webpack_require__(5);
-
-	var _timeToSeconds2 = _interopRequireDefault(_timeToSeconds);
-
-	var _correctFormat = __webpack_require__(2);
-
-	var _correctFormat2 = _interopRequireDefault(_correctFormat);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	/**
-	 * @description Validates the provded time
-	 *
-	 * Additionally, if a pattern is provided, 25h / 25m, than
-	 * it is converted here before being passed to timeToSeconds.
-	 *
-	 * @param {String|Number} time - The time to be checked
-	 *
-	 * @throws If the provided time is neither a number nor a string.
-	 * @throws If the provided time is a negative number.
-	 * @throws If the provided time is not in the correct format.
-	 * @throws If the provided time in seconds is over 999:59:59.
-	 *
-	 * @returns {Number} - The original number or the converted number if
-	 * a time string was provided.
-	 */
-	function validate(time) {
-	  var newTime = time;
-
-	  if (/^\d+[mh]$/i.test(newTime)) {
-	    newTime = newTime.replace(/^(\d+)m$/i, '$1:00');
-	    newTime = newTime.replace(/^(\d+)h$/i, '$1:00:00');
-	  }
-
-	  if (!(!isNaN(newTime) && newTime !== Infinity && newTime !== -Infinity && typeof newTime === 'number' || typeof newTime === 'string')) {
-	    throw new Error('Expected time to be a string or number, instead got: ' + (
-	    // Passes correct type, including null, NaN and Infinity
-	    typeof newTime === 'number' || newTime === null ? newTime : typeof newTime === 'undefined' ? 'undefined' : _typeof(newTime)));
-	  }
-
-	  if (!(isNaN(Number(newTime)) || Number(newTime) >= 0)) {
-	    throw new Error('Time cannot be a negative number, got: ' + newTime);
-	  }
-
-	  if (!(0, _correctFormat2.default)(newTime)) {
-	    throw new Error('Expected time to be in (hh:mm:ss) format, instead got: ' + newTime);
-	  }
-
-	  if ((0, _timeToSeconds2.default)(newTime) > 3599999) {
-	    throw new Error('Sorry, we don\'t support any time over 999:59:59.');
-	  }
-
-	  return (0, _timeToSeconds2.default)(newTime);
-	}
-
-/***/ },
-/* 7 */
-/***/ function(module, exports) {
-
-	"use strict";
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	/**
-	 * @description Creates an EventEmitter.
-	 *
-	 * This is a super slimmed down version of nodes EventEmitter.
-	 *
-	 * This is only intended for internal use, as there is
-	 * no real error checking.
-	 */
-	function EventEmitter() {
-	  this.events = {};
-	}
-
-	EventEmitter.prototype = {
-
-	  constructor: EventEmitter,
-
-	  /**
-	   * @description Registers a listener to an event array.
-	   *
-	   * @param {String} event - The event to attach to.
-	   * @param {Function} listener - The event listener.
-	   */
-	  on: function on(event, listener) {
-	    if (!this.events[event]) {
-	      this.events[event] = [];
-	    }
-
-	    this.events[event].push(listener);
-	  },
-
-
-	  /**
-	   * @description Emits an event, calling all listeners store
-	   * against the provided event.
-	   *
-	   * @param {String} event - The event to emit.
-	   */
-	  emit: function emit(event) {
-	    var _this = this;
-
-	    for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
-	      args[_key - 1] = arguments[_key];
-	    }
-
-	    if (this.events[event]) {
-	      this.events[event].forEach(function (listener) {
-	        listener.apply(_this, args);
-	      });
-	    }
-	  },
-
-
-	  /**
-	   * @description Removes all listeners.
-	   */
-	  removeAllListeners: function removeAllListeners() {
-	    this.events = {};
-	  }
-	};
-
-	exports.default = EventEmitter;
-
-/***/ },
-/* 8 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -631,23 +226,19 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _objectAssign2 = _interopRequireDefault(_objectAssign);
 
-	var _EventEmitter = __webpack_require__(7);
+	var _EventEmitter = __webpack_require__(8);
 
 	var _EventEmitter2 = _interopRequireDefault(_EventEmitter);
 
-	var _buildOptions = __webpack_require__(9);
+	var _buildOptions = __webpack_require__(3);
 
 	var _buildOptions2 = _interopRequireDefault(_buildOptions);
 
-	var _validate = __webpack_require__(6);
+	var _validate = __webpack_require__(7);
 
 	var _validate2 = _interopRequireDefault(_validate);
 
-	var _store = __webpack_require__(4);
-
-	var _store2 = _interopRequireDefault(_store);
-
-	var _formatTime2 = __webpack_require__(3);
+	var _formatTime2 = __webpack_require__(5);
 
 	var _formatTime3 = _interopRequireDefault(_formatTime2);
 
@@ -782,14 +373,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	  /**
 	   * @description Destroys the timr,
 	   * clearing the interval, removing all event listeners and removing,
-	   * from the store.
+	   * from the store (if it's in one).
 	   *
 	   * @return {Object} Returns a reference to the Timr so calls can be chained.
 	   */
 	  destroy: function destroy() {
 	    this.clear().removeAllListeners();
 
-	    _store2.default.removeFromStore(this);
+	    // removeFromStore is added when the timr is added to a store,
+	    // so need to check if it's in a store before removing it.
+	    if (typeof this.removeFromStore === 'function') {
+	      this.removeFromStore();
+	    }
 
 	    return this;
 	  },
@@ -854,7 +449,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  formatTime: function formatTime() {
 	    var time = arguments.length <= 0 || arguments[0] === undefined ? 'currentTime' : arguments[0];
 
-	    return (0, _formatTime3.default)(this[time], this.options.separator, this.options.outputFormat, this.options.formatType);
+	    return (0, _formatTime3.default)(this[time], this.options);
 	  },
 
 
@@ -877,7 +472,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	   * @return {Object} Returns a reference to the Timr so calls can be chained.
 	   */
 	  changeOptions: function changeOptions(options) {
-	    this.options = (0, _buildOptions2.default)(options, this);
+	    this.options = (0, _buildOptions2.default)(options, this.options);
 
 	    return this;
 	  },
@@ -935,7 +530,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.default = Timr;
 
 /***/ },
-/* 9 */
+/* 3 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -957,18 +552,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	/**
 	 * @description Builds an options object from default and custom options.
 	 *
-	 * @param {Object} options - Custom options.
-	 * @param {Object} timr - The Timr object.
+	 * @param {Object} [newOptions] - Optional custom options.
+	 * @param {Object} [oldOptions] - Optional previous options.
 	 *
 	 * @throws If any option is invalid.
 	 *
 	 * @return {Object} Compiled options from default and custom.
 	 */
-	function buildOptions(options, timr) {
-	  if (options) {
-	    var separator = options.separator;
-	    var outputFormat = options.outputFormat;
-	    var formatType = options.formatType;
+	function buildOptions(newOptions, oldOptions) {
+	  if (newOptions) {
+	    var separator = newOptions.separator;
+	    var outputFormat = newOptions.outputFormat;
+	    var formatType = newOptions.formatType;
 
 	    // Error checking for separator.
 
@@ -993,7 +588,440 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	  }
 
-	  return (0, _objectAssign2.default)(timr.options || { formatType: 'h', outputFormat: 'mm:ss', separator: ':' }, options);
+	  return (0, _objectAssign2.default)(oldOptions || { formatType: 'h', outputFormat: 'mm:ss', separator: ':' }, newOptions);
+	}
+
+/***/ },
+/* 4 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.default = correctFormat;
+	/**
+	 * @description Checks the provided time for correct formatting.
+	 * See incorrectFormat-test.js for examples of correct and incorrect formatting.
+	 *
+	 * @param {String} time - The provided time string.
+	 *
+	 * @returns {Boolean} True if format is correct, false otherwise.
+	 */
+
+	function correctFormat(time) {
+	  var newTime = time;
+
+	  if (typeof newTime === 'number') {
+	    return true;
+	  }
+
+	  if (typeof newTime !== 'string') {
+	    return false;
+	  }
+
+	  newTime = newTime.split(':');
+
+	  // No more than 3 units (hh:mm:ss) and every unit is a number and is not a negative number.
+	  return newTime.length <= 3 && newTime.every(function (el) {
+	    return !isNaN(Number(el)) && Number(el) >= 0;
+	  });
+	}
+
+/***/ },
+/* 5 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.default = formatTime;
+
+	var _buildOptions2 = __webpack_require__(3);
+
+	var _buildOptions3 = _interopRequireDefault(_buildOptions2);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	/**
+	 * @description Converts seconds to time format.
+	 *
+	 * @param {Number} seconds - The seconds to convert.
+	 * @param {Object} [options] - The options to build the string.
+	 *
+	 * @return {String} The formatted time.
+	 */
+	function formatTime(seconds, options) {
+	  var _buildOptions = (0, _buildOptions3.default)(options);
+
+	  var outputFormat = _buildOptions.outputFormat;
+	  var formatType = _buildOptions.formatType;
+	  var separator = _buildOptions.separator;
+
+	  /**
+	   * @description Creates a timestring.
+	   * Created inside formatTime to have access to separator argument,
+	   *
+	   * @param {Array} [...args] - All arguments to be processed
+	   *
+	   * @return {String} The compiled time string.
+	   */
+
+	  var createTimeString = function createTimeString() {
+	    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+	      args[_key] = arguments[_key];
+	    }
+
+	    return args.filter(function (value) {
+	      return value !== false;
+	    }).map(function (value) {
+	      return value < 10 ? '0' + value : value;
+	    }).join(separator);
+	  };
+
+	  if (formatType === 's') {
+	    return '' + seconds;
+	  }
+
+	  var minutes = seconds / 60;
+
+	  if (minutes >= 1 && /[hm]/i.test(formatType)) {
+	    var hours = minutes / 60;
+	    minutes = Math.floor(minutes);
+
+	    if (hours >= 1 && /[h]/i.test(formatType)) {
+	      hours = Math.floor(hours);
+
+	      return createTimeString(hours, minutes - hours * 60, seconds - minutes * 60);
+	    }
+
+	    return createTimeString(/HH:MM:SS/i.test(outputFormat) && 0, minutes, seconds - minutes * 60);
+	  }
+
+	  return createTimeString(/HH:MM:SS/i.test(outputFormat) && 0, /MM:SS/i.test(outputFormat) && 0, seconds);
+	}
+
+/***/ },
+/* 6 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.default = timeToSeconds;
+	/**
+	 * @description Converts time format (HH:MM:SS) into seconds.
+	 *
+	 * Automatically rounds the returned number to avoid errors
+	 * with floating point values.
+	 *
+	 * @param {String|Number} time - The time to be converted.
+	 * If a number is provided it will simply return that number.
+	 *
+	 * @return {Number} - The time in seconds.
+	 */
+	function timeToSeconds(time) {
+	  if (typeof time === 'number' && !isNaN(time)) {
+	    return Math.round(time);
+	  }
+
+	  return Math.round(time.split(':').reduce(function (prev, curr, index, arr) {
+	    if (arr.length === 3) {
+	      if (index === 0) {
+	        return prev + Number(curr) * 60 * 60;
+	      }
+	      if (index === 1) {
+	        return prev + Number(curr) * 60;
+	      }
+	    }
+
+	    if (arr.length === 2) {
+	      if (index === 0) {
+	        return prev + Number(curr) * 60;
+	      }
+	    }
+
+	    return prev + Number(curr);
+	  }, 0));
+	}
+
+/***/ },
+/* 7 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+
+	exports.default = validate;
+
+	var _timeToSeconds = __webpack_require__(6);
+
+	var _timeToSeconds2 = _interopRequireDefault(_timeToSeconds);
+
+	var _correctFormat = __webpack_require__(4);
+
+	var _correctFormat2 = _interopRequireDefault(_correctFormat);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	/**
+	 * @description Validates the provded time
+	 *
+	 * Additionally, if a pattern is provided, 25h / 25m, than
+	 * it is converted here before being passed to timeToSeconds.
+	 *
+	 * @param {String|Number} time - The time to be checked
+	 *
+	 * @throws If the provided time is neither a number nor a string.
+	 * @throws If the provided time is a negative number.
+	 * @throws If the provided time is not in the correct format.
+	 * @throws If the provided time in seconds is over 999:59:59.
+	 *
+	 * @returns {Number} - The original number or the converted number if
+	 * a time string was provided.
+	 */
+	function validate(time) {
+	  var newTime = time;
+
+	  if (/^\d+[mh]$/i.test(newTime)) {
+	    newTime = newTime.replace(/^(\d+)m$/i, '$1:00');
+	    newTime = newTime.replace(/^(\d+)h$/i, '$1:00:00');
+	  }
+
+	  if (!(!isNaN(newTime) && newTime !== Infinity && newTime !== -Infinity && typeof newTime === 'number' || typeof newTime === 'string')) {
+	    throw new Error('Expected time to be a string or number, instead got: ' + (
+	    // Passes correct type, including null, NaN and Infinity
+	    typeof newTime === 'number' || newTime === null ? newTime : typeof newTime === 'undefined' ? 'undefined' : _typeof(newTime)));
+	  }
+
+	  if (!(isNaN(Number(newTime)) || Number(newTime) >= 0)) {
+	    throw new Error('Time cannot be a negative number, got: ' + newTime);
+	  }
+
+	  if (!(0, _correctFormat2.default)(newTime)) {
+	    throw new Error('Expected time to be in (hh:mm:ss) format, instead got: ' + newTime);
+	  }
+
+	  if ((0, _timeToSeconds2.default)(newTime) > 3599999) {
+	    throw new Error('Sorry, we don\'t support any time over 999:59:59.');
+	  }
+
+	  return (0, _timeToSeconds2.default)(newTime);
+	}
+
+/***/ },
+/* 8 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	/**
+	 * @description Creates an EventEmitter.
+	 *
+	 * This is a super slimmed down version of nodes EventEmitter.
+	 *
+	 * This is only intended for internal use, as there is
+	 * no real error checking.
+	 */
+	function EventEmitter() {
+	  this.events = {};
+	}
+
+	EventEmitter.prototype = {
+
+	  constructor: EventEmitter,
+
+	  /**
+	   * @description Registers a listener to an event array.
+	   *
+	   * @param {String} event - The event to attach to.
+	   * @param {Function} listener - The event listener.
+	   */
+	  on: function on(event, listener) {
+	    if (!this.events[event]) {
+	      this.events[event] = [];
+	    }
+
+	    this.events[event].push(listener);
+	  },
+
+
+	  /**
+	   * @description Emits an event, calling all listeners store
+	   * against the provided event.
+	   *
+	   * @param {String} event - The event to emit.
+	   */
+	  emit: function emit(event) {
+	    var _this = this;
+
+	    for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+	      args[_key - 1] = arguments[_key];
+	    }
+
+	    if (this.events[event]) {
+	      this.events[event].forEach(function (listener) {
+	        listener.apply(_this, args);
+	      });
+	    }
+	  },
+
+
+	  /**
+	   * @description Removes all listeners.
+	   */
+	  removeAllListeners: function removeAllListeners() {
+	    this.events = {};
+	  }
+	};
+
+	exports.default = EventEmitter;
+
+/***/ },
+/* 9 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.default = createStore;
+
+	var _Timr = __webpack_require__(2);
+
+	var _Timr2 = _interopRequireDefault(_Timr);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	/**
+	 * @description Flattens arrays to their base values
+	 * Example: [[1], 2, [[[3]]]] - [1, 2, 3]
+	 *
+	 * @param {Array} The array to flatten
+	 *
+	 * @return {Array} The flattened array
+	 */
+	function flattenArray(arr) {
+	  return arr.reduce(function (prev, curr) {
+	    if (Array.isArray(curr)) {
+	      return prev.concat(flattenArray(curr));
+	    }
+
+	    return prev.concat(curr);
+	  }, []);
+	}
+
+	/**
+	 * @description Creates a store that can store multiple timr objects
+	 * and perform functions on all of them.
+	 *
+	 * @param {Array} [args] - Optional timers to start the store with.
+	 * Can be any type, but will get filtered down to only timr objects.
+	 *
+	 * @return {Object} Returns a store object with methods.
+	 */
+	function createStore() {
+	  for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+	    args[_key] = arguments[_key];
+	  }
+
+	  // Array to store all timrs.
+	  // Filters out non timr objects and timrs that exist in another store.
+	  var timrs = flattenArray(args).filter(function (item) {
+	    return item instanceof _Timr2.default;
+	  }).filter(function (timr) {
+	    return typeof timr.removeFromStore !== 'function';
+	  });
+
+	  var removeFromStore = function removeFromStore(timr) {
+	    if (timr instanceof _Timr2.default) {
+	      timrs = timrs.filter(function (x) {
+	        return x !== timr;
+	      });
+	      /* eslint-disable no-param-reassign */
+	      timr.removeFromStore = null;
+	    }
+	  };
+
+	  // Provides each Timr with the ability to remove itself from the store.
+	  timrs.forEach(function (timr) {
+	    timr.removeFromStore = function () {
+	      removeFromStore(timr);
+	    };
+	  });
+
+	  return {
+	    /**
+	     * @description Adds the provided timr to the store.
+	     *
+	     * @param {Object} timr - A timr object.
+	     *
+	     * @throws If the provided timr is not a Timr object.
+	     * @throws If the provided timr is already in a store.
+	     *
+	     * @return {Object} The provided timr object.
+	     */
+	    add: function add(timr) {
+	      if (timr instanceof _Timr2.default && typeof timr.removeFromStore !== 'function') {
+	        timrs.push(timr);
+
+	        timr.removeFromStore = function () {
+	          removeFromStore(timr);
+	        };
+	        /* eslint-disable no-param-reassign */
+	      } else {
+	        throw new Error('Unable to add to store; provided argument is either already in a store ' + 'or not a timr object.');
+	      }
+
+	      return timr;
+	    },
+
+	    // Methods associated with all Timrs.
+	    getAll: function getAll() {
+	      return timrs;
+	    },
+	    startAll: function startAll() {
+	      return timrs.forEach(function (timr) {
+	        return timr.start();
+	      });
+	    },
+	    pauseAll: function pauseAll() {
+	      return timrs.forEach(function (timr) {
+	        return timr.pause();
+	      });
+	    },
+	    stopAll: function stopAll() {
+	      return timrs.forEach(function (timr) {
+	        return timr.stop();
+	      });
+	    },
+	    isRunning: function isRunning() {
+	      return timrs.filter(function (timr) {
+	        return timr.isRunning();
+	      });
+	    },
+	    removeFromStore: removeFromStore,
+	    destroyAll: function destroyAll() {
+	      timrs.forEach(function (timr) {
+	        return timr.destroy();
+	      });
+	      timrs = [];
+	    }
+	  };
 	}
 
 /***/ }

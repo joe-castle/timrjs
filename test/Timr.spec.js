@@ -3,7 +3,7 @@ import dirtyChai from 'dirty-chai';
 import sinon from 'sinon';
 
 import Timr from '../src/Timr';
-import store from '../src/store';
+import createStore from '../src/createStore';
 
 // Turns methods like to.be.true into to.be.true() to stop eslint failing
 chai.use(dirtyChai);
@@ -120,7 +120,8 @@ describe('Timr Class', () => {
     });
 
     it('Removes the timer from the store', () => {
-      const timer = store.add(new Timr(600));
+      const timer = new Timr(600);
+      const store = createStore(timer);
 
       expect(store.getAll().indexOf(timer)).to.equal(0);
 

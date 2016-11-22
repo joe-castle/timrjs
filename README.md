@@ -63,8 +63,6 @@ Optional. Object which accepts:
      - `'-'` e.g. output: `'10-00'`
      - `'+'` e.g. output: `'10+00'`
      - `'foobar'` e.g. output: `'10foobar00'`
- - `store` - Overrides the global store setting if provided. See: _[store](#store)_
-   - Accepts `true` or `false`.
 
 ## Basic Usage
 Import Timr into your project.
@@ -130,7 +128,7 @@ The following methods are available on all timrs.
  - `start(delay)` - Starts the timer. Optionally delays starting by the provided ms.
  - `pause()` - Pauses the timer.
  - `stop()` - Stops the timer.
- - `destroy()` - Stops the timer, removes all event listeners and removes the timr from the store.
+ - `destroy()` - Stops the timer, removes all event listeners and removes the timr from the store (if it's in one).
  - `ticker(fn)` - The provided function executes every second the timer ticks down.
  - `finish(fn)` - The provided function executes once the timer finishes.
  - `formatTime(time)` - Returns the currentTime, formatted. Optionally accepts 'startTime', which will return the startTime formatted.
@@ -172,22 +170,38 @@ timer.isRunning();
 // false
 ```
 ## Top Level API
-### Store
-The store is a singleton object that stores all Timr objects created, providing some useful methods that can be run on all Timrs at once.
+### createStore
+The createStore function provides a way to easily store multiple timrs together and perform various operations on all of them at the same time.
 
-By default this feature is disabled, to enable, set the store variable to true after importing Timr.
+It is available on the imported Timr Object.
 ```js
 import Timr from 'timrjs';
 
-Timr.store = true;
+const store = Timr.createStore();
 ```
-Each Timr can override this setting on creation by setting the store option:
+
+It also accepts Timr objects; these can be as separate arguments or together in an Array.
+
+If any non-Timr arguments are provided, they will be removed from the array. If a Timr object also exists in another store, they won't be added to a new one.
+
+_The below exmples are a bit extreme, but they're to illustrate how it works._
+
 ```js
-const timer = Timr('10:00', { store: false });
-// This Timr won't be stored, regardless of the global setting.
+const timer1 = Timr(600);
+const timer2 = Timr(600);
+const timer3 = Timr(600);
+
+const store1 = createStore(timer1, 'not a timr', {}, 5);
+// The resulting array will look like: [timer1].
+
+const store2 = createStore([[timer1], 5, 'beebop', [timer2, [3, {}]], timer3])
+// The resulting array will look like: [timer2, timer3].
 ```
+
+These will both return an object that contains the following methods.
+
 **Available Methods**
- - `Timr.add(timr)` - Adds the provided Timr to the store. If it already exits  in the store, then it won't add it again. Returns the provided Timr.
+ - `Timr.add(timr)` - Adds the provided Timr to the store. If it already exits in a store, then it won't add it. Returns the provided Timr.
  - `Timr.getAll()` - Returns the array of all stored Timrs.
  - `Timr.startAll()` - Starts all stored Timrs.
  - `Timr.pauseAll()` - Pauses all stored Timrs.
@@ -196,16 +210,18 @@ const timer = Timr('10:00', { store: false });
  - `Timr.removeFromStore(timr)` - Removes the provided Timr from the store.
  - `Timr.destroyAll()` - Destroys all stored Timrs.
 
+Each store is isolated, so methods run on one won't affect another.
+
 ### Utilities
-The following methods are availble on the imported Timr object.
+The following methods are also available on the imported Timr object.
  - `Timr.validate(startTime)` - Validates the startTime and returns it converted into seconds.
    - Ensures provided time is a number or a string.
    - Ensures it is not a negative number.
    - Checks validity of time string.
    - Ensures provided time does not exceed '999:59:59'.
- - `Timr.formatTime(seconds, separator, outputFormat, formatType)` - Converts seconds into a time string. Used by Timrs when outputting their formattedTime.
+ - `Timr.formatTime(seconds, options)` - Converts seconds into a time string. Used by Timrs when outputting their formattedTime.
    - `seconds` - Required. The seconds to be converted.
-   - `separator` `outputFormat` `formatType` - See: _[parameters > options](#parameters)_
+   - `options` - See: _[parameters > options](#parameters)_
  - `Timr.timeToSeconds(time)` - Converts a time string into seconds. Must be separated by a colon, e.g. '10:00'. Used in the validate method.
  - `Timr.correctFormat(time)` - Checks the format of a time string. Must be separated by a colon, e.g. '10:00'. Used in the validate method.
 
@@ -221,11 +237,11 @@ Timr.validate('25:00:00');
 
 Timr.formatTime(600);
 // '10:00'
-Timr.formatTime(600, '-');
+Timr.formatTime(600, { separator: '-' });
 // '10-00'
-Timr.formatTime(600, undefined, 'HH:MM:SS');
+Timr.formatTime(600, { outputFormat: 'HH:MM:SS' });
 // '00:10:00'
-Timr.formatTime(7200, undefined, undefined, 'm');
+Timr.formatTime(7200, { formatType: 'm' });
 // '120:00'
 
 Timr.timeToSeconds('10:00');
