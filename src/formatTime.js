@@ -1,3 +1,5 @@
+import buildOptions from './buildOptions';
+
 /**
  * @description Converts seconds to time format.
  *
@@ -8,23 +10,21 @@
  *
  * @return {String} The formatted time.
  */
-export default function formatTime(
-  seconds,
-  separator = ':',
-  outputFormat = 'mm:ss',
-  formatType = 'h'
-) {
+export default function formatTime(seconds, options) {
+  const { outputFormat, formatType, separator } = buildOptions(options);
+
   /**
    * @description Creates a timestring.
-   * Created inside formatTime to have access to its arguments,
+   * Created inside formatTime to have access to separator argument,
    *
    * @param {Array} [...args] - All arguments to be processed
    *
    * @return {String} The compiled time string.
    */
-  function createTimeString(...args) {
-    return args.filter(value => value !== false)
-      .map((value) => (value < 10 ? `0${value}` : value))
+  const createTimeString = function createTimeString(...args) {
+    return args
+      .filter(value => value !== false)
+      .map(value => (value < 10 ? `0${value}` : value))
       .join(separator);
   }
 

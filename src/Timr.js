@@ -211,12 +211,7 @@ Timr.prototype = objectAssign(Object.create(EventEmitter.prototype), {
    * @return {String} The formatted time.
    */
   formatTime(time = 'currentTime') {
-    return formatTime(
-      this[time],
-      this.options.separator,
-      this.options.outputFormat,
-      this.options.formatType
-    );
+    return formatTime(this[time], this.options);
   },
 
   /**
