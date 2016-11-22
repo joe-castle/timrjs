@@ -237,7 +237,7 @@ Timr.prototype = objectAssign(Object.create(EventEmitter.prototype), {
    * @return {Object} Returns a reference to the Timr so calls can be chained.
    */
   changeOptions(options) {
-    this.options = buildOptions(options, this);
+    this.options = buildOptions(options, this.options);
 
     return this;
   },

@@ -3,16 +3,16 @@ import objectAssign from 'object-assign';
 /**
  * @description Builds an options object from default and custom options.
  *
- * @param {Object} options - Custom options.
- * @param {Object} timr - The Timr object.
+ * @param {Object} [newOptions] - Optional custom options.
+ * @param {Object} [oldOptions] - Optional previous options.
  *
  * @throws If any option is invalid.
  *
  * @return {Object} Compiled options from default and custom.
  */
-export default function buildOptions(options, timr) {
-  if (options) {
-    const { separator, outputFormat, formatType } = options;
+export default function buildOptions(newOptions, oldOptions) {
+  if (newOptions) {
+    const { separator, outputFormat, formatType } = newOptions;
 
     // Error checking for separator.
     if (separator) {
@@ -43,7 +43,7 @@ export default function buildOptions(options, timr) {
   }
 
   return objectAssign(
-    timr.options || { formatType: 'h', outputFormat: 'mm:ss', separator: ':' },
-    options
+    oldOptions || { formatType: 'h', outputFormat: 'mm:ss', separator: ':' },
+    newOptions
   );
 }
