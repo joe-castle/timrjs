@@ -44,15 +44,17 @@ Accepts a string or a number; a number is treated as seconds. Examples of accept
  - `0` - Sets up a stopwatch style counter, counting up rather than down.
 
 If the provided startTime is invalid an error will be thrown. Times up to 999:59:59 are supported.
-
+```js
+Timr('10:00');
+```
 **options**
 
 Optional. Object which accepts:
  - `outputFormat` - This option specifies how many 00 should be added to the front of the time string as it counts down from hours to minutes to seconds. Defaults to `'mm:ss'`
    - Accepts the following values (case insensitive):
-     - `'hh:mm:ss'` e.g. output: `'01:00:00'` `'00:43:23'` `'00:00:25'`.
-     - `'mm:ss'` e.g. output: `'01:00:00'` - `'43:23'` - `'00:25'`.
-     - `'ss'` e.g. output: `'01:00:00'` - `'43:23'` - `'25'`.
+     - `'hh:mm:ss'` e.g. output: `'02:00:00'` `'00:20:00'` `'00:00:20'`.
+     - `'mm:ss'` e.g. output: `'02:00:00'` - `'20:00'` - `'00:20'`.
+     - `'ss'` e.g. output: `'02:00:00'` - `'20:00'` - `'20'`.
  - `formatType` - This option specifies whether to format the time string up to hours, up to minutes or just seconds. Defaults to `'h'`
     - Accepts the following values (case insensitive):
       - `'h'` e.g. output: `'02:00:00'`
@@ -60,69 +62,81 @@ Optional. Object which accepts:
       - `'s'` e.g. output: `'7200'`
  - `separator` - This option specifies how the time string is separated. Defaults to `':'`
    - Accepts any string value, examples:
-     - `'-'` e.g. output: `'10-00'`
-     - `'+'` e.g. output: `'10+00'`
-     - `'foobar'` e.g. output: `'10foobar00'`
+     - `':'` e.g. output: `'20:00'`
+     - `'-'` e.g. output: `'20-00'`
+     - `'+'` e.g. output: `'20+00'`
 
 ## Basic Usage
 Import Timr into your project.
 ```js
 import Timr from 'timrjs';
 ```
-To create a Timr, simply call the function with the desired start time.
+Start by calling the Timr function with the desired startTime and any options. This will return a new Timr Object.
 ```js
 const timer = Timr('10:00');
 ```
-To `start`, `pause` and `stop`, call the desired method on the Timr.
-
-Stopping the timer resets the time back to the startTime. Where as pause will allow you to resume the timer (with start), where it was paused from.
-
-```js
-timer.start(delay);
-// Optional delay in ms before the timer starts
-timer.pause();
-timer.stop();
-```
-
-> _If start is called whilst the timer is already running, a warning will be logged to the console._
-
 Each Timr emits 2 events, `ticker` and `finish`.
 
 The `ticker` function is called every second the timer ticks down and is provided with the following arguments:
  - `formattedTime` - The current time formatted into a time string. Customisable with outputFormat, formatType and separator options.
- - `percentDone` - The elapsed time in percent.
+ - `percentDone` - The elapsed time in percent. _Useful for making something like a progress bar._
  - `currentTime` - The current time in seconds.
  - `startTime` - The starting time in seconds.
  - `self` - The original Timr object.
 
-> _The first time ticker is called will be 1 second after the timer starts. So if you have a 10:00 timer, the first call will emit 09:59._
-
 ```js
-timer.ticker((formattedTime, percentDone, currentTime, startTime, self) => {
-  console.log(formattedTime);
-  // '09:59'
-  console.log(percentDone);
-  // 0
-  console.log(currentTime);
-  // 599
-  console.log(startTime);
-  // 600
-  console.log(self);
-  // Timr {_events: Object, timer: 6, running: true, options: Object…}
+/**
+ * Tickers first call will be 1 second after the timer has started.
+ * In our current example, the first call will emit '09:59'.
+ *
+ * To display the timers startTime before starting the timer, you can call
+ * timer.formatTime() which will return, in this case, '10:00'.
+ */
+timer.ticker((formattedTime, percentDone, currentTime, startTime) => {
+  // formattedTime: '09:59'
+  // percentDone:   0
+  // currentTime:   599
+  // startTime:     600
 });
+
+/**
+ * If the Timr has been setup as a stopwatch, ticker will only be provided
+ * with 3 arguments: formattedTime, currentTime and self
+ */
 ```
-> _When used as a stopwatch, the ticker will be provided with 3 arguments, `formattedTime`, `currentTime` and `self`._
 
 The `finish` method is called once, when the timer hits 0. Only 1 argument is provided into the function, the original Timr object.
 ```js
-timer.finish(self => {
-  console.log(self)
-  // Timr {_events: Object, timer: 6, running: false, options: Object…}
-});
-```
-> _When used as a stopwatch, the timer will stop and the finish function will fire when the time reaches the maximum supported time `'999:59:59'`_
+timer.finish(() => {
+  // ticker: '00:00'
+  // finish: 'Countdown Finished!'
+})
 
-All of the above methods return a reference to the timr, so calls can be chained.
+/*
+ * If the Timr has been setup as a stopwatch, the timer will stop
+ * and the finish function will fire when the time reaches the
+ * maximum supported time of '999:59:59'.
+ */
+ Timr(0).finish(() => {
+   // ticker: '1000:00:00'
+   // finish: 'Stopwatch Finished!''
+ });
+```
+
+To control the Timr, you use the `start`, `pause` and `stop` methods.
+
+```js
+/*
+ * Start takes an optional number (in ms) argument that will
+ * delay the start of the timer.
+ */
+timer.start([delay]);
+timer.pause();
+timer.stop();
+```
+
+All of the methods discussed thus for return a reference to the original Timr so calls can be chained. The same goes for the rest of the methods below, unless they specifically return a value, like: `timer.formatTime()`
+
 ### API
 The following methods are available on all timrs.
  - `start(delay)` - Starts the timer. Optionally delays starting by the provided ms.
@@ -139,44 +153,12 @@ The following methods are available on all timrs.
  - `getCurrentTime()` - Returns the currentTime in seconds.
  - `isRunning()` - Returns true if the timer is running, false otherwise.
 
-```js
-timer.start();
-// Returns a reference to the timr.
-timer.pause();
-// Returns a reference to the timr.
-timer.stop();
-// Returns a reference to the timr.
-timer.destroy();
-// Returns a reference to the timr.
-timer.ticker(ft => console.log(ft));
-// Returns a reference to the timr.
-timer.finish(() => console.log('All done!'));
-// Returns a reference to the timr.
-timer.formatTime();
-// '10:00'
-timer.formatTime('startTime');
-// '10:00'
-timer.percentDone();
-// 0
-timer.changeOptions({ separator: '-' });
-// Returns a reference to the timr.
-timer.setStartTime('11:00');
-// '11:00'
-timer.getStartTime();
-// 600
-timer.getCurrentTime();
-// 600
-timer.isRunning();
-// false
-```
 ## Top Level API
 ### createStore
 The createStore function provides a way to easily store multiple timrs together and perform various operations on all of them at the same time.
 
 It is available on the imported Timr Object.
 ```js
-import Timr from 'timrjs';
-
 const store = Timr.createStore();
 ```
 
@@ -184,23 +166,21 @@ It also accepts Timr objects; these can be as separate arguments or together in 
 
 If any non-Timr arguments are provided, they will be removed from the array. If a Timr object also exists in another store, they won't be added to a new one.
 
-_The below exmples are a bit extreme, but they're to illustrate how it works._
 
 ```js
-const timer1 = Timr(600);
-const timer2 = Timr(600);
-const timer3 = Timr(600);
+const timer1 = Timr('20:00');
+const timer2 = Timr('15:00');
+const timer3 = Timr('10:00');
+const timer4 = Timr('5:00');
 
-const store1 = createStore(timer1, 'not a timr', {}, 5);
-// The resulting array will look like: [timer1].
-
-const store2 = createStore([[timer1], 5, 'beebop', [timer2, [3, {}]], timer3])
-// The resulting array will look like: [timer2, timer3].
+const store1 = Timr.createStore(timer1, timer2);
+const store2 = Timr.createStore([timer2, timer3, timer4]);
+// Because timer2 already exists in store1, it won't be added to store2.
 ```
 
-These will both return an object that contains the following methods.
+**API**
 
-**Available Methods**
+When createStore is called, it will return an object with the following methods:
  - `Timr.add(timr)` - Adds the provided Timr to the store. If it already exits in a store, then it won't add it. Returns the provided Timr.
  - `Timr.getAll()` - Returns the array of all stored Timrs.
  - `Timr.startAll()` - Starts all stored Timrs.
