@@ -44,9 +44,7 @@ Accepts a string or a number; a number is treated as seconds. Examples of accept
  - `0` - Sets up a stopwatch style counter, counting up rather than down.
 
 If the provided startTime is invalid an error will be thrown. Times up to 999:59:59 are supported.
-```js
-Timr('10:00');
-```
+
 **options**
 
 Optional. Object which accepts:
