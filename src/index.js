@@ -1,6 +1,6 @@
 import objectAssign from 'object-assign';
 
-import validate from './validate';
+import validateStartTime from './validateStartTime';
 import formatTime from './formatTime';
 import timeToSeconds from './timeToSeconds';
 import correctFormat from './correctFormat';
@@ -21,7 +21,7 @@ const init = objectAssign(
 
   // Exposed helper methods.
   {
-    validate,
+    validateStartTime,
     formatTime,
     timeToSeconds,
     correctFormat,

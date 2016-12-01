@@ -2,7 +2,7 @@ import timeToSeconds from './timeToSeconds';
 import correctFormat from './correctFormat';
 
 /**
- * @description Validates the provded time
+ * @description Validates the startTime
  *
  * Additionally, if a pattern is provided, 25h / 25m, than
  * it is converted here before being passed to timeToSeconds.

@@ -3,7 +3,7 @@ import objectAssign from 'object-assign';
 import EventEmitter from './EventEmitter';
 
 import buildOptions from './buildOptions';
-import validate from './validate';
+import validateStartTime from './validateStartTime';
 import formatTime from './formatTime';
 
 /**
@@ -20,7 +20,7 @@ function Timr(startTime, options) {
 
   this.timer = null;
   this.running = false;
-  this.startTime = validate(startTime);
+  this.startTime = validateStartTime(startTime);
   this.currentTime = this.startTime;
   this.changeOptions(options);
 }
@@ -253,7 +253,7 @@ Timr.prototype = objectAssign(Object.create(EventEmitter.prototype), {
   setStartTime(startTime) {
     this.clear();
 
-    this.startTime = this.currentTime = validate(startTime);
+    this.startTime = this.currentTime = validateStartTime(startTime);
 
     return this.formatTime();
   },
