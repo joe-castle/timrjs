@@ -133,7 +133,7 @@ timer.pause();
 timer.stop();
 ```
 
-All of the methods discussed thus for return a reference to the original Timr so calls can be chained. The same goes for the rest of the methods below, unless they specifically return a value, like: `timer.formatTime()`
+All of the methods discussed thus far return a reference to the original Timr, so calls can be chained. The same goes for the rest of the methods below, unless they specifically return a value, like: `timer.formatTime()`
 
 ### API
 The following methods are available on all timrs.
