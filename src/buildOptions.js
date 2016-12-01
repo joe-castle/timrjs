@@ -42,8 +42,14 @@ export default function buildOptions(newOptions, oldOptions) {
     }
   }
 
+  const defaults = {
+    formatType: 'h',
+    outputFormat: 'mm:ss',
+    separator: ':'
+  };
+
   return objectAssign(
-    oldOptions || { formatType: 'h', outputFormat: 'mm:ss', separator: ':' },
+    oldOptions || defaults,
     newOptions
   );
 }

@@ -20,6 +20,7 @@ import correctFormat from './correctFormat';
 export default function validate(time) {
   let newTime = time;
 
+  // Converts '25m' & '25h' into '25:00' & '25:00:00' respectivley.
   if (/^\d+[mh]$/i.test(newTime)) {
     newTime = newTime.replace(/^(\d+)m$/i, '$1:00');
     newTime = newTime.replace(/^(\d+)h$/i, '$1:00:00');
