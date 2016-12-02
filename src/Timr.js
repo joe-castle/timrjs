@@ -9,18 +9,29 @@ import formatTime from './formatTime';
 /**
  * @description Creates a Timr.
  *
+ * If the provided startTime is 0 or fasly, the constructor will automatically
+ * setup the timr as stopwatch, this prevents the timer from counting down into
+ * negative numbers and covers previous use case where 0 was used to setup a
+ * stopwatch.
+ *
  * @param {String|Number} startTime - The starting time for the timr object.
  * @param {Object} [options] - Options to customise the timer.
  *
  * @throws If the provided startTime is neither a number or a string,
  * or, incorrect format.
+ *
+ * @return {Object} - The newly created Timr object.
  */
 function Timr(startTime, options) {
   EventEmitter.call(this);
 
+  const newStartTime = !startTime || startTime === 0
+   ? 0
+   : startTime;
+
   this.timer = null;
   this.running = false;
-  this.startTime = validateStartTime(startTime);
+  this.startTime = validateStartTime(newStartTime);
   this.currentTime = this.startTime;
   this.changeOptions(options);
 }
@@ -87,7 +98,7 @@ Timr.prototype = objectAssign(Object.create(EventEmitter.prototype), {
       const startFn = () => {
         this.running = true;
 
-        this.timer = this.startTime > 0
+        this.timer = this.options.countdown
           ? setInterval(Timr.countdown.bind(this), 1000)
           : setInterval(Timr.stopwatch.bind(this), 1000);
       };
@@ -235,14 +246,21 @@ Timr.prototype = objectAssign(Object.create(EventEmitter.prototype), {
    * @return {Object} Returns a reference to the Timr so calls can be chained.
    */
   changeOptions(options) {
-    this.options = buildOptions(options, this.options);
+    let newOptions = this.startTime > 0
+      ? options
+      : objectAssign({}, options, { countdown: false });
+
+    this.options = buildOptions(newOptions, this.options);
 
     return this;
   },
 
   /**
    * @description Sets new startTime after Timr has been created.
+   *
    * Will clear currentTime and reset to new startTime.
+   * Will also change the timer to a stopwatch if the startTime is falsy or 0,
+   * as per constructor.
    *
    * @param {String|Number} startTime - The new start time.
    *
@@ -253,7 +271,12 @@ Timr.prototype = objectAssign(Object.create(EventEmitter.prototype), {
   setStartTime(startTime) {
     this.clear();
 
-    this.startTime = this.currentTime = validateStartTime(startTime);
+    const newStartTime = !startTime || startTime === 0
+     ? 0
+     : startTime;
+
+    this.startTime = this.currentTime = validateStartTime(newStartTime);
+    this.changeOptions();
 
     return this.formatTime();
   },

@@ -18,9 +18,9 @@ describe('Timr Class', () => {
       expect(new Timr(0).currentTime).to.equal(0);
     });
 
-    it('Throws an error if startTime is not a string or number', () => {
-      expect(() => new Timr()).to.throw(
-        'Expected time to be a string or number, instead got: undefined'
+    it('Throws an error if startTime is not a string or a number', () => {
+      expect(() => new Timr({})).to.throw(
+        'Expected time to be a string or number, instead got: object'
       );
     });
   });
@@ -154,10 +154,23 @@ describe('Timr Class', () => {
 
     it('As a stopwatch, fires the ticker function every second the timer runs, ' +
       'returning the formattedTime, currentTime and original Timr object.', done => {
-      const timer = new Timr(0).start().ticker(
+      const timer = new Timr().start().ticker(
         (formattedTime, currentTime, self) => {
           expect(formattedTime).to.equal('00:01');
           expect(currentTime).to.equal(1);
+          expect(self).to.equal(timer);
+          timer.stop();
+          done();
+        }
+      );
+    });
+
+    it('The stopwatch is able to be started at any given time; previously in ' +
+     'pre v1.0.0 a stopwatch could only be started at 0.', done => {
+      const timer = new Timr(600, { countdown: false }).start().ticker(
+        (formattedTime, currentTime, self) => {
+          expect(formattedTime).to.equal('10:01');
+          expect(currentTime).to.equal(601);
           expect(self).to.equal(timer);
           timer.stop();
           done();
@@ -190,13 +203,12 @@ describe('Timr Class', () => {
 
     it('As a stopwatch, fires the finish function when the ' +
       'timer reaches the maximum supported time, 999:59:59', done => {
-      const timer = new Timr(0).start();
-      timer.ticker(() => {
-        timer.currentTime = 3600000;
-      }).finish(self => {
-        expect(self).to.equal(timer);
-        done();
-      });
+      const timer = new Timr(3599999, { countdown: false })
+        .finish(self => {
+          expect(self).to.equal(timer);
+          done();
+        })
+        .start();
     });
 
     it('Throws an error if the finish method is called with no ' +
@@ -274,6 +286,17 @@ describe('Timr Class', () => {
       expect(timer.formatTime()).to.equal('00-10-00');
     });
 
+    it('Ignores { countdown: true } when the startTime has been set to 0', done => {
+      const timer = new Timr()
+        .changeOptions({ countdown: true })
+        .ticker(ft => {
+          expect(ft).to.equal('00:01')
+          timer.destroy();
+          done();
+        })
+        .start();
+    });
+
     it('Returns a reference to the Timr', () => {
       const timer = new Timr(600).changeOptions();
       expect(timer).equal(timer);
@@ -308,6 +331,20 @@ describe('Timr Class', () => {
 
       expect(timer.setStartTime.bind(timer, '12-12')).to.throw(Error);
       expect(timer.setStartTime.bind(timer, 8737475638)).to.throw(Error);
+    });
+
+    it('Setsup a stopwatch if the newStartTime is falsy or 0', done => {
+      const timer = new Timr(600);
+
+      timer.setStartTime(0);
+
+      timer.ticker((ft, ct) => {
+        expect(ft).to.equal('00:01')
+        expect(ct).to.equal(1)
+        timer.destroy();
+        done();
+      })
+      .start();
     });
 
     it('Returns the formatted start time', () => {
