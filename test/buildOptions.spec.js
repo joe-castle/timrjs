@@ -5,16 +5,16 @@ import buildOptions from '../src/buildOptions';
 describe('Build Options Function', () => {
   it('Returns an object with default options.', () => {
     expect(buildOptions()).to.deep.equal(
-      { formatType: 'h', outputFormat: 'mm:ss', separator: ':' }
+      { formatType: 'h', outputFormat: 'mm:ss', separator: ':', countdown: true }
     );
   });
 
   it('Returns an object with amended outputFormat option', () => {
     expect(buildOptions({ outputFormat: 'ss' })).to.deep.equal(
-      { formatType: 'h', outputFormat: 'ss', separator: ':' }
+      { formatType: 'h', outputFormat: 'ss', separator: ':', countdown: true }
     );
     expect(buildOptions({ outputFormat: 'hh:mm:ss' })).to.deep.equal(
-      { formatType: 'h', outputFormat: 'hh:mm:ss', separator: ':' }
+      { formatType: 'h', outputFormat: 'hh:mm:ss', separator: ':', countdown: true }
     );
   });
 
@@ -26,10 +26,10 @@ describe('Build Options Function', () => {
 
   it('Returns an object with amended separator option', () => {
     expect(buildOptions({ separator: '-' })).to.deep.equal(
-      { formatType: 'h', outputFormat: 'mm:ss', separator: '-' }
+      { formatType: 'h', outputFormat: 'mm:ss', separator: '-', countdown: true }
     );
     expect(buildOptions({ separator: 'boop' })).to.deep.equal(
-      { formatType: 'h', outputFormat: 'mm:ss', separator: 'boop' }
+      { formatType: 'h', outputFormat: 'mm:ss', separator: 'boop', countdown: true }
     );
   });
 
@@ -47,10 +47,16 @@ describe('Build Options Function', () => {
 
   it('Returns an object with amended formatType option', () => {
     expect(buildOptions({ formatType: 'm' })).to.deep.equal(
-      { formatType: 'm', outputFormat: 'mm:ss', separator: ':' }
+      { formatType: 'm', outputFormat: 'mm:ss', separator: ':', countdown: true }
     );
     expect(buildOptions({ formatType: 's' })).to.deep.equal(
-      { formatType: 's', outputFormat: 'mm:ss', separator: ':' }
+      { formatType: 's', outputFormat: 'mm:ss', separator: ':', countdown: true }
+    );
+  });
+
+  it('Returns an object with amended countdown option', () => {
+    expect(buildOptions({ countdown: false })).to.deep.equal(
+      { formatType: 'h', outputFormat: 'mm:ss', separator: ':', countdown: false }
     );
   });
 });

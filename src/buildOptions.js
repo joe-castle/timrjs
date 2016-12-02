@@ -45,7 +45,8 @@ export default function buildOptions(newOptions, oldOptions) {
   const defaults = {
     formatType: 'h',
     outputFormat: 'mm:ss',
-    separator: ':'
+    separator: ':',
+    countdown: true,
   };
 
   return objectAssign(
