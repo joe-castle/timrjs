@@ -347,10 +347,10 @@ describe('Timr Class', () => {
       .start();
     });
 
-    it('Returns the formatted start time', () => {
-      expect(new Timr(600).setStartTime('11:00')).equal('11:00');
-      expect(new Timr(600).setStartTime('1:00')).equal('01:00');
-      expect(new Timr(600).setStartTime(800)).equal('13:20');
+    it('Returns a reference to the Timr', () => {
+      const timer = new Timr(600).setStartTime();
+      expect(timer).equal(timer);
+      timer.destroy();
     });
   });
 

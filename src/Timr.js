@@ -242,6 +242,8 @@ Timr.prototype = objectAssign(Object.create(EventEmitter.prototype), {
    * @description Creates / changes options for a Timr.
    * Merges with existing or default options.
    *
+   * Ignores { countdown: true } if startTime is 0 or falsy
+   *
    * @param {Object} options - The options to create / change.
    * @return {Object} Returns a reference to the Timr so calls can be chained.
    */
@@ -271,14 +273,16 @@ Timr.prototype = objectAssign(Object.create(EventEmitter.prototype), {
   setStartTime(startTime) {
     this.clear();
 
-    const newStartTime = !startTime || startTime === 0
-     ? 0
-     : startTime;
+    let newStartTime = startTime
+
+    if (!startTime || startTime === 0) {
+      newStartTime = 0;
+      this.changeOptions({ countdown: false });
+    }
 
     this.startTime = this.currentTime = validateStartTime(newStartTime);
-    this.changeOptions();
 
-    return this.formatTime();
+    return this;
   },
 
   /**
