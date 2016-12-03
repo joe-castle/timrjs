@@ -47,9 +47,5 @@ export default function validate(time) {
     throw new Error(`Expected time to be in (hh:mm:ss) format, instead got: ${newTime}`);
   }
 
-  if (timeToSeconds(newTime) > 3599999) {
-    throw new Error('Sorry, we don\'t support any time over 999:59:59.');
-  }
-
   return timeToSeconds(newTime);
 }

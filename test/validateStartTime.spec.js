@@ -26,18 +26,13 @@ describe('Validate function', () => {
       'Expected time to be a string or number, instead got: null'
     );
   });
-  it('Throws if the provided time is over a 999:59:59', () => {
-    expect(validateStartTime.bind(validateStartTime, 3600000)).to.throw(Error);
-    expect(validateStartTime.bind(validateStartTime, '3600000')).to.throw(Error);
-    expect(validateStartTime.bind(validateStartTime, '3600000')).to.throw(
-      'Sorry, we don\'t support any time over 999:59:59.'
-    );
-  });
+
   it('Does not throw an error when the time is valid', () => {
     expect(validateStartTime.bind(validateStartTime, 600)).to.not.throw(Error);
     expect(validateStartTime.bind(validateStartTime, '600')).to.not.throw(Error);
     expect(validateStartTime.bind(validateStartTime, '10:00')).to.not.throw(Error);
   });
+
   it('Returns the original number or the converted number if a time string was provided', () => {
     expect(validateStartTime(600)).to.equal(600);
     expect(validateStartTime('10:00')).to.equal(600);
