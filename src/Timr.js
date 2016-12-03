@@ -7,6 +7,38 @@ import validateStartTime from './validateStartTime';
 import formatTime from './formatTime';
 
 /**
+ * @description Converts an ISO date string into seconds until that date.
+ *
+ * @param {String} startTime - The ISO date string
+ *
+ * @throws If the date matches the regex but is not ISO format.
+ *
+ * @return {Number} - Returns the converted seconds if it is an ISO date,
+ * otherwise it will return the original value passed in.
+ */
+function ISODateStringToSeconds(startTime) {
+  if (/\d{4}-\d{2}-\d{2}( \d{2}:\d{2}:\d{2})?/i.test(startTime)) {
+    const parsedString = Date.parse(startTime.replace(' ', 'T'));
+
+    if (isNaN(parsedString)) {
+      throw new Error(
+        'The date/time you passed does not match ISO format. ' +
+        'You can pass a date like: YYYY-MM-DD. ' +
+        'You can pass a date and time like: YYYY-MM-DD HH:MM:SS. ' +
+        `You passed ${startTime}.`
+      );
+    }
+
+    return {
+      ISODate: startTime,
+      parsed: Math.round((parsedString - Date.now()) / 1000),
+    };
+  }
+
+  return startTime;
+}
+
+/**
  * @description Creates a Timr.
  *
  * If the provided startTime is 0 or fasly, the constructor will automatically
@@ -25,14 +57,13 @@ import formatTime from './formatTime';
 function Timr(startTime, options) {
   EventEmitter.call(this);
 
-  const newStartTime = !startTime || startTime === 0
-   ? 0
-   : startTime;
-
   this.timer = null;
-  this.running = false;
-  this.startTime = validateStartTime(newStartTime);
-  this.currentTime = this.startTime;
+  // this.running
+  // this.startTime
+  // this.currentTime
+  // this.ISODate
+  this.setStartTime(startTime);
+  // this.options
   this.changeOptions(options);
 }
 
@@ -71,11 +102,6 @@ Timr.stopwatch = function stopwatch() {
     this.currentTime,
     this
   );
-
-  if (this.currentTime > 3599999) {
-    this.stop();
-    this.emit('finish', this);
-  }
 };
 
 Timr.prototype = objectAssign(Object.create(EventEmitter.prototype), {
@@ -96,6 +122,10 @@ Timr.prototype = objectAssign(Object.create(EventEmitter.prototype), {
     } else {
     /* eslint-disable no-console */
       const startFn = () => {
+        if (this.ISODate) {
+          this.setStartTime(this.ISODate);
+        }
+
         this.running = true;
 
         this.timer = this.options.countdown
@@ -273,10 +303,30 @@ Timr.prototype = objectAssign(Object.create(EventEmitter.prototype), {
   setStartTime(startTime) {
     this.clear();
 
-    let newStartTime = startTime
+    // Coerces falsy values into 0.
+    let newStartTime;
 
-    if (!startTime || startTime === 0) {
+    if (startTime) {
+      const parsedISO = ISODateStringToSeconds(startTime);
+
+      // Double checks parsedISO has a parsed property, in case an empty object is passed
+      // in startTime.
+      if (typeof parsedISO === 'object' && parsedISO.parsed) {
+        this.ISODate = parsedISO.ISODate;
+        newStartTime = parsedISO.parsed;
+      } else {
+        this.ISODate = false;
+        newStartTime = parsedISO;
+      }
+    } else {
+      // Coerces falsy values into 0.
       newStartTime = 0;
+    }
+
+    // Changes to stopwatch only if setStartTime is run after Timr creation
+    // and the startTime is 0.
+    // The constructor will handle this on instantiation.
+    if (!newStartTime && this.options) {
       this.changeOptions({ countdown: false });
     }
 

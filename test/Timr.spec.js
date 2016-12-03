@@ -45,6 +45,35 @@ describe('Timr Class', () => {
         });
     });
 
+    it('If an ISO date has been used to start the timer, start will re-run setStartTime ' +
+    'to ensure the startTime is in sync. Allowing .start() ' +
+    'to be called at a later time.', done => {
+      const timer = new Timr('2016-12-15 10:00:00')
+        .ticker((ft, pd, ct) => {
+          const testStart = Math.round((Date.parse('2016-12-15 10:00:00') - Date.now()) / 1000);
+
+          expect(ct).to.equal(testStart);
+
+          timer.destroy();
+          done();
+        })
+
+      setTimeout(timer.start.bind(timer), 2000);
+    });
+
+    it('Same test as above, but using starts delay feature', done => {
+      const timer = new Timr('2016-12-15 10:00:00')
+        .ticker((ft, pd, ct) => {
+          const testStart = Math.round((Date.parse('2016-12-15 10:00:00') - Date.now()) / 1000);
+
+          expect(ct).to.equal(testStart);
+
+          timer.destroy();
+          done();
+        })
+        .start(2000);
+    });
+
     /* eslint-disable no-console */
     after(() => {
       console.warn.restore();
@@ -201,16 +230,6 @@ describe('Timr Class', () => {
       });
     });
 
-    it('As a stopwatch, fires the finish function when the ' +
-      'timer reaches the maximum supported time, 999:59:59', done => {
-      const timer = new Timr(3599999, { countdown: false })
-        .finish(self => {
-          expect(self).to.equal(timer);
-          done();
-        })
-        .start();
-    });
-
     it('Throws an error if the finish method is called with no ' +
       'function provided as the first argument', () => {
       expect(new Timr(600).finish.bind(Timr.prototype.finish)).to.throw(
@@ -326,11 +345,39 @@ describe('Timr Class', () => {
       });
     });
 
+    it('When passed a date and time, it creates a new Timr with a countdown to that' +
+    'point in time', () => {
+      const testStartTime1 = Math.round((Date.parse('2016-12-15 10:00:00') - Date.now()) / 1000);
+      expect(new Timr('2016-12-15 10:00:00').getStartTime()).to.equal(testStartTime1);
+
+      const testStartTime2 = Math.round((Date.parse('2017-12-15 10:00:00') - Date.now()) / 1000);
+      expect(new Timr('2017-12-15 10:00:00').getStartTime()).to.equal(testStartTime2);
+    });
+
+    it('When passed just a date, it creates a new Timr to that point in time,' +
+    'midnight of that date', () => {
+      const testStartTime1 = Math.round((Date.parse('2016-12-15') - Date.now()) / 1000);
+      expect(new Timr('2016-12-15').getStartTime()).to.equal(testStartTime1);
+
+      const testStartTime2 = Math.round((Date.parse('2017-12-15') - Date.now()) / 1000);
+      expect(new Timr('2017-12-15').getStartTime()).to.equal(testStartTime2);
+    });
+
+    it('Throws an error if the format matches the regex but is not ISO format', () => {
+      expect(() => new Timr('2016-13-25')).to.throw(
+        'The date/time you passed does not match ISO format. ' +
+        'You can pass a date like: YYYY-MM-DD. ' +
+        'You can pass a date and time like: YYYY-MM-DD HH:MM:SS. ' +
+        `You passed 2016-13-25.`
+      );
+    });
+
     it('Throws an error if the newly provided startTime is invalid', () => {
       const timer = new Timr(600);
 
       expect(timer.setStartTime.bind(timer, '12-12')).to.throw(Error);
-      expect(timer.setStartTime.bind(timer, 8737475638)).to.throw(Error);
+      expect(timer.setStartTime.bind(timer, {})).to.throw(Error);
+      expect(timer.setStartTime.bind(timer, 'invalid')).to.throw(Error);
     });
 
     it('Setsup a stopwatch if the newStartTime is falsy or 0', done => {
