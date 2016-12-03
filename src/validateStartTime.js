@@ -11,8 +11,7 @@ import correctFormat from './correctFormat';
  *
  * @throws If the provided time is neither a number nor a string.
  * @throws If the provided time is a negative number.
- * @throws If the provided time is not in the correct format.
- * @throws If the provided time in seconds is over 999:59:59.
+ * @throws If the provided time is not in the correct format HH:MM:SS.
  *
  * @returns {Number} - The original number or the converted number if
  * a time string was provided.
@@ -26,20 +25,23 @@ export default function validate(time) {
     newTime = newTime.replace(/^(\d+)h$/i, '$1:00:00');
   }
 
-  if (
-    !((!isNaN(newTime) && newTime !== Infinity && newTime !== -Infinity)
-    && typeof newTime === 'number'
-    || typeof newTime === 'string')
-  ) {
-    throw new Error(
-      `Expected time to be a string or number, instead got: ${
-        // Passes correct type, including null, NaN and Infinity
-        typeof newTime === 'number' || newTime === null ? newTime : typeof newTime
-      }`
-    );
+  if (typeof newTime !== 'string') {
+    if (
+      typeof newTime !== 'number' ||
+      isNaN(newTime) ||
+      newTime === Infinity ||
+      newTime === -Infinity
+    ) {
+      throw new Error(
+        `Expected time to be a string or number, instead got: ${
+          // Passes correct type, including null, NaN and Infinity
+          typeof newTime === 'number' || newTime === null ? newTime : typeof newTime
+        }`
+      );
+    }
   }
 
-  if (!(isNaN(Number(newTime)) || Number(newTime) >= 0)) {
+  if (Number(newTime) < 0) {
     throw new Error(`Time cannot be a negative number, got: ${newTime}`);
   }
 

@@ -10,6 +10,9 @@ describe('Validate function', () => {
     expect(validateStartTime.bind(validateStartTime, {})).to.throw(
       'Expected time to be a string or number, instead got: object'
     );
+    expect(validateStartTime.bind(validateStartTime, () => {})).to.throw(
+      'Expected time to be a string or number, instead got: function'
+    );
     expect(validateStartTime.bind(validateStartTime, -1)).to.throw(
       'Time cannot be a negative number, got: -1'
     );
