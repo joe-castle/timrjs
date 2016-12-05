@@ -75,10 +75,6 @@ describe('Timr Class', () => {
     });
 
     /* eslint-disable no-console */
-    after(() => {
-      console.warn.restore();
-    });
-
     it('If a timer is running and the user tries to start it again, ' +
       'a warning in the console is logged', () => {
       sinon.stub(console, 'warn');
@@ -89,6 +85,7 @@ describe('Timr Class', () => {
         .destroy();
 
       expect(console.warn.calledWith('Timer already running')).to.be.true();
+      console.warn.restore();
     });
     /* eslint-disable no-console */
 
@@ -367,8 +364,23 @@ describe('Timr Class', () => {
       expect(() => new Timr('2016-13-25')).to.throw(
         'The date/time you passed does not match ISO format. ' +
         'You can pass a date like: YYYY-MM-DD. ' +
+        'You can pass a time like: THH:MM:SS. ' +
         'You can pass a date and time like: YYYY-MM-DD HH:MM:SS. ' +
-        `You passed 2016-13-25.`
+        `You passed: 2016-13-25.`
+      );
+    });
+
+    it('Throws an error if the passed date is in the past', () => {
+      const dateNow = new Date();
+
+      expect(() => new Timr('2015-12-25')).to.throw(
+        'When passing a date/time, it cannot be in the past. ' +
+        'You can pass a date like: YYYY-MM-DD. ' +
+        'You can pass a time like: THH:MM:SS. ' +
+        'You can pass a date and time like: YYYY-MM-DD HH:MM:SS. ' +
+        `You passed: 2015-12-25. It's currently: ` + 
+        `${dateNow.getFullYear()}-${dateNow.getMonth()}-${dateNow.getDate()} ` +
+        `${dateNow.getHours()}:${dateNow.getMinutes()}:${dateNow.getSeconds()}`
       );
     });
 

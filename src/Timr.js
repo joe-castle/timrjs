@@ -17,21 +17,36 @@ import formatTime from './formatTime';
  * otherwise it will return the original value passed in.
  */
 function ISODateStringToSeconds(startTime) {
-  if (/\d{4}-\d{2}-\d{2}( \d{2}:\d{2}:\d{2})?/i.test(startTime)) {
-    const parsedString = Date.parse(startTime.replace(' ', 'T'));
+  if (/^(\d{4}-\d{2}-\d{2})?([ T]\d{2}:\d{2}:\d{2})?$/i.test(startTime)) {
+    const dateNow = new Date();
+    const parsedStartTime = Date.parse(startTime);
+    const startTimeToSeconds = Math.round((parsedStartTime - dateNow) / 1000);
 
-    if (isNaN(parsedString)) {
+    if (isNaN(parsedStartTime)) {
       throw new Error(
         'The date/time you passed does not match ISO format. ' +
         'You can pass a date like: YYYY-MM-DD. ' +
+        'You can pass a time like: THH:MM:SS. ' +
         'You can pass a date and time like: YYYY-MM-DD HH:MM:SS. ' +
-        `You passed ${startTime}.`
+        `You passed: ${startTime}.`
+      );
+    }
+    
+    if (startTimeToSeconds < 0) {
+      throw new Error(
+        'When passing a date/time, it cannot be in the past. ' +
+        'You can pass a date like: YYYY-MM-DD. ' +
+        'You can pass a time like: THH:MM:SS. ' +
+        'You can pass a date and time like: YYYY-MM-DD HH:MM:SS. ' +
+        `You passed: ${startTime}. It's currently: ` + 
+        `${dateNow.getFullYear()}-${dateNow.getMonth()}-${dateNow.getDate()} ` +
+        `${dateNow.getHours()}:${dateNow.getMinutes()}:${dateNow.getSeconds()}`
       );
     }
 
     return {
       ISODate: startTime,
-      parsed: Math.round((parsedString - Date.now()) / 1000),
+      parsed: startTimeToSeconds,
     };
   }
 
