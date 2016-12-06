@@ -19,7 +19,8 @@ let bannerText = `/**
 const config = {
   output: {
     library: 'Timr',
-    libraryTarget: 'umd'
+    libraryTarget: 'umd',
+    umdNamedDefine: true
   },
   plugins: [
     new webpack.optimize.OccurrenceOrderPlugin()
