@@ -17,36 +17,36 @@ import formatTime from './formatTime';
  * otherwise it will return the original value passed in.
  */
 function ISODateStringToSeconds(startTime) {
+  const zeroPad = number => number < 10 ? `0${number}` : number
+
   if (/^(\d{4}-\d{2}-\d{2})?([ T]\d{2}:\d{2}:\d{2})?$/i.test(startTime)) {
     const dateNow = new Date();
     const parsedStartTime = Date.parse(startTime);
-    const startTimeToSeconds = Math.round((parsedStartTime - dateNow) / 1000);
+    const startTimeInSeconds = Math.ceil((parsedStartTime - dateNow) / 1000);
 
     if (isNaN(parsedStartTime)) {
       throw new Error(
         'The date/time you passed does not match ISO format. ' +
-        'You can pass a date like: YYYY-MM-DD. ' +
-        'You can pass a time like: THH:MM:SS. ' +
-        'You can pass a date and time like: YYYY-MM-DD HH:MM:SS. ' +
-        `You passed: ${startTime}.`
+        'You can pass a date like: 2017-07-26. ' +
+        'You can pass a date and time like: 2017-07-26 10:50:43. ' +
+        `You passed: "${startTime}".`
       );
     }
     
-    if (startTimeToSeconds < 0) {
+    if (startTimeInSeconds < 0) {
       throw new Error(
         'When passing a date/time, it cannot be in the past. ' +
-        'You can pass a date like: YYYY-MM-DD. ' +
-        'You can pass a time like: THH:MM:SS. ' +
-        'You can pass a date and time like: YYYY-MM-DD HH:MM:SS. ' +
-        `You passed: ${startTime}. It's currently: ` + 
-        `${dateNow.getFullYear()}-${dateNow.getMonth()}-${dateNow.getDate()} ` +
-        `${dateNow.getHours()}:${dateNow.getMinutes()}:${dateNow.getSeconds()}`
+        'You can pass a date like: 2017-07-26. ' +
+        'You can pass a date and time like: 2017-07-26 10:50:43. ' +
+        `You passed: "${startTime}". It's currently: ` + 
+        `"${zeroPad(dateNow.getFullYear())}-${zeroPad(dateNow.getMonth()) + 1}-${zeroPad(dateNow.getDate())} ` +
+        `${zeroPad(dateNow.getHours())}:${zeroPad(dateNow.getMinutes())}:${zeroPad(dateNow.getSeconds())}"`
       );
     }
 
     return {
       ISODate: startTime,
-      parsed: startTimeToSeconds,
+      parsed: startTimeInSeconds,
     };
   }
 

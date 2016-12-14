@@ -5,6 +5,8 @@ import sinon from 'sinon';
 import Timr from '../src/Timr';
 import createStore from '../src/createStore';
 
+const zeroPad = number => number >= 1 && number <= 9 ? `0${number}` : number
+
 // Turns methods like to.be.true into to.be.true() to stop eslint failing
 chai.use(dirtyChai);
 
@@ -50,13 +52,13 @@ describe('Timr Class', () => {
     'to be called at a later time.', done => {
       const timer = new Timr('2016-12-15 10:00:00')
         .ticker((ft, pd, ct) => {
-          const testStart = Math.round((Date.parse('2016-12-15 10:00:00') - Date.now()) / 1000);
+          const testStart = Math.ceil((Date.parse('2016-12-15 10:00:00') - Date.now()) / 1000);
 
           expect(ct).to.equal(testStart);
 
           timer.destroy();
           done();
-        })
+        });
 
       setTimeout(timer.start.bind(timer), 2000);
     });
@@ -64,7 +66,7 @@ describe('Timr Class', () => {
     it('Same test as above, but using starts delay feature', done => {
       const timer = new Timr('2016-12-15 10:00:00')
         .ticker((ft, pd, ct) => {
-          const testStart = Math.round((Date.parse('2016-12-15 10:00:00') - Date.now()) / 1000);
+          const testStart = Math.ceil((Date.parse('2016-12-15 10:00:00') - Date.now()) / 1000);
 
           expect(ct).to.equal(testStart);
 
@@ -344,29 +346,30 @@ describe('Timr Class', () => {
 
     it('When passed a date and time, it creates a new Timr with a countdown to that' +
     'point in time', () => {
-      const testStartTime1 = Math.round((Date.parse('2016-12-15 10:00:00') - Date.now()) / 1000);
+      const testStartTime1 = Math.ceil((Date.parse('2016-12-15 10:00:00') - Date.now()) / 1000);
       expect(new Timr('2016-12-15 10:00:00').getStartTime()).to.equal(testStartTime1);
 
-      const testStartTime2 = Math.round((Date.parse('2017-12-15 10:00:00') - Date.now()) / 1000);
+      const testStartTime2 = Math.ceil((Date.parse('2017-12-15 10:00:00') - Date.now()) / 1000);
       expect(new Timr('2017-12-15 10:00:00').getStartTime()).to.equal(testStartTime2);
     });
 
     it('When passed just a date, it creates a new Timr to that point in time,' +
     'midnight of that date', () => {
-      const testStartTime1 = Math.round((Date.parse('2016-12-15') - Date.now()) / 1000);
+      const testStartTime1 = Math.ceil((Date.parse('2016-12-15') - Date.now()) / 1000);
       expect(new Timr('2016-12-15').getStartTime()).to.equal(testStartTime1);
 
-      const testStartTime2 = Math.round((Date.parse('2017-12-15') - Date.now()) / 1000);
+      const testStartTime2 = Math.ceil((Date.parse('2017-12-15') - Date.now()) / 1000);
       expect(new Timr('2017-12-15').getStartTime()).to.equal(testStartTime2);
     });
 
     it('Throws an error if the format matches the regex but is not ISO format', () => {
-      expect(() => new Timr('2016-13-25')).to.throw(
+      const year = new Date().getFullYear() + 1;
+
+      expect(() => new Timr(`${year}-13-25`)).to.throw(
         'The date/time you passed does not match ISO format. ' +
-        'You can pass a date like: YYYY-MM-DD. ' +
-        'You can pass a time like: THH:MM:SS. ' +
-        'You can pass a date and time like: YYYY-MM-DD HH:MM:SS. ' +
-        `You passed: 2016-13-25.`
+        'You can pass a date like: 2017-07-26. ' +
+        'You can pass a date and time like: 2017-07-26 10:50:43. ' +
+        `You passed: "${year}-13-25".`
       );
     });
 
@@ -375,12 +378,11 @@ describe('Timr Class', () => {
 
       expect(() => new Timr('2015-12-25')).to.throw(
         'When passing a date/time, it cannot be in the past. ' +
-        'You can pass a date like: YYYY-MM-DD. ' +
-        'You can pass a time like: THH:MM:SS. ' +
-        'You can pass a date and time like: YYYY-MM-DD HH:MM:SS. ' +
-        `You passed: 2015-12-25. It's currently: ` + 
-        `${dateNow.getFullYear()}-${dateNow.getMonth()}-${dateNow.getDate()} ` +
-        `${dateNow.getHours()}:${dateNow.getMinutes()}:${dateNow.getSeconds()}`
+        'You can pass a date like: 2017-07-26. ' +
+        'You can pass a date and time like: 2017-07-26 10:50:43. ' +
+        `You passed: "2015-12-25". It's currently: "` + 
+        `${zeroPad(dateNow.getFullYear())}-${zeroPad(dateNow.getMonth() + 1)}-${zeroPad(dateNow.getDate())} ` +
+        `${zeroPad(dateNow.getHours())}:${zeroPad(dateNow.getMinutes())}:${zeroPad(dateNow.getSeconds())}"`
       );
     });
 
