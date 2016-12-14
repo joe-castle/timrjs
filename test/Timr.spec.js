@@ -50,9 +50,9 @@ describe('Timr Class', () => {
     it('If an ISO date has been used to start the timer, start will re-run setStartTime ' +
     'to ensure the startTime is in sync. Allowing .start() ' +
     'to be called at a later time.', done => {
-      const timer = new Timr('2016-12-15 10:00:00')
+      const timer = new Timr('2016-12-15T10:00:00')
         .ticker((ft, pd, ct) => {
-          const testStart = Math.ceil((Date.parse('2016-12-15 10:00:00') - Date.now()) / 1000);
+          const testStart = Math.ceil((Date.parse('2016-12-15T10:00:00') - Date.now()) / 1000);
 
           expect(ct).to.equal(testStart);
 
@@ -64,9 +64,9 @@ describe('Timr Class', () => {
     });
 
     it('Same test as above, but using starts delay feature', done => {
-      const timer = new Timr('2016-12-15 10:00:00')
+      const timer = new Timr('2016-12-15T10:00:00')
         .ticker((ft, pd, ct) => {
-          const testStart = Math.ceil((Date.parse('2016-12-15 10:00:00') - Date.now()) / 1000);
+          const testStart = Math.ceil((Date.parse('2016-12-15T10:00:00') - Date.now()) / 1000);
 
           expect(ct).to.equal(testStart);
 
@@ -346,11 +346,11 @@ describe('Timr Class', () => {
 
     it('When passed a date and time, it creates a new Timr with a countdown to that' +
     'point in time', () => {
-      const testStartTime1 = Math.ceil((Date.parse('2016-12-15 10:00:00') - Date.now()) / 1000);
-      expect(new Timr('2016-12-15 10:00:00').getStartTime()).to.equal(testStartTime1);
+      const testStartTime1 = Math.ceil((Date.parse('2016-12-15T10:00:00') - Date.now()) / 1000);
+      expect(new Timr('2016-12-15T10:00:00').getStartTime()).to.equal(testStartTime1);
 
-      const testStartTime2 = Math.ceil((Date.parse('2017-12-15 10:00:00') - Date.now()) / 1000);
-      expect(new Timr('2017-12-15 10:00:00').getStartTime()).to.equal(testStartTime2);
+      const testStartTime2 = Math.ceil((Date.parse('2017-12-15T10:00:00') - Date.now()) / 1000);
+      expect(new Timr('2017-12-15T10:00:00').getStartTime()).to.equal(testStartTime2);
     });
 
     it('When passed just a date, it creates a new Timr to that point in time,' +
@@ -362,13 +362,22 @@ describe('Timr Class', () => {
       expect(new Timr('2017-12-15').getStartTime()).to.equal(testStartTime2);
     });
 
+    it('When passing a timezone offset, it should create the timer.', () => {
+      const year = new Date().getFullYear() + 1;
+
+      expect(() => new Timr(`${year}-12-25T10:00:00-05:00`)).to.not.throw()
+      expect(() => new Timr(`${year}-12-25T10:00:00+05:00`)).to.not.throw()
+      expect(() => new Timr(`${year}-12-25T10:00:00Z`)).to.not.throw()
+    });
+
     it('Throws an error if the format matches the regex but is not ISO format', () => {
       const year = new Date().getFullYear() + 1;
 
       expect(() => new Timr(`${year}-13-25`)).to.throw(
         'The date/time you passed does not match ISO format. ' +
         'You can pass a date like: 2017-07-26. ' +
-        'You can pass a date and time like: 2017-07-26 10:50:43. ' +
+        'You can pass a date and time like: 2017-07-26T10:50:43. ' +
+        'You can pass a date and time with a UTC offset like: 2017-07-26T10:50:43-07:00. ' +
         `You passed: "${year}-13-25".`
       );
     });
@@ -379,7 +388,8 @@ describe('Timr Class', () => {
       expect(() => new Timr('2015-12-25')).to.throw(
         'When passing a date/time, it cannot be in the past. ' +
         'You can pass a date like: 2017-07-26. ' +
-        'You can pass a date and time like: 2017-07-26 10:50:43. ' +
+        'You can pass a date and time like: 2017-07-26T10:50:43. ' +
+        'You can pass a date and time with a UTC offset like: 2017-07-26T10:50:43-07:00. ' +
         `You passed: "2015-12-25". It's currently: "` + 
         `${zeroPad(dateNow.getFullYear())}-${zeroPad(dateNow.getMonth() + 1)}-${zeroPad(dateNow.getDate())} ` +
         `${zeroPad(dateNow.getHours())}:${zeroPad(dateNow.getMinutes())}:${zeroPad(dateNow.getSeconds())}"`
