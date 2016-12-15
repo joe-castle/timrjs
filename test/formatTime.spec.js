@@ -3,43 +3,38 @@ import { expect } from 'chai';
 import formatTime from '../src/formatTime';
 
 describe('Format Time function', () => {
-  it('Returns the currentTime formatted into a time string', () => {
-    // expect(formatTime(50)).to.equal('00:50');
-    // expect(formatTime(600)).to.equal('10:00');
-    // expect(formatTime(9600)).to.equal('02:40:00');
-    // console.log(formatTime(3600));
-    // console.log(formatTime(9600));
-    // console.log(formatTime(96000));
-    // console.log(formatTime(59));
-    console.log(formatTime(35));
-    console.log(formatTime(360));
-    console.log(formatTime(3600));
-    console.log(formatTime(96000));
+  it('Returns seconds formatted into a time string', () => {
+    expect(formatTime(50).formattedTime).to.equal('00:50');
+    expect(formatTime(600).formattedTime).to.equal('10:00');
+    expect(formatTime(9600).formattedTime).to.equal('02:40:00');
   });
 
-  it('Returns the currentTime formatted into a time string with a modified outputFormat', () => {
-    expect(formatTime(600, { outputFormat: 'HH:MM:SS' })).to.equal('00:10:00');
-    expect(formatTime(50, { outputFormat: 'SS' })).to.equal('50');
+  it('Returns an object with seconds formatted into a time string and the raw ' +
+   'values as string type', () => {
+    expect(formatTime(600).formattedTime).to.equal('10:00');
+    expect(formatTime(600).raw.currentHours).to.equal('00');
+    expect(formatTime(600).raw.currentMinutes).to.equal('10');
+    expect(formatTime(600).raw.currentSeconds).to.equal('00');
   });
 
-  it('Returns the currentTime formatted into a time string witha modifided separator', () => {
-    expect(formatTime(600, { separator: '-' })).to.equal('10-00');
-    expect(formatTime(600, { separator: 'boop' })).to.equal('10boop00');
+  it('Returns an object with the raw values un padded and as number type', () => {
+    expect(formatTime(600, { padRaw: false }).raw.currentHours).to.equal(0);
+    expect(formatTime(600, { padRaw: false }).raw.currentMinutes).to.equal(10);
+    expect(formatTime(600, { padRaw: false }).raw.currentSeconds).to.equal(0);
   });
 
-  it('Returns the currentTime formatted into a time string with a modifided formatType', () => {
-    expect(formatTime(5500, { formatType: 'm' })).to.equal('91:40');
-    expect(formatTime(5500, { formatType: 's' })).to.equal('5500');
-  });
-
-  it('Returns the correct formatting with a mixture of differentsettings applied.', () => {
-    expect(formatTime(5500, { formatType: 'm', outputFormat: 'HH:MM:SS' })).to.equal('00:91:40');
-    expect(formatTime(5500, { formatType: 'm', outputFormat: 'HH:MM:SS', separator: '-' }))
-      .to.equal('00-91-40');
-    expect(formatTime(5500, { outputFormat: 'MM:SS', separator: '_' })).to.equal('01_31_40');
-    expect(formatTime(5500, { formatType: 's', outputFormat: 'SS', separator: '()' }))
-      .to.equal('5500');
-    expect(formatTime(5500, { formatType: 'h', outputFormat: 'HH:MM:SS', separator: '$' }))
-      .to.equal('01$31$40');
+  it('Returns the correct formatting with a mixture of different formatOutput strings.', () => {
+    expect(formatTime(5500, { formatOutput: '00:MM:ss' }).formattedTime).to.equal('00:91:40');
+    expect(formatTime(5500, { formatOutput: '00-MM-ss' }).formattedTime).to.equal('00-91-40');
+    expect(formatTime(5500, { formatOutput: 'HH_mm_ss' }).formattedTime).to.equal('01_31_40');
+    expect(formatTime(5500, { formatOutput: 'SS' }).formattedTime).to.equal('5500');
+    expect(formatTime(5500, { formatOutput: 'HH$mm$ss' }).formattedTime).to.equal('01$31$40');
+    expect(formatTime(999999, { formatOutput: 'dd days hh:mm:ss' }).formattedTime)
+      .to.equal('11 days 13:46:39');
+    expect(formatTime(999999, { formatOutput: 'dd days hh:mm:ss' }).formattedTime)
+      .to.equal('11 days 13:46:39');
+    expect(
+      formatTime(99999, { formatOutput: 'dd days hh hours mm minutes ss seconds' }).formattedTime
+    ).to.equal('01 days 03 hours 46 minutes 39 seconds');
   });
 });

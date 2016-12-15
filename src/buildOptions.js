@@ -12,40 +12,33 @@ import objectAssign from 'object-assign';
  */
 export default function buildOptions(newOptions, oldOptions) {
   if (newOptions) {
-    const { separator, outputFormat, formatType } = newOptions;
+    const { formatOutput, padRaw, countdown } = newOptions;
 
     // Error checking for separator.
-    if (separator) {
-      if (typeof separator !== 'string') {
-        throw new Error(
-          `Expected separator to be a string, instead got: ${typeof separator}`
-        );
+    if (formatOutput) {
+      if (typeof formatOutput !== 'string') {
+        throw new Error(`Expected formatOutput to be a string; instead got: ${typeof formatOutput}`);
       }
     }
 
     // Error checking for outputFormat.
-    if (outputFormat) {
-      if (!/^(hh:)?(mm:)?ss$/i.test(outputFormat)) {
-        throw new Error(
-        `Expected outputFormat to be: hh:mm:ss, mm:ss (default) or ss; instead got: ${outputFormat}`
-        );
+    if (padRaw) {
+      if (typeof padRaw !== 'boolean') {
+        throw new Error(`Expected padRaw to be a boolean; instead got: ${typeof padRaw}`);
       }
     }
 
     // Error checking for formatType.
-    if (formatType) {
-      if (!/^[hms]$/i.test(formatType)) {
-        throw new Error(
-          `Expected formatType to be: h, m or s; instead got: ${formatType}`
-        );
+    if (countdown) {
+      if (typeof countdown !== 'boolean') {
+        throw new Error(`Expected countdown to be a boolean; instead got: ${typeof countdown}`);
       }
     }
   }
 
   const defaults = {
-    formatType: 'h',
-    outputFormat: 'mm:ss',
-    separator: ':',
+    formatOutput: 'HH:{mm:ss}',
+    padRaw: true,
     countdown: true,
   };
 
