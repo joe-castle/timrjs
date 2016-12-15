@@ -7,22 +7,26 @@ import validateStartTime from './validateStartTime';
 import formatTime from './formatTime';
 
 /**
- * @description Converts an ISO date string into seconds until that date.
+ * @description Converts an ISO date string, or unix time into seconds until that date/time.
  *
- * @param {String} startTime - The ISO date string
+ * @param {String|Number} startTime - The ISO date string or unix time in ms.
  *
  * @throws If the date matches the regex but is not ISO format.
+ * @throws If the date is in the past.
  *
  * @return {Number} - Returns the converted seconds if it is an ISO date,
  * otherwise it will return the original value passed in.
  */
-function ISODateStringToSeconds(startTime) {
+function dateToSeconds(startTime) {
   const zeroPad = number => (number < 10 ? `0${number}` : number);
 
-  if (/^(\d{4}-\d{2}-\d{2})?(T\d{2}:\d{2}(:\d{2})?)?(([-+]\d{2}:\d{2})?Z?)?$/i.test(startTime)) {
+  if (
+    /^(\d{4}-\d{2}-\d{2})?(T\d{2}:\d{2}(:\d{2})?)?(([-+]\d{2}:\d{2})?Z?)?$/i.test(startTime)
+    || startTime > 1451642400000
+  ) {
     const dateNow = new Date();
-    const parsedStartTime = Date.parse(startTime);
-    const startTimeInSeconds = Math.ceil((parsedStartTime - dateNow) / 1000);
+    const parsedStartTime = new Date(startTime).getTime();
+    const startTimeInSeconds = Math.ceil((parsedStartTime - dateNow.getTime()) / 1000);
 
     if (isNaN(parsedStartTime)) {
       throw new Error(
@@ -47,7 +51,7 @@ function ISODateStringToSeconds(startTime) {
     }
 
     return {
-      ISODate: startTime,
+      originalDate: startTime,
       parsed: startTimeInSeconds,
     };
   }
@@ -78,7 +82,7 @@ function Timr(startTime, options) {
   // this.running
   // this.startTime
   // this.currentTime
-  // this.ISODate
+  // this.originalDate
   this.setStartTime(startTime);
   // this.options
   this.changeOptions(options);
@@ -139,8 +143,8 @@ Timr.prototype = objectAssign(Object.create(EventEmitter.prototype), {
     } else {
     /* eslint-disable no-console */
       const startFn = () => {
-        if (this.ISODate) {
-          this.setStartTime(this.ISODate);
+        if (this.originalDate) {
+          this.setStartTime(this.originalDate);
         }
 
         this.running = true;
@@ -324,16 +328,16 @@ Timr.prototype = objectAssign(Object.create(EventEmitter.prototype), {
     let newStartTime;
 
     if (startTime) {
-      const parsedISO = ISODateStringToSeconds(startTime);
+      const parsedDate = dateToSeconds(startTime);
 
-      // Double checks parsedISO has a parsed property, in case an empty object is passed
+      // Double checks parsedDate has a parsed property, in case an empty object is passed
       // in startTime.
-      if (typeof parsedISO === 'object' && parsedISO.parsed) {
-        this.ISODate = parsedISO.ISODate;
-        newStartTime = parsedISO.parsed;
+      if (typeof parsedDate === 'object' && parsedDate.parsed) {
+        this.originalDate = parsedDate.originalDate;
+        newStartTime = parsedDate.parsed;
       } else {
-        this.ISODate = false;
-        newStartTime = parsedISO;
+        this.originalDate = false;
+        newStartTime = parsedDate;
       }
     } else {
       // Coerces falsy values into 0.

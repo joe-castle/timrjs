@@ -5,7 +5,7 @@ import sinon from 'sinon';
 import Timr from '../src/Timr';
 import createStore from '../src/createStore';
 
-const zeroPad = number => number >= 1 && number <= 9 ? `0${number}` : number
+const zeroPad = number => (number < 10 ? `0${number}` : number);
 
 // Turns methods like to.be.true into to.be.true() to stop eslint failing
 chai.use(dirtyChai);
@@ -346,20 +346,31 @@ describe('Timr Class', () => {
 
     it('When passed a date and time, it creates a new Timr with a countdown to that' +
     'point in time', () => {
-      const testStartTime1 = Math.ceil((Date.parse('2016-12-15T10:00:00') - Date.now()) / 1000);
-      expect(new Timr('2016-12-15T10:00:00').getStartTime()).to.equal(testStartTime1);
+      const year = new Date().getFullYear() + 1;
 
-      const testStartTime2 = Math.ceil((Date.parse('2017-12-15T10:00:00') - Date.now()) / 1000);
-      expect(new Timr('2017-12-15T10:00:00').getStartTime()).to.equal(testStartTime2);
+      const testStartTime1 = Math.ceil((Date.parse(`${year}-12-15T10:00:00`) - Date.now()) / 1000);
+      expect(new Timr(`${year}-12-15T10:00:00`).getStartTime()).to.equal(testStartTime1);
+
+      const testStartTime2 = Math.ceil((Date.parse(`${year}-05-15T14:00:00`) - Date.now()) / 1000);
+      expect(new Timr(`${year}-05-15T14:00:00`).getStartTime()).to.equal(testStartTime2);
     });
 
-    it('When passed just a date, it creates a new Timr to that point in time,' +
+    it('When passed just a date, it creates a new Timr to that point in time, ' +
     'midnight of that date', () => {
-      const testStartTime1 = Math.ceil((Date.parse('2016-12-15') - Date.now()) / 1000);
-      expect(new Timr('2016-12-15').getStartTime()).to.equal(testStartTime1);
+      const year = new Date().getFullYear() + 1;
+      const testStartTime1 = Math.ceil((Date.parse(`${year}-02-15`) - Date.now()) / 1000);
+      expect(new Timr(`${year}-02-15`).getStartTime()).to.equal(testStartTime1);
 
-      const testStartTime2 = Math.ceil((Date.parse('2017-12-15') - Date.now()) / 1000);
-      expect(new Timr('2017-12-15').getStartTime()).to.equal(testStartTime2);
+      const testStartTime2 = Math.ceil((Date.parse(`${year}-12-15`) - Date.now()) / 1000);
+      expect(new Timr(`${year}-12-15`).getStartTime()).to.equal(testStartTime2);
+    });
+
+    it.only('When passed a unix time, it creates a new Timr to that point in time, ' +
+    'midnight of that date', () => {
+      const testTime = Date.now() + 36000;
+
+      const testStartTime1 = Math.ceil((testTime - Date.now()) / 1000);
+      expect(new Timr(testTime).getStartTime()).to.equal(testStartTime1);
     });
 
     it('When passing a timezone offset, it should create the timer.', () => {
