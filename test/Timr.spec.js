@@ -50,9 +50,11 @@ describe('Timr Class', () => {
     it('If an ISO date has been used to start the timer, start will re-run setStartTime ' +
     'to ensure the startTime is in sync. Allowing .start() ' +
     'to be called at a later time.', done => {
-      const timer = new Timr('2016-12-15T10:00:00')
+      const year = new Date().getFullYear() + 1;
+
+      const timer = new Timr(`${year}-12-15T10:00:00`)
         .ticker((ft, pd, ct) => {
-          const testStart = Math.ceil((Date.parse('2016-12-15T10:00:00') - Date.now()) / 1000);
+          const testStart = Math.ceil((Date.parse(`${year}-12-15T10:00:00`) - Date.now()) / 1000);
 
           expect(ct).to.equal(testStart);
 
@@ -64,9 +66,11 @@ describe('Timr Class', () => {
     });
 
     it('Same test as above, but using starts delay feature', done => {
-      const timer = new Timr('2016-12-15T10:00:00')
+      const year = new Date().getFullYear() + 1;
+
+      const timer = new Timr(`${year}-12-15T10:00:00`)
         .ticker((ft, pd, ct) => {
-          const testStart = Math.ceil((Date.parse('2016-12-15T10:00:00') - Date.now()) / 1000);
+          const testStart = Math.ceil((Date.parse(`${year}-12-15T10:00:00`) - Date.now()) / 1000);
 
           expect(ct).to.equal(testStart);
 
@@ -365,7 +369,7 @@ describe('Timr Class', () => {
       expect(new Timr(`${year}-12-15`).getStartTime()).to.equal(testStartTime2);
     });
 
-    it.only('When passed a unix time, it creates a new Timr to that point in time, ' +
+    it('When passed a unix time, it creates a new Timr to that point in time, ' +
     'midnight of that date', () => {
       const testTime = Date.now() + 36000;
 
