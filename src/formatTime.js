@@ -59,11 +59,11 @@ export default function formatTime(seconds, options) {
   // Replaces all values in string with their respective number values
   const formattedTime = stringToFormat
     .replace(/\{?\}?/g, '')
-    .replace(/DD/g, zeroPad(totalDays))
+    .replace(/DD/g, totalDays)
     .replace(/HH/g, zeroPad(totalHours))
     .replace(/MM/g, zeroPad(totalMinutes))
     .replace(/SS/g, zeroPad(totalSeconds))
-    .replace(/dd/g, zeroPad(currentDays))
+    .replace(/dd/g, currentDays)
     .replace(/hh/g, zeroPad(currentHours))
     .replace(/mm/g, zeroPad(currentMinutes))
     .replace(/ss/g, zeroPad(currentSeconds));

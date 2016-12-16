@@ -3,10 +3,11 @@ import { expect } from 'chai';
 import formatTime from '../src/formatTime';
 
 describe('Format Time function', () => {
-  it('Returns seconds formatted into a time string', () => {
+  it('Returns seconds formatted into a time string. Days aren\'nt padded', () => {
     expect(formatTime(50).formattedTime).to.equal('00:50');
     expect(formatTime(600).formattedTime).to.equal('10:00');
     expect(formatTime(9600).formattedTime).to.equal('02:40:00');
+    expect(formatTime(96000, { formatOutput: 'DD' }).formattedTime).to.equal('1');
   });
 
   it('Returns an object with seconds formatted into a time string and the raw ' +
@@ -35,6 +36,6 @@ describe('Format Time function', () => {
       .to.equal('11 days 13:46:39');
     expect(
       formatTime(99999, { formatOutput: 'dd days hh hours mm minutes ss seconds' }).formattedTime
-    ).to.equal('01 days 03 hours 46 minutes 39 seconds');
+    ).to.equal('1 days 03 hours 46 minutes 39 seconds');
   });
 });
