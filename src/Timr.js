@@ -5,59 +5,7 @@ import EventEmitter from './EventEmitter';
 import buildOptions from './buildOptions';
 import validateStartTime from './validateStartTime';
 import formatTime from './formatTime';
-
-/**
- * @description Converts an ISO date string, or unix time into seconds until that date/time.
- *
- * @param {String|Number} startTime - The ISO date string or unix time in ms.
- *
- * @throws If the date matches the regex but is not ISO format.
- * @throws If the date is in the past.
- *
- * @return {Number} - Returns the converted seconds if it is an ISO date,
- * otherwise it will return the original value passed in.
- */
-function dateToSeconds(startTime) {
-  const zeroPad = number => (number < 10 ? `0${number}` : number);
-
-  if (
-    /^(\d{4}-\d{2}-\d{2})?(T\d{2}:\d{2}(:\d{2})?)?(([-+]\d{2}:\d{2})?Z?)?$/i.test(startTime)
-    || startTime > 1451642400000
-  ) {
-    const dateNow = new Date();
-    const parsedStartTime = new Date(startTime).getTime();
-    const startTimeInSeconds = Math.ceil((parsedStartTime - dateNow.getTime()) / 1000);
-
-    if (isNaN(parsedStartTime)) {
-      throw new Error(
-        'The date/time you passed does not match ISO format. ' +
-        'You can pass a date like: 2017-07-26. ' +
-        'You can pass a date and time like: 2017-07-26T10:50:43. ' +
-        'You can pass a date and time with a UTC offset like: 2017-07-26T10:50:43-07:00. ' +
-        `You passed: "${startTime}".`
-      );
-    }
-
-    if (startTimeInSeconds < 0) {
-      throw new Error(
-        'When passing a date/time, it cannot be in the past. ' +
-        'You can pass a date like: 2017-07-26. ' +
-        'You can pass a date and time like: 2017-07-26T10:50:43. ' +
-        'You can pass a date and time with a UTC offset like: 2017-07-26T10:50:43-07:00. ' +
-        `You passed: "${startTime}". It's currently: ` + 
-        `"${zeroPad(dateNow.getFullYear())}-${zeroPad(dateNow.getMonth()) + 1}-${zeroPad(dateNow.getDate())} ` +
-        `${zeroPad(dateNow.getHours())}:${zeroPad(dateNow.getMinutes())}:${zeroPad(dateNow.getSeconds())}"`
-      );
-    }
-
-    return {
-      originalDate: startTime,
-      parsed: startTimeInSeconds,
-    };
-  }
-
-  return startTime;
-}
+import dateToSeconds from './dateToSeconds';
 
 /**
  * @description Creates a Timr.
@@ -325,7 +273,7 @@ Timr.prototype = objectAssign(Object.create(EventEmitter.prototype), {
     this.clear();
 
     // Coerces falsy values into 0.
-    let newStartTime;
+    let newStartTime = 0;
 
     if (startTime) {
       const parsedDate = dateToSeconds(startTime);
@@ -339,9 +287,6 @@ Timr.prototype = objectAssign(Object.create(EventEmitter.prototype), {
         this.originalDate = false;
         newStartTime = parsedDate;
       }
-    } else {
-      // Coerces falsy values into 0.
-      newStartTime = 0;
     }
 
     // Changes to stopwatch only if setStartTime is run after Timr creation

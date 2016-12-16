@@ -1,0 +1,55 @@
+const zeroPad = number => (number < 10 ? `0${number}` : number);
+
+/**
+ * @description Converts an ISO date string, or unix time into seconds until that date/time.
+ *
+ * @param {String|Number} startTime - The ISO date string or unix time in ms.
+ *
+ * @throws If the date matches the regex but is not ISO format.
+ * @throws If the date is in the past.
+ *
+ * @return {Object|Any} - Returns the converted seconds and the original date.
+ * The originalDate is used to re-run the function when the timer starts, to ensure
+ * that it is upto date.
+ */
+export default function dateToSeconds(startTime) {
+  if (
+    /^(\d{4}-\d{2}-\d{2})?(T\d{2}:\d{2}(:\d{2})?)?(([-+]\d{2}:\d{2})?Z?)?$/i.test(startTime)
+    || startTime >= 63072000000
+  ) {
+    const dateNow = new Date();
+    const parsedStartTime = new Date(startTime).getTime();
+    const startTimeInSeconds = Math.ceil((parsedStartTime - dateNow.getTime()) / 1000);
+
+    if (isNaN(parsedStartTime)) {
+      throw new Error(
+        'The date/time you passed does not match ISO format. ' +
+        'You can pass a date like: 2017-07-26. ' +
+        'You can pass a date and time like: 2017-07-26T10:50:43. ' +
+        'You can pass a date and time with a UTC offset like: 2017-07-26T10:50:43-07:00. ' +
+        `You passed: "${startTime}".`
+      );
+    }
+
+    if (startTimeInSeconds < 0) {
+      throw new Error(
+        'When passing a date/time, it cannot be in the past. ' +
+        'You can pass a date like: 2017-07-26. ' +
+        'You can pass a date and time like: 2017-07-26T10:50:43. ' +
+        'You can pass a date and time with a UTC offset like: 2017-07-26T10:50:43-07:00. ' +
+        `You passed: "${startTime}". It's currently: ` +
+        `"${zeroPad(dateNow.getFullYear())}-${zeroPad(dateNow.getMonth()) + 1}-` +
+        `${zeroPad(dateNow.getDate())} ` +
+        `${zeroPad(dateNow.getHours())}:${zeroPad(dateNow.getMinutes())}:` +
+        `${zeroPad(dateNow.getSeconds())}"`
+      );
+    }
+
+    return {
+      originalDate: startTime,
+      parsed: startTimeInSeconds,
+    };
+  }
+
+  return startTime;
+}
