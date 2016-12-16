@@ -40,7 +40,7 @@ function Timr(startTime, options) {
  * @description Countdown function.
  * Bound to a setInterval when start() is called.
  */
-Timr.countdown = function countdown() {
+function countdown() {
   this.currentTime -= 1;
 
   this.emit(
@@ -56,13 +56,13 @@ Timr.countdown = function countdown() {
     this.stop();
     this.emit('finish', this);
   }
-};
+}
 
 /**
  * @description Stopwatch function.
  * Bound to a setInterval when start() is called.
  */
-Timr.stopwatch = function stopwatch() {
+function stopwatch() {
   this.currentTime += 1;
 
   this.emit(
@@ -71,7 +71,7 @@ Timr.stopwatch = function stopwatch() {
     this.currentTime,
     this
   );
-};
+}
 
 Timr.prototype = objectAssign(Object.create(EventEmitter.prototype), {
 
@@ -98,8 +98,8 @@ Timr.prototype = objectAssign(Object.create(EventEmitter.prototype), {
         this.running = true;
 
         this.timer = this.options.countdown
-          ? setInterval(Timr.countdown.bind(this), 1000)
-          : setInterval(Timr.stopwatch.bind(this), 1000);
+          ? setInterval(countdown.bind(this), 1000)
+          : setInterval(stopwatch.bind(this), 1000);
       };
 
       if (delay) {
