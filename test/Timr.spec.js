@@ -95,6 +95,17 @@ describe('Timr Class', () => {
     });
     /* eslint-disable no-console */
 
+    it('Emits the onStart event', (done) => {
+      const timer = new Timr(600)
+        .onStart(self => {
+          expect(self).to.equal(timer);
+          timer.destroy();
+          done();
+        });
+
+      timer.start();
+    });
+
     it('Returns a reference to the Timr', () => {
       const timer = new Timr(600).start();
       expect(timer).equal(timer);
@@ -113,6 +124,18 @@ describe('Timr Class', () => {
         });
     });
 
+    it('Emits the onPause event', (done) => {
+      const timer = new Timr(600)
+        .onPause(self => {
+          expect(self).to.equal(timer);
+          timer.destroy();
+          done();
+        });
+
+      timer.start();
+      timer.pause();
+    });
+
     it('Returns a reference to the Timr', () => {
       const timer = new Timr(600).pause();
       expect(timer).equal(timer);
@@ -128,6 +151,18 @@ describe('Timr Class', () => {
         expect(timer.getCurrentTime()).to.equal(600);
         done();
       });
+    });
+
+    it('Emits the onStop event', (done) => {
+      const timer = new Timr(600)
+        .onStop(self => {
+          expect(self).to.equal(timer);
+          timer.destroy();
+          done();
+        });
+
+      timer.start();
+      timer.stop();
     });
 
     it('Returns a reference to the Timr', () => {
@@ -160,6 +195,16 @@ describe('Timr Class', () => {
       timer.destroy();
 
       expect(store.getAll().indexOf(timer)).to.equal(-1);
+    });
+
+    it('Emits the onDestroy event', (done) => {
+      const timer = new Timr(600)
+        .onDestroy(self => {
+          expect(self).to.equal(timer);
+          done();
+        });
+
+      timer.destroy();
     });
 
     it('Returns a reference to the Timr', () => {

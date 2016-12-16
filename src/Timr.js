@@ -37,6 +37,25 @@ function Timr(startTime, options) {
 }
 
 /**
+ * @description Creats event listeners.
+ *
+ * @param {String} The name of the listener.
+ *
+ * @return {Function} The function that makes listeners.
+ */
+function makeListenerGenerator(name) {
+  return function listenerGenerator(fn) {
+    if (typeof fn !== 'function') {
+      throw new Error(`Expected ${name} to be a function, instead got: ${typeof fn}`);
+    }
+
+    this.on(name, fn);
+
+    return this;
+  };
+}
+
+/**
  * @description Countdown function.
  * Bound to a setInterval when start() is called.
  */
@@ -104,6 +123,8 @@ Timr.prototype = objectAssign(Object.create(EventEmitter.prototype), {
       } else {
         startFn();
       }
+
+      this.emit('onStart', this);
     }
 
     return this;
@@ -117,6 +138,8 @@ Timr.prototype = objectAssign(Object.create(EventEmitter.prototype), {
   pause() {
     this.clear();
 
+    this.emit('onPause', this);
+
     return this;
   },
 
@@ -129,6 +152,8 @@ Timr.prototype = objectAssign(Object.create(EventEmitter.prototype), {
     this.clear();
 
     this.currentTime = this.startTime;
+
+    this.emit('onStop', this);
 
     return this;
   },
@@ -155,6 +180,8 @@ Timr.prototype = objectAssign(Object.create(EventEmitter.prototype), {
    * @return {Object} Returns a reference to the Timr so calls can be chained.
    */
   destroy() {
+    this.emit('onDestroy', this);
+
     this.clear().removeAllListeners();
 
     // removeFromStore is added when the timr is added to a store,
@@ -167,50 +194,26 @@ Timr.prototype = objectAssign(Object.create(EventEmitter.prototype), {
   },
 
   /**
-   * @description The ticker method is called every second
-   * the timer ticks down.
+   * @description The following methods create listeners.
    *
-   * As Timr inherits from EventEmitter, this can be called
-   * multiple times with different functions and each one will
-   * be called when the event is emitted.
+   * Ticker: Called every second the timer ticks down.
+   * Finish: Called once when the timer finishes.
+   * onStart: Called when the timer starts.
+   * onPause: Called when the timer is paused.
+   * onStop: Called when the timer is stopped.
+   * onDestroy: Called when the timer is destroyed.
    *
    * @throws If the argument is not of type function.
    *
    * @param {Function} fn - Function to be called every second.
    * @return {Object} Returns a reference to the Timr so calls can be chained.
    */
-  ticker(fn) {
-    if (typeof fn !== 'function') {
-      throw new Error(`Expected ticker to be a function, instead got: ${typeof fn}`);
-    }
-
-    this.on('ticker', fn);
-
-    return this;
-  },
-
-  /**
-   * @description The finish method is called once when the
-   * timer finishes.
-   *
-   * As Timr inherits from EventEmitter, this can be called
-   * multiple times with different functions and each one will
-   * be called when the event is emitted.
-   *
-   * @throws If the argument is not of type function.
-   *
-   * @param {Function} fn - Function to be called when finished.
-   * @return {Object} Returns a reference to the Timr so calls can be chained.
-   */
-  finish(fn) {
-    if (typeof fn !== 'function') {
-      throw new Error(`Expected finish to be a function, instead got: ${typeof fn}`);
-    }
-
-    this.on('finish', fn);
-
-    return this;
-  },
+  ticker: makeListenerGenerator('ticker'),
+  finish: makeListenerGenerator('finish'),
+  onStart: makeListenerGenerator('onStart'),
+  onPause: makeListenerGenerator('onPause'),
+  onStop: makeListenerGenerator('onStop'),
+  onDestroy: makeListenerGenerator('onDestroy'),
 
   /**
    * @description Converts seconds to time format.
