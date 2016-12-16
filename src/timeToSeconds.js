@@ -17,18 +17,12 @@ export default function timeToSeconds(time) {
   return Math.round(
     time.split(':').reduce((prev, curr, index, arr) => {
       if (arr.length === 3) {
-        if (index === 0) {
-          return prev + Number(curr) * 60 * 60;
-        }
-        if (index === 1) {
-          return prev + Number(curr) * 60;
-        }
+        if (index === 0) return prev + Number(curr) * 60 * 60;
+        if (index === 1) return prev + Number(curr) * 60;
       }
 
       if (arr.length === 2) {
-        if (index === 0) {
-          return prev + Number(curr) * 60;
-        }
+        if (index === 0) return prev + Number(curr) * 60;
       }
 
       return prev + Number(curr);

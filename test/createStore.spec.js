@@ -49,11 +49,11 @@ describe('Create Store Function', () => {
 
     store1.add(timer);
 
-    expect(store1.add.bind(store1, timer)).to.throw(
+    expect(() => store1.add(timer)).to.throw(
       'Unable to add to store; provided argument is either already in a store or not a timr object.'
     );
 
-    expect(store2.add.bind(store2, timer)).to.throw(
+    expect(() => store2.add(timer)).to.throw(
       'Unable to add to store; provided argument is either already in a store or not a timr object.'
     );
   });
@@ -61,7 +61,7 @@ describe('Create Store Function', () => {
   it('Throws an error if the provided argument is not a timr object', () => {
     const store = createStore();
 
-    expect(store.add.bind('not a timr object')).to.throw(
+    expect(() => store.add('not a timr object')).to.throw(
       'Unable to add to store; provided argument is either already in a store or not a timr object.'
     );
     expect(store.add).to.throw(
@@ -76,8 +76,8 @@ describe('Create Store Function', () => {
         timer.stop();
         done();
       });
-    const store = createStore(timer);
 
+    const store = createStore(timer);
     store.startAll();
   });
 

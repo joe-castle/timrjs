@@ -21,7 +21,7 @@ describe('Build Options Function', () => {
   });
 
   it('Throws an error if formatOutput is not a string', () => {
-    expect(buildOptions.bind(buildOptions, { formatOutput: 5 })).to.throw(
+    expect(() => buildOptions({ formatOutput: 5 })).to.throw(
       'Expected formatOutput to be a string; instead got: number'
     );
   });
@@ -33,7 +33,7 @@ describe('Build Options Function', () => {
   });
 
   it('Throws an error if padRaw is not a boolean', () => {
-    expect(buildOptions.bind(buildOptions, { padRaw: 5 })).to.throw(
+    expect(() => buildOptions({ padRaw: 5 })).to.throw(
       'Expected padRaw to be a boolean; instead got: number'
     );
   });
@@ -45,7 +45,7 @@ describe('Build Options Function', () => {
   });
 
   it('Throws an error if countdown is not a boolean', () => {
-    expect(buildOptions.bind(buildOptions, { countdown: 'hey' })).to.throw(
+    expect(() => buildOptions({ countdown: 'hey' })).to.throw(
       'Expected countdown to be a boolean; instead got: string'
     );
   });

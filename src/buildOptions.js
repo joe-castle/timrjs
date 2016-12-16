@@ -14,21 +14,18 @@ export default function buildOptions(newOptions, oldOptions) {
   if (newOptions) {
     const { formatOutput, padRaw, countdown } = newOptions;
 
-    // Error checking for separator.
     if (formatOutput) {
       if (typeof formatOutput !== 'string') {
         throw new Error(`Expected formatOutput to be a string; instead got: ${typeof formatOutput}`);
       }
     }
 
-    // Error checking for outputFormat.
     if (padRaw) {
       if (typeof padRaw !== 'boolean') {
         throw new Error(`Expected padRaw to be a boolean; instead got: ${typeof padRaw}`);
       }
     }
 
-    // Error checking for formatType.
     if (countdown) {
       if (typeof countdown !== 'boolean') {
         throw new Error(`Expected countdown to be a boolean; instead got: ${typeof countdown}`);
