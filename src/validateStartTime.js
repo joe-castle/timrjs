@@ -1,5 +1,4 @@
 import timeToSeconds from './timeToSeconds';
-import correctFormat from './correctFormat';
 
 /**
  * @description Validates the startTime
@@ -33,20 +32,26 @@ export default function validate(time) {
       newTime === -Infinity
     ) {
       throw new Error(
+        // Passes correct type, including null, NaN and Infinity
         `Expected time to be a string or number, instead got: ${
-          // Passes correct type, including null, NaN and Infinity
           typeof newTime === 'number' || newTime === null ? newTime : typeof newTime
         }`
       );
     }
   }
 
-  if (Number(newTime) < 0) {
-    throw new Error(`Time cannot be a negative number, got: ${newTime}`);
+  if (typeof newTime === 'string' && isNaN(Number(newTime))) {
+    if (
+      !/^\d+$/.test(newTime)
+      && !/^\d+:\d+$/.test(newTime)
+      && !/^\d+:\d+:\d+$/.test(newTime)
+    ) {
+      throw new Error(`Expected time to be in (hh:mm:ss) format, instead got: ${newTime}`);
+    }
   }
 
-  if (!correctFormat(newTime)) {
-    throw new Error(`Expected time to be in (hh:mm:ss) format, instead got: ${newTime}`);
+  if (Number(newTime) < 0) {
+    throw new Error(`Time cannot be a negative number, got: ${newTime}`);
   }
 
   return timeToSeconds(newTime);

@@ -23,7 +23,6 @@ describe('Index function', () => {
     expect(init.validateStartTime).to.exist();
     expect(init.formatTime).to.exist();
     expect(init.timeToSeconds).to.exist();
-    expect(init.correctFormat).to.exist();
     expect(init.createStore).to.exist();
   });
 });

@@ -3,7 +3,6 @@ import objectAssign from 'object-assign';
 import validateStartTime from './validateStartTime';
 import formatTime from './formatTime';
 import timeToSeconds from './timeToSeconds';
-import correctFormat from './correctFormat';
 import createStore from './createStore';
 
 import Timr from './Timr';
@@ -24,7 +23,6 @@ const init = objectAssign(
     validateStartTime,
     formatTime,
     timeToSeconds,
-    correctFormat,
     createStore,
   }
 );
