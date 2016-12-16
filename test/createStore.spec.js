@@ -71,7 +71,7 @@ describe('Create Store Function', () => {
 
   it('Starts all the timers.', done => {
     const timer = new Timr(600)
-      .ticker(formattedTime => {
+      .ticker(({ formattedTime }) => {
         expect(formattedTime).to.equal('09:59');
         timer.stop();
         done();
@@ -98,7 +98,7 @@ describe('Create Store Function', () => {
   it('Stops all the timers.', done => {
     const store = createStore();
     const timer = new Timr(600)
-      .ticker(formattedTime => {
+      .ticker(({ formattedTime }) => {
         expect(formattedTime).to.equal('09:59');
         store.stopAll();
         expect(timer.getCurrentTime()).to.equal(600);

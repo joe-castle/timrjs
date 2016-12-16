@@ -30,7 +30,7 @@ describe('Timr Class', () => {
   describe('start method', () => {
     it('Starts the timer', done => {
       const timer = new Timr(600).start()
-        .ticker(formattedTime => {
+        .ticker(({ formattedTime }) => {
           expect(formattedTime).to.equal('09:59');
           timer.stop();
           done();
@@ -53,26 +53,26 @@ describe('Timr Class', () => {
       const year = new Date().getFullYear() + 1;
 
       const timer = new Timr(`${year}-12-15T10:00:00`)
-        .ticker((ft, pd, ct) => {
+        .ticker(({ currentTime }) => {
           const testStart = Math.ceil((Date.parse(`${year}-12-15T10:00:00`) - Date.now()) / 1000);
 
-          expect(ct).to.equal(testStart);
+          expect(currentTime).to.equal(testStart);
 
           timer.destroy();
           done();
         });
 
-      setTimeout(timer.start.bind(timer), 2000);
+      setTimeout(() => timer.start(), 2000);
     });
 
     it('Same test as above, but using starts delay feature', done => {
       const year = new Date().getFullYear() + 1;
 
       const timer = new Timr(`${year}-12-15T10:00:00`)
-        .ticker((ft, pd, ct) => {
+        .ticker(({ currentTime }) => {
           const testStart = Math.ceil((Date.parse(`${year}-12-15T10:00:00`) - Date.now()) / 1000);
 
-          expect(ct).to.equal(testStart);
+          expect(currentTime).to.equal(testStart);
 
           timer.destroy();
           done();
@@ -122,7 +122,7 @@ describe('Timr Class', () => {
   describe('stop method', () => {
     it('Stops the timer', done => {
       const timer = new Timr(600).start();
-      timer.ticker(formattedTime => {
+      timer.ticker(({ formattedTime }) => {
         expect(formattedTime).to.equal('09:59');
         timer.stop();
         expect(timer.getCurrentTime()).to.equal(600);
@@ -173,7 +173,7 @@ describe('Timr Class', () => {
       'returning the formattedTime, precentDone, currentTime, ' +
       'startTime and the original Timr object.', done => {
       const timer = new Timr(600).start()
-        .ticker((formattedTime, percentDone, currentTime, startTime, self) => {
+        .ticker(({ formattedTime, percentDone, currentTime, startTime, self }) => {
           expect(formattedTime).to.equal('09:59');
           expect(percentDone).to.equal(0);
           expect(currentTime).to.equal(599);
@@ -185,11 +185,12 @@ describe('Timr Class', () => {
     });
 
     it('As a stopwatch, fires the ticker function every second the timer runs, ' +
-      'returning the formattedTime, currentTime and original Timr object.', done => {
+      'returning the formattedTime, startTime, currentTime and original Timr object.', done => {
       const timer = new Timr().start().ticker(
-        (formattedTime, currentTime, self) => {
+        ({ formattedTime, currentTime, startTime, self }) => {
           expect(formattedTime).to.equal('00:01');
           expect(currentTime).to.equal(1);
+          expect(startTime).to.equal(0);
           expect(self).to.equal(timer);
           timer.stop();
           done();
@@ -200,9 +201,10 @@ describe('Timr Class', () => {
     it('The stopwatch is able to be started at any given time; previously in ' +
      'pre v1.0.0 a stopwatch could only be started at 0.', done => {
       const timer = new Timr(600, { countdown: false }).start().ticker(
-        (formattedTime, currentTime, self) => {
+        ({ formattedTime, currentTime, startTime, self }) => {
           expect(formattedTime).to.equal('10:01');
           expect(currentTime).to.equal(601);
+          expect(startTime).to.equal(600);
           expect(self).to.equal(timer);
           timer.stop();
           done();
@@ -212,7 +214,7 @@ describe('Timr Class', () => {
 
     it('Throws an error if the ticker method is called with no ' +
       'function provided as the first argument', () => {
-      expect(new Timr(600).ticker.bind()).to.throw(
+      expect(() => new Timr(600).ticker()).to.throw(
         'Expected ticker to be a function, instead got: undefined'
       );
     });
@@ -235,7 +237,7 @@ describe('Timr Class', () => {
 
     it('Throws an error if the finish method is called with no ' +
       'function provided as the first argument', () => {
-      expect(new Timr(600).finish.bind(Timr.prototype.finish)).to.throw(
+      expect(() => new Timr(600).finish()).to.throw(
         'Expected finish to be a function, instead got: undefined'
       );
     });
@@ -248,39 +250,29 @@ describe('Timr Class', () => {
 
   describe('formatTime method', () => {
     it('Returns the currentTime formatted into a time string', () => {
-      expect(new Timr(50).formatTime()).to.equal('00:50');
-      expect(new Timr(600).formatTime()).to.equal('10:00');
-      expect(new Timr(9600).formatTime()).to.equal('02:40:00');
+      expect(new Timr(50).formatTime().formattedTime).to.equal('00:50');
+      expect(new Timr(600).formatTime().formattedTime).to.equal('10:00');
+      expect(new Timr(9600).formatTime().formattedTime).to.equal('02:40:00');
     });
 
-    it('Returns the currentTime formatted into a time string ' +
-      'with a modified outputFormat', () => {
-      expect(new Timr(600, { outputFormat: 'HH:MM:SS' }).formatTime()).to.equal('00:10:00');
-      expect(new Timr(50, { outputFormat: 'SS' }).formatTime()).to.equal('50');
-    });
-
-    it('Returns the currentTime formatted into a time string ' +
-      'with a modifided separator', () => {
-      expect(new Timr(600, { separator: '-' }).formatTime()).to.equal('10-00');
-      expect(new Timr(600, { separator: 'boop' }).formatTime())
-        .to.equal('10boop00');
+    it('Returns the currentTime formatted into a time string with a modified formatOutput', () => {
+      expect(new Timr(600, { formatOutput: 'MM-SS' }).formatTime().formattedTime)
+        .to.equal('10-600');
+      expect(new Timr(600, { formatOutput: 'boop' }).formatTime().formattedTime)
+        .to.equal('boop');
     });
 
     it('Returns the startTime formatted into a time string', () => {
-      expect(new Timr(50).formatTime('startTime')).to.equal('00:50');
-      expect(new Timr(600).formatTime('startTime')).to.equal('10:00');
-      expect(new Timr(9600).formatTime('startTime')).to.equal('02:40:00');
+      expect(new Timr(50).formatTime('startTime').formattedTime).to.equal('00:50');
+      expect(new Timr(600).formatTime('startTime').formattedTime).to.equal('10:00');
+      expect(new Timr(9600).formatTime('startTime').formattedTime).to.equal('02:40:00');
     });
 
-    it('Returns the startTime formatted into a time stringwith a modified outputFormat', () => {
-      expect(new Timr(600, { outputFormat: 'HH:MM:SS' }).formatTime('startTime'))
+    it('Returns the startTime formatted into a time string with a modified formatOutput', () => {
+      expect(new Timr(600, { formatOutput: '00:mm:ss' }).formatTime('startTime').formattedTime)
         .to.equal('00:10:00');
-      expect(new Timr(50, { outputFormat: 'SS' }).formatTime('startTime')).to.equal('50');
-    });
-
-    it('Returns the startTime formatted into a time stringwith a modifided separator', () => {
-      expect(new Timr(600, { separator: '-' }).formatTime('startTime')).to.equal('10-00');
-      expect(new Timr(600, { separator: 'boop' }).formatTime('startTime')).to.equal('10boop00');
+      expect(new Timr(50, { formatOutput: 'SS' }).formatTime('startTime').formattedTime)
+        .to.equal('50');
     });
   });
 
@@ -296,23 +288,25 @@ describe('Timr Class', () => {
   describe('changeOptions methods', () => {
     it('Changes the timrs options after creation.', () => {
       const timer = new Timr(600);
-      expect(timer.formatTime()).to.equal('10:00');
-      timer.changeOptions({ separator: '-', outputFormat: 'hh:mm:ss' });
-      expect(timer.formatTime()).to.equal('00-10-00');
+      expect(timer.formatTime().formattedTime).to.equal('10:00');
+      timer.changeOptions({ formatOutput: '00-mm-ss' });
+      expect(timer.formatTime().formattedTime).to.equal('00-10-00');
     });
 
     it('Changes the timrs options after creation and merges with existing ones.', () => {
-      const timer = new Timr(600, { separator: '-' });
-      expect(timer.formatTime()).to.equal('10-00');
-      timer.changeOptions({ separator: '-', outputFormat: 'hh:mm:ss' });
-      expect(timer.formatTime()).to.equal('00-10-00');
+      const timer = new Timr(600, { padRaw: false });
+      expect(timer.formatTime().formattedTime).to.equal('10:00');
+      expect(timer.formatTime().raw.currentMinutes).to.equal(10);
+      timer.changeOptions({ padRaw: true, formatOutput: '00-mm-ss' });
+      expect(timer.formatTime().formattedTime).to.equal('00-10-00');
+      expect(timer.formatTime().raw.currentMinutes).to.equal('10');
     });
 
     it('Ignores { countdown: true } when the startTime has been set to 0', done => {
       const timer = new Timr()
         .changeOptions({ countdown: true })
-        .ticker(ft => {
-          expect(ft).to.equal('00:01')
+        .ticker(({ formattedTime }) => {
+          expect(formattedTime).to.equal('00:01');
           timer.destroy();
           done();
         })
@@ -339,11 +333,11 @@ describe('Timr Class', () => {
     it('Clears the existing timer and sets the ' +
       'currentTime and startTime to the new starTime', done => {
       const timer = new Timr(600).start();
-      timer.ticker((ft, pd, ct) => {
-        expect(ct).to.equal(599);
+      timer.ticker(({ currentTime }) => {
+        expect(currentTime).to.equal(599);
         timer.setStartTime('11:00');
-        expect(timer.startTime).to.equal(660);
-        expect(timer.currentTime).to.equal(660);
+        expect(timer.getStartTime()).to.equal(660);
+        expect(timer.getCurrentTime()).to.equal(660);
         done();
       });
     });
@@ -351,19 +345,19 @@ describe('Timr Class', () => {
     it('Throws an error if the newly provided startTime is invalid', () => {
       const timer = new Timr(600);
 
-      expect(timer.setStartTime.bind(timer, '12-12')).to.throw(Error);
-      expect(timer.setStartTime.bind(timer, {})).to.throw(Error);
-      expect(timer.setStartTime.bind(timer, 'invalid')).to.throw(Error);
+      expect(() => timer.setStartTime('12-12')).to.throw(Error);
+      expect(() => timer.setStartTime({})).to.throw(Error);
+      expect(() => timer.setStartTime('invalid')).to.throw(Error);
     });
 
-    it('Setsup a stopwatch if the newStartTime is falsy or 0', done => {
+    it('Sets up a stopwatch if the newStartTime is falsy or 0', done => {
       const timer = new Timr(600);
 
       timer.setStartTime(0);
 
-      timer.ticker((ft, ct) => {
-        expect(ft).to.equal('00:01')
-        expect(ct).to.equal(1)
+      timer.ticker(({ formattedTime, currentTime }) => {
+        expect(formattedTime).to.equal('00:01');
+        expect(currentTime).to.equal(1);
         timer.destroy();
         done();
       })
