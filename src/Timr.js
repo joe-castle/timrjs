@@ -12,7 +12,7 @@ import dateToSeconds from './dateToSeconds';
  *
  * If the provided startTime is 0 or fasly, the constructor will automatically
  * setup the timr as stopwatch, this prevents the timer from counting down into
- * negative numbers and covers previous use case where 0 was used to setup a
+ * negative numbers and covers previous ( < v1.0.0 ) use case where 0 was used to setup a
  * stopwatch.
  *
  * @param {String|Number} startTime - The starting time for the timr object.
@@ -43,14 +43,12 @@ function Timr(startTime, options) {
 function countdown() {
   this.currentTime -= 1;
 
-  this.emit(
-    'ticker',
-    this.formatTime(),
-    this.percentDone(),
-    this.currentTime,
-    this.startTime,
-    this
-  );
+  this.emit('ticker', objectAssign(this.formatTime(), {
+    percentDone: this.percentDone(),
+    currentTime: this.currentTime,
+    startTime: this.startTime,
+    self: this,
+  }));
 
   if (this.currentTime <= 0) {
     this.stop();
@@ -65,12 +63,11 @@ function countdown() {
 function stopwatch() {
   this.currentTime += 1;
 
-  this.emit(
-    'ticker',
-    this.formatTime(),
-    this.currentTime,
-    this
-  );
+  this.emit('ticker', objectAssign(this.formatTime(), {
+    currentTime: this.currentTime,
+    startTime: this.startTime,
+    self: this,
+  }));
 }
 
 Timr.prototype = objectAssign(Object.create(EventEmitter.prototype), {
@@ -217,11 +214,11 @@ Timr.prototype = objectAssign(Object.create(EventEmitter.prototype), {
 
   /**
    * @description Converts seconds to time format.
-   * This is provided to the ticker method as the first argument.
+   * This is provided to the ticker.
    *
    * @param {String} [time=currentTime] - option do format the startTime
    *
-   * @return {String} The formatted time.
+   * @return {Object} The formatted time and raw values.
    */
   formatTime(time = 'currentTime') {
     return formatTime(this[time], this.options);
@@ -229,7 +226,7 @@ Timr.prototype = objectAssign(Object.create(EventEmitter.prototype), {
 
   /**
    * @description Returns the time elapsed in percent.
-   * This is provided to the ticker method as the second argument.
+   * This is provided to the ticker.
    *
    * @return {Number} Time elapsed in percent.
    */
@@ -267,7 +264,7 @@ Timr.prototype = objectAssign(Object.create(EventEmitter.prototype), {
    *
    * @throws If the starttime is invalid.
    *
-   * @return {String} Returns the formatted startTime.
+   * @return {Object} The original Timr object.
    */
   setStartTime(startTime) {
     this.clear();
