@@ -304,7 +304,7 @@ Timr.prototype = objectAssign(Object.create(EventEmitter.prototype), {
   /**
    * @description Shorthand for this.formatTime(time).formattedTime
    */
-  getFT(time = 'currentTime') {
+  getFt(time = 'currentTime') {
     return this.formatTime(time).formattedTime;
   },
 

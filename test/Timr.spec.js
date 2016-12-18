@@ -416,9 +416,9 @@ describe('Timr Class', () => {
     });
   });
 
-  describe('getFT', () => {
+  describe('getFt', () => {
     it('Returns the formattedTime.', () => {
-      expect(new Timr(600).getFT()).to.equal('10:00');
+      expect(new Timr(600).getFt()).to.equal('10:00');
     });
   });
 
