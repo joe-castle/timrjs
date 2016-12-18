@@ -5,7 +5,7 @@ import buildOptions from '../src/buildOptions';
 describe('Build Options Function', () => {
   it('Returns an object with default options.', () => {
     expect(buildOptions()).to.deep.equal({
-      formatOutput: 'HH:{mm:ss}',
+      formatOutput: 'DD hh:{mm:ss}',
       padRaw: true,
       countdown: true,
     });
@@ -28,7 +28,7 @@ describe('Build Options Function', () => {
 
   it('Returns an object with amended padRaw option', () => {
     expect(buildOptions({ padRaw: false })).to.deep.equal(
-      { formatOutput: 'HH:{mm:ss}', padRaw: false, countdown: true }
+      { formatOutput: 'DD hh:{mm:ss}', padRaw: false, countdown: true }
     );
   });
 
@@ -40,7 +40,7 @@ describe('Build Options Function', () => {
 
   it('Returns an object with amended countdown option', () => {
     expect(buildOptions({ countdown: false })).to.deep.equal(
-      { formatOutput: 'HH:{mm:ss}', padRaw: true, countdown: false }
+      { formatOutput: 'DD hh:{mm:ss}', padRaw: true, countdown: false }
     );
   });
 

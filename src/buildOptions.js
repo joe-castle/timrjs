@@ -34,7 +34,7 @@ export default function buildOptions(newOptions, oldOptions) {
   }
 
   const defaults = {
-    formatOutput: 'HH:{mm:ss}',
+    formatOutput: 'DD hh:{mm:ss}',
     padRaw: true,
     countdown: true,
   };
