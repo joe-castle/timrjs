@@ -43,7 +43,7 @@ describe('Date to Seconds function', () => {
 
   it('Returns the original value if it\'s a number that is less than 2 years. Anythiung over ' +
   'is assumed to be a unix time', () => {
-    expect(dateToSeconds(63071999999)).to.equal(63071999999)
+    expect(dateToSeconds(63071999999)).to.equal(63071999999);
   });
 
   it('Throws an error if the format matches the regex but is not ISO format', () => {

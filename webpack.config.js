@@ -9,13 +9,19 @@ const config = {
     libraryTarget: 'umd',
     umdNamedDefine: true
   },
-  plugins: [
-    new webpack.optimize.OccurrenceOrderPlugin()
-  ],
+  plugins: [],
   module: {
-    loaders: [
-      { test: /\.js$/, loader: 'babel', exclude: /node_modules/ }
-    ],
+    rules: [{ 
+      test: /\.js$/, 
+      use: [{ 
+        loader: 'babel-loader', 
+        options: {
+          babelrc: false,
+          presets: ['es2015'],
+        },
+      }],
+      exclude: /node_modules/ 
+    }],
   },
 };
 
@@ -38,7 +44,7 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 config.plugins.push(
-  new webpack.BannerPlugin(bannerText, { raw: true })
+  new webpack.BannerPlugin({ banner: bannerText, raw: true })
 );
 
 module.exports = config;

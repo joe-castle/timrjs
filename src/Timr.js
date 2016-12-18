@@ -247,7 +247,7 @@ Timr.prototype = objectAssign(Object.create(EventEmitter.prototype), {
    * @return {Object} Returns a reference to the Timr so calls can be chained.
    */
   changeOptions(options) {
-    let newOptions = this.startTime > 0
+    const newOptions = this.startTime > 0
       ? options
       : objectAssign({}, options, { countdown: false });
 

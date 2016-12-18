@@ -1,6 +1,6 @@
 {
   "name": "timrjs",
-  "description": "Timr is a simple, event driven utility for creating timers in JavaScript.",
+  "description": "Timr is a simple utility for creating timers in JavaScript.",
   "main": "lib/index.js",
   "authors": [
     "Joe Smith <joesmith0488@gmail.com>"
@@ -12,7 +12,8 @@
     "timrjs",
     "utility",
     "countdown",
-    "stopwatch"
+    "stopwatch",
+    "date"
   ],
   "homepage": "https://github.com/joesmith100/timrjs",
   "repository": {

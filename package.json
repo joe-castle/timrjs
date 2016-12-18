@@ -1,7 +1,7 @@
 {
   "name": "timrjs",
-  "version": "0.9.0",
-  "description": "Timr is a simple, event driven utility for creating timers in JavaScript.",
+  "version": "1.0.0",
+  "description": "Timr is a simple utility for creating timers in JavaScript.",
   "main": "lib/index.js",
   "scripts": {
     "clean": "rimraf dist/ && rimraf lib/",
@@ -22,7 +22,8 @@
     "timrjs",
     "utility",
     "countdown",
-    "stopwatch"
+    "stopwatch",
+    "date"
   ],
   "bugs": {
     "url": "https://github.com/joesmith100/timrjs/issues"
@@ -37,7 +38,7 @@
     "babel-cli": "^6.10.1",
     "babel-core": "^6.10.4",
     "babel-istanbul": "^0.11.0",
-    "babel-loader": "^6.2.4",
+    "babel-loader": "^6.2.10",
     "babel-preset-es2015": "^6.9.0",
     "babel-register": "^6.9.0",
     "chai": "^3.5.0",
@@ -51,7 +52,7 @@
     "mocha-lcov-reporter": "^1.2.0",
     "rimraf": "^2.5.3",
     "sinon": "^1.17.4",
-    "webpack": "^1.13.1"
+    "webpack": "^2.2.0-rc.1"
   },
   "dependencies": {
     "object-assign": "^4.1.0"

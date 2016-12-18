@@ -5,8 +5,6 @@ import sinon from 'sinon';
 import Timr from '../src/Timr';
 import createStore from '../src/createStore';
 
-const zeroPad = number => (number < 10 ? `0${number}` : number);
-
 // Turns methods like to.be.true into to.be.true() to stop eslint failing
 chai.use(dirtyChai);
 

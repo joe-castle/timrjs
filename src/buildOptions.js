@@ -16,7 +16,10 @@ export default function buildOptions(newOptions, oldOptions) {
 
     if (formatOutput) {
       if (typeof formatOutput !== 'string') {
-        throw new Error(`Expected formatOutput to be a string; instead got: ${typeof formatOutput}`);
+        throw new Error(
+          'Expected formatOutput to be a string; instead got: ' +
+          `${typeof formatOutput}`
+        );
       }
     }
 
