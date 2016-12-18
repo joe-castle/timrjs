@@ -416,6 +416,27 @@ describe('Timr Class', () => {
     });
   });
 
+  describe('getFT', () => {
+    it('Returns the formattedTime.', () => {
+      expect(new Timr(600).getFT()).to.equal('10:00');
+    });
+  });
+
+  describe('getRaw', () => {
+    it('Returns the raw values.', () => {
+      expect(new Timr(600).getRaw()).to.deep.equal({
+        totalDays: '00',
+        totalHours: '00',
+        totalMinutes: '10',
+        totalSeconds: '600',
+        currentDays: '00',
+        currentHours: '00',
+        currentMinutes: '10',
+        currentSeconds: '00',
+      });
+    });
+  });
+
   describe('getStartTime method', () => {
     it('Returns the currentTime in seconds', () => {
       expect(new Timr(600).getStartTime()).to.equal(600);

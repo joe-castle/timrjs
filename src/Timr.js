@@ -302,6 +302,20 @@ Timr.prototype = objectAssign(Object.create(EventEmitter.prototype), {
   },
 
   /**
+   * @description Shorthand for this.formatTime(time).formattedTime
+   */
+  getFT(time = 'currentTime') {
+    return this.formatTime(time).formattedTime;
+  },
+
+  /**
+   * @description Shorthand for this.formatTime(time).raw
+   */
+  getRaw(time = 'currentTime') {
+    return this.formatTime(time).raw;
+  },
+
+  /**
    * @description Gets the Timrs startTime.
    *
    * @return {Number} Start time in seconds.
