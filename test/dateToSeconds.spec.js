@@ -51,9 +51,6 @@ describe('Date to Seconds function', () => {
 
     expect(() => dateToSeconds(`${year}-13-25`)).to.throw(
       'The date/time you passed does not match ISO format. ' +
-      'You can pass a date like: 2017-07-26. ' +
-      'You can pass a date and time like: 2017-07-26T10:50:43. ' +
-      'You can pass a date and time with a UTC offset like: 2017-07-26T10:50:43-07:00. ' +
       `You passed: "${year}-13-25".`
     );
   });
@@ -63,9 +60,6 @@ describe('Date to Seconds function', () => {
 
     expect(() => dateToSeconds('2015-12-25')).to.throw(
       'When passing a date/time, it cannot be in the past. ' +
-      'You can pass a date like: 2017-07-26. ' +
-      'You can pass a date and time like: 2017-07-26T10:50:43. ' +
-      'You can pass a date and time with a UTC offset like: 2017-07-26T10:50:43-07:00. ' +
       'You passed: "2015-12-25". It\'s currently: "' +
       `${zeroPad(dateNow.getFullYear())}-${zeroPad(dateNow.getMonth() + 1)}-` +
       `${zeroPad(dateNow.getDate())} ` +

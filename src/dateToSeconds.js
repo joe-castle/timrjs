@@ -10,7 +10,7 @@ const zeroPad = number => (number < 10 ? `0${number}` : number);
  *
  * @return {Object|Any} - Returns the converted seconds and the original date.
  * The originalDate is used to re-run the function when the timer starts, to ensure
- * that it is upto date.
+ * that it is up to date.
  */
 export default function dateToSeconds(startTime) {
   if (
@@ -18,15 +18,18 @@ export default function dateToSeconds(startTime) {
     || startTime >= 63072000000
   ) {
     const dateNow = new Date();
-    const parsedStartTime = new Date(startTime).getTime();
+    let newStartTime = startTime;
+
+    if (/^(\d{4}-\d{2}-\d{2})$/i.test(newStartTime)) {
+      newStartTime = `${newStartTime}T00:00`;
+    }
+
+    const parsedStartTime = new Date(newStartTime).getTime();
     const startTimeInSeconds = Math.ceil((parsedStartTime - dateNow.getTime()) / 1000);
 
     if (isNaN(parsedStartTime)) {
       throw new Error(
         'The date/time you passed does not match ISO format. ' +
-        'You can pass a date like: 2017-07-26. ' +
-        'You can pass a date and time like: 2017-07-26T10:50:43. ' +
-        'You can pass a date and time with a UTC offset like: 2017-07-26T10:50:43-07:00. ' +
         `You passed: "${startTime}".`
       );
     }
@@ -34,9 +37,6 @@ export default function dateToSeconds(startTime) {
     if (startTimeInSeconds < 0) {
       throw new Error(
         'When passing a date/time, it cannot be in the past. ' +
-        'You can pass a date like: 2017-07-26. ' +
-        'You can pass a date and time like: 2017-07-26T10:50:43. ' +
-        'You can pass a date and time with a UTC offset like: 2017-07-26T10:50:43-07:00. ' +
         `You passed: "${startTime}". It's currently: ` +
         `"${zeroPad(dateNow.getFullYear())}-${zeroPad(dateNow.getMonth()) + 1}-` +
         `${zeroPad(dateNow.getDate())} ` +
