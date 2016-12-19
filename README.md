@@ -173,13 +173,23 @@ Four other events are provided, all of them emit the original timr object as the
 To control the Timr, you use the `start`, `pause` and `stop` methods.
 
 ```js
-/*
+/**
  * Start takes an optional number (in ms) argument that will
  * delay the start of the timer.
  */
 timer.start([delay]);
 timer.pause();
 timer.stop();
+
+/**
+ * Because Timr is class based, to ensure the this variable is correct,
+ * you'll need to bind it's functions if you want to pass them in to be called later.
+ *
+ * Or you can use ES6 arrow syntax which doesn't alter the this value.
+ */
+$('button').on('click', timer.start.bind(timer));
+
+setTImeout(() => timer.start(), 1000);
 ```
 
 ### Full API
