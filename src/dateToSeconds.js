@@ -37,8 +37,8 @@ export default function dateToSeconds(startTime) {
     if (startTimeInSeconds < 0) {
       throw new Error(
         'When passing a date/time, it cannot be in the past. ' +
-        `You passed: "${startTime}". It's currently: ` +
-        `"${zeroPad(dateNow.getFullYear())}-${zeroPad(dateNow.getMonth()) + 1}-` +
+        'You passed: "2015-12-25". It\'s currently: "' +
+        `${zeroPad(dateNow.getFullYear())}-${zeroPad(dateNow.getMonth() + 1)}-` +
         `${zeroPad(dateNow.getDate())} ` +
         `${zeroPad(dateNow.getHours())}:${zeroPad(dateNow.getMinutes())}:` +
         `${zeroPad(dateNow.getSeconds())}"`
