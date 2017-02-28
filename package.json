@@ -2,7 +2,7 @@
   "name": "timrjs",
   "version": "1.0.0",
   "description": "Timr is a simple utility for creating timers in JavaScript.",
-  "main": "lib/index.js",
+  "main": "dist/timr.js",
   "scripts": {
     "clean": "rimraf dist/ && rimraf lib/",
     "lint": "eslint --format 'node_modules/eslint-friendly-formatter' src test",
