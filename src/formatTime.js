@@ -56,6 +56,20 @@ export default function formatTime(seconds, options) {
     stringToFormat = stringToFormat.slice(beginSlice >= 0 ? beginSlice : 0);
   }
 
+  /* a Better implementation, needs testing
+    string.replace(/(DD)?(HH)?(MM)?(SS)?/gi, function(match) {
+      if (match.length === 0) return ''; // removes whitespace caught in regex
+
+      return zeroPad(obj[match]);
+    });
+
+    obj = {
+      HH: 23,
+      mm: 25
+      ... etc
+    }
+  */
+
   // Replaces all values in string with their respective number values
   const formattedTime = stringToFormat
     .replace(/\{?\}?/g, '')
