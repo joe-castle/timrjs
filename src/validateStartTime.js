@@ -35,7 +35,7 @@ export default function validate(time) {
         // Passes correct type, including null, NaN and Infinity
         `Expected time to be a string or number, instead got: ${
           typeof newTime === 'number' || newTime === null ? newTime : typeof newTime
-        }`
+        }`,
       );
     }
   }

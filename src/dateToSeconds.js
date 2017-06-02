@@ -30,7 +30,7 @@ export default function dateToSeconds(startTime) {
     if (isNaN(parsedStartTime)) {
       throw new Error(
         'The date/time you passed does not match ISO format. ' +
-        `You passed: "${startTime}".`
+        `You passed: "${startTime}".`,
       );
     }
 
@@ -41,7 +41,7 @@ export default function dateToSeconds(startTime) {
         `${zeroPad(dateNow.getFullYear())}-${zeroPad(dateNow.getMonth() + 1)}-` +
         `${zeroPad(dateNow.getDate())} ` +
         `${zeroPad(dateNow.getHours())}:${zeroPad(dateNow.getMinutes())}:` +
-        `${zeroPad(dateNow.getSeconds())}"`
+        `${zeroPad(dateNow.getSeconds())}"`,
       );
     }
 

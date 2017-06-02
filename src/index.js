@@ -24,7 +24,7 @@ const init = objectAssign(
     formatTime,
     timeToSeconds,
     createStore,
-  }
+  },
 );
 
 export default init;

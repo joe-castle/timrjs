@@ -35,7 +35,7 @@ describe('Format Time function', () => {
     expect(formatTime(999999, { formatOutput: 'dd days hh:mm:ss' }).formattedTime)
       .to.equal('11 days 13:46:39');
     expect(
-      formatTime(99999, { formatOutput: 'dd days hh hours mm minutes ss seconds' }).formattedTime
+      formatTime(99999, { formatOutput: 'dd days hh hours mm minutes ss seconds' }).formattedTime,
     ).to.equal('1 days 03 hours 46 minutes 39 seconds');
   });
 });

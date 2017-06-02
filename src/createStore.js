@@ -34,7 +34,7 @@ export default function createStore(...args) {
     .filter(item => item instanceof Timr)
     .filter(timr => typeof timr.removeFromStore !== 'function');
 
-  const removeFromStore = timr => {
+  const removeFromStore = (timr) => {
     if (timr instanceof Timr) {
       timrs = timrs.filter(x => x !== timr);
       /* eslint-disable no-param-reassign */
@@ -43,7 +43,7 @@ export default function createStore(...args) {
   };
 
   // Provides each Timr with the ability to remove itself from the store.
-  timrs.forEach(timr => {
+  timrs.forEach((timr) => {
     timr.removeFromStore = () => {
       removeFromStore(timr);
     };
@@ -60,7 +60,7 @@ export default function createStore(...args) {
      *
      * @return {Object} The provided timr object.
      */
-    add: timr => {
+    add: (timr) => {
       if (timr instanceof Timr && typeof timr.removeFromStore !== 'function') {
         timrs.push(timr);
 
@@ -72,7 +72,7 @@ export default function createStore(...args) {
       } else {
         throw new Error(
           'Unable to add to store; provided argument is either already in a store ' +
-          'or not a timr object.'
+          'or not a timr object.',
         );
       }
 

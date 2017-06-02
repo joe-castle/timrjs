@@ -234,7 +234,7 @@ Timr.prototype = objectAssign(Object.create(EventEmitter.prototype), {
    * @return {Number} Time elapsed in percent.
    */
   percentDone() {
-    return 100 - Math.round(this.currentTime / this.startTime * 100);
+    return 100 - Math.round((this.currentTime / this.startTime) * 100);
   },
 
   /**
@@ -296,7 +296,8 @@ Timr.prototype = objectAssign(Object.create(EventEmitter.prototype), {
       this.changeOptions({ countdown: false });
     }
 
-    this.startTime = this.currentTime = validateStartTime(newStartTime);
+    this.startTime = validateStartTime(newStartTime);
+    this.currentTime = this.startTime;
 
     return this;
   },

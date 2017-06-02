@@ -18,9 +18,9 @@ export default function formatTime(seconds, options) {
   const totalMinutes = Math.floor(totalSeconds / 60);
   const totalHours = totalMinutes && Math.floor(totalMinutes / 60);
   const totalDays = totalHours && Math.floor(totalHours / 24);
-  const currentSeconds = totalMinutes ? totalSeconds - totalMinutes * 60 : totalSeconds;
-  const currentMinutes = totalHours ? totalMinutes - totalHours * 60 : totalMinutes;
-  const currentHours = totalDays ? totalHours - totalDays * 24 : totalHours;
+  const currentSeconds = totalMinutes ? totalSeconds - (totalMinutes * 60) : totalSeconds;
+  const currentMinutes = totalHours ? totalMinutes - (totalHours * 60) : totalMinutes;
+  const currentHours = totalDays ? totalHours - (totalDays * 24) : totalHours;
   const currentDays = totalDays;
 
   let stringToFormat = formatOutput;

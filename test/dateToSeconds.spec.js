@@ -51,7 +51,7 @@ describe('Date to Seconds function', () => {
 
     expect(() => dateToSeconds(`${year}-13-25`)).to.throw(
       'The date/time you passed does not match ISO format. ' +
-      `You passed: "${year}-13-25".`
+      `You passed: "${year}-13-25".`,
     );
   });
 
@@ -64,7 +64,7 @@ describe('Date to Seconds function', () => {
       `${zeroPad(dateNow.getFullYear())}-${zeroPad(dateNow.getMonth() + 1)}-` +
       `${zeroPad(dateNow.getDate())} ` +
       `${zeroPad(dateNow.getHours())}:${zeroPad(dateNow.getMinutes())}:` +
-      `${zeroPad(dateNow.getSeconds())}"`
+      `${zeroPad(dateNow.getSeconds())}"`,
     );
   });
 });

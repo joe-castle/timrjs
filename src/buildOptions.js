@@ -18,7 +18,7 @@ export default function buildOptions(newOptions, oldOptions) {
       if (typeof formatOutput !== 'string') {
         throw new Error(
           'Expected formatOutput to be a string; instead got: ' +
-          `${typeof formatOutput}`
+          `${typeof formatOutput}`,
         );
       }
     }
@@ -44,6 +44,6 @@ export default function buildOptions(newOptions, oldOptions) {
 
   return objectAssign(
     oldOptions || defaults,
-    newOptions
+    newOptions,
   );
 }

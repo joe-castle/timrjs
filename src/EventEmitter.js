@@ -36,7 +36,7 @@ EventEmitter.prototype = {
    */
   emit(event, ...args) {
     if (this.events[event]) {
-      this.events[event].forEach(listener => {
+      this.events[event].forEach((listener) => {
         listener.apply(this, args);
       });
     }

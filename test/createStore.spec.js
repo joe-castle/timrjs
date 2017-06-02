@@ -21,7 +21,7 @@ describe('Create Store Function', () => {
 
     expect(store2.getAll()).to.have.lengthOf(2);
 
-    store2.getAll().forEach(item => {
+    store2.getAll().forEach((item) => {
       expect(item).to.be.instanceof(Timr);
     });
   });
@@ -29,7 +29,7 @@ describe('Create Store Function', () => {
   it('Creates new store and provides timr objects with a removeFromStore function', () => {
     const store = createStore(new Timr(0), new Timr(0), new Timr(0));
 
-    store.getAll().forEach(timr => {
+    store.getAll().forEach((timr) => {
       expect(typeof timr.removeFromStore === 'function');
     });
   });
@@ -50,11 +50,11 @@ describe('Create Store Function', () => {
     store1.add(timer);
 
     expect(() => store1.add(timer)).to.throw(
-      'Unable to add to store; provided argument is either already in a store or not a timr object.'
+      'Unable to add to store; provided argument is either already in a store or not a timr object.',
     );
 
     expect(() => store2.add(timer)).to.throw(
-      'Unable to add to store; provided argument is either already in a store or not a timr object.'
+      'Unable to add to store; provided argument is either already in a store or not a timr object.',
     );
   });
 
@@ -62,14 +62,14 @@ describe('Create Store Function', () => {
     const store = createStore();
 
     expect(() => store.add('not a timr object')).to.throw(
-      'Unable to add to store; provided argument is either already in a store or not a timr object.'
+      'Unable to add to store; provided argument is either already in a store or not a timr object.',
     );
     expect(store.add).to.throw(
-      'Unable to add to store; provided argument is either already in a store or not a timr object.'
+      'Unable to add to store; provided argument is either already in a store or not a timr object.',
     );
   });
 
-  it('Starts all the timers.', done => {
+  it('Starts all the timers.', (done) => {
     const timer = new Timr(600)
       .ticker(({ formattedTime }) => {
         expect(formattedTime).to.equal('09:59');
@@ -81,7 +81,7 @@ describe('Create Store Function', () => {
     store.startAll();
   });
 
-  it('Pauses all the timers.', done => {
+  it('Pauses all the timers.', (done) => {
     const store = createStore();
     const timer = new Timr(600)
       .ticker(() => {
@@ -95,7 +95,7 @@ describe('Create Store Function', () => {
     store.startAll();
   });
 
-  it('Stops all the timers.', done => {
+  it('Stops all the timers.', (done) => {
     const store = createStore();
     const timer = new Timr(600)
       .ticker(({ formattedTime }) => {

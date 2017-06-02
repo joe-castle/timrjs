@@ -5,28 +5,28 @@ import validateStartTime from '../src/validateStartTime';
 describe('Validate function', () => {
   it('Throws an error if provided time is not valid', () => {
     expect(() => validateStartTime('boom')).to.throw(
-      'Expected time to be in (hh:mm:ss) format, instead got: boom'
+      'Expected time to be in (hh:mm:ss) format, instead got: boom',
     );
     expect(() => validateStartTime({})).to.throw(
-      'Expected time to be a string or number, instead got: object'
+      'Expected time to be a string or number, instead got: object',
     );
     expect(() => validateStartTime(() => {})).to.throw(
-      'Expected time to be a string or number, instead got: function'
+      'Expected time to be a string or number, instead got: function',
     );
     expect(() => validateStartTime(-1)).to.throw(
-      'Time cannot be a negative number, got: -1'
+      'Time cannot be a negative number, got: -1',
     );
     expect(() => validateStartTime(NaN)).to.throw(
-      'Expected time to be a string or number, instead got: NaN'
+      'Expected time to be a string or number, instead got: NaN',
     );
     expect(() => validateStartTime(Infinity)).to.throw(
-      'Expected time to be a string or number, instead got: Infinity'
+      'Expected time to be a string or number, instead got: Infinity',
     );
     expect(() => validateStartTime(-Infinity)).to.throw(
-      'Expected time to be a string or number, instead got: -Infinity'
+      'Expected time to be a string or number, instead got: -Infinity',
     );
     expect(() => validateStartTime(null)).to.throw(
-      'Expected time to be a string or number, instead got: null'
+      'Expected time to be a string or number, instead got: null',
     );
   });
 
