@@ -2,7 +2,7 @@ import path from 'path';
 import webpack from 'webpack';
 import { getIfUtils, removeEmpty } from 'webpack-config-utils';
 
-import { version } from './package';
+import { version } from './package.json';
 
 export default (env) => {
   const { ifProduction } = getIfUtils(env);
@@ -28,33 +28,34 @@ export default (env) => {
       path: path.join(__dirname, 'dist'),
       filename: ifProduction(
         'timr.min.js',
-        'timr.js'
+        'timr.js',
       ),
       library: 'Timr',
       libraryTarget: 'umd',
-      umdNamedDefine: true
+      umdNamedDefine: true,
     },
     plugins: removeEmpty([
       ifProduction(
-        new webpack.optimize.UglifyJsPlugin()
+        new webpack.optimize.UglifyJsPlugin(),
       ),
       new webpack.BannerPlugin({ banner, raw: true }),
     ]),
     module: {
       rules: [
         {
-          test: /\.js$/, 
-          use: { 
-            loader: 'babel-loader', 
+          test: /\.js$/,
+          use: {
+            loader: 'babel-loader',
             options: {
               // Enables webpack tree-shaking
               babelrc: false,
-              presets: [['es2015', { modules: false }]],
+              presets: [['latest', { es2015: { modules: false } }]],
+              plugins: ['transform-object-rest-spread'],
             },
           },
-          exclude: /node_modules/ 
-        }
+          exclude: /node_modules/,
+        },
       ],
     },
   };
-}
+};

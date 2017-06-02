@@ -339,10 +339,10 @@ describe('Timr Class', () => {
     it('Changes the timrs options after creation and merges with existing ones.', () => {
       const timer = new Timr(600, { padRaw: false });
       expect(timer.formatTime().formattedTime).to.equal('10:00');
-      expect(timer.formatTime().raw.currentMinutes).to.equal(10);
+      expect(timer.formatTime().raw.mm).to.equal(10);
       timer.changeOptions({ padRaw: true, formatOutput: '00-mm-ss' });
       expect(timer.formatTime().formattedTime).to.equal('00-10-00');
-      expect(timer.formatTime().raw.currentMinutes).to.equal('10');
+      expect(timer.formatTime().raw.mm).to.equal('10');
     });
 
     it('Ignores { countdown: true } when the startTime has been set to 0', (done) => {
@@ -423,14 +423,14 @@ describe('Timr Class', () => {
   describe('getRaw', () => {
     it('Returns the raw values.', () => {
       expect(new Timr(600).getRaw()).to.deep.equal({
-        totalDays: '00',
-        totalHours: '00',
-        totalMinutes: '10',
-        totalSeconds: '600',
-        currentDays: '00',
-        currentHours: '00',
-        currentMinutes: '10',
-        currentSeconds: '00',
+        DD: '00',
+        HH: '00',
+        MM: '10',
+        SS: '600',
+        dd: '00',
+        hh: '00',
+        mm: '10',
+        ss: '00',
       });
     });
   });

@@ -14,14 +14,15 @@ const zeroPad = number => (number < 10 ? `0${number}` : `${number}`);
 export default function formatTime(seconds, options) {
   const { formatOutput, padRaw } = buildOptions(options);
 
-  const totalSeconds = seconds;
-  const totalMinutes = Math.floor(totalSeconds / 60);
-  const totalHours = totalMinutes && Math.floor(totalMinutes / 60);
-  const totalDays = totalHours && Math.floor(totalHours / 24);
-  const currentSeconds = totalMinutes ? totalSeconds - (totalMinutes * 60) : totalSeconds;
-  const currentMinutes = totalHours ? totalMinutes - (totalHours * 60) : totalMinutes;
-  const currentHours = totalDays ? totalHours - (totalDays * 24) : totalHours;
-  const currentDays = totalDays;
+  const raw = {};
+  raw.SS = seconds;
+  raw.MM = Math.floor(raw.SS / 60);
+  raw.HH = raw.MM && Math.floor(raw.MM / 60); // If total minutes exceeds 60, work out hours.
+  raw.DD = raw.HH && Math.floor(raw.HH / 24); // If total hours exceeds 24, work out days.
+  raw.ss = raw.MM ? raw.SS - (raw.MM * 60) : raw.SS;
+  raw.mm = raw.HH ? raw.MM - (raw.HH * 60) : raw.MM;
+  raw.hh = raw.DD ? raw.HH - (raw.DD * 24) : raw.HH;
+  raw.dd = raw.DD;
 
   let stringToFormat = formatOutput;
 
@@ -29,7 +30,7 @@ export default function formatTime(seconds, options) {
   const rightBracketPosition = stringToFormat.indexOf('}');
 
   /**
-   * Get values sitting inbetween { }
+   * Get values sitting inbetween { } (protectedValues)
    * Match returns empty strings for groups it can't find so filter them out.
    */
   const protectedValues = stringToFormat
@@ -40,10 +41,10 @@ export default function formatTime(seconds, options) {
   // If no protectedValues then format string exactly as it appears
   if (protectedValues.length > 0) {
     let lastValueAboveZero;
-    if (totalDays > 0) lastValueAboveZero = 'DD';
-    else if (totalHours > 0) lastValueAboveZero = 'HH';
-    else if (totalMinutes > 0) lastValueAboveZero = 'MM';
-    else if (totalSeconds >= 0) lastValueAboveZero = 'SS';
+    if (raw.DD > 0) lastValueAboveZero = 'DD';
+    else if (raw.HH > 0) lastValueAboveZero = 'HH';
+    else if (raw.MM > 0) lastValueAboveZero = 'MM';
+    else if (raw.SS >= 0) lastValueAboveZero = 'SS';
 
     /**
      * If the lastValueAboveZero is inbetween the protectedValues than don't remove them.
@@ -56,44 +57,21 @@ export default function formatTime(seconds, options) {
     stringToFormat = stringToFormat.slice(beginSlice >= 0 ? beginSlice : 0);
   }
 
-  /* a Better implementation, needs testing
-    string.replace(/(DD)?(HH)?(MM)?(SS)?/gi, function(match) {
-      if (match.length === 0) return ''; // removes whitespace caught in regex
-
-      return zeroPad(obj[match]);
-    });
-
-    obj = {
-      HH: 23,
-      mm: 25
-      ... etc
-    }
-  */
-
   // Replaces all values in string with their respective number values
   const formattedTime = stringToFormat
-    .replace(/\{?\}?/g, '')
-    .replace(/DD/g, totalDays)
-    .replace(/HH/g, zeroPad(totalHours))
-    .replace(/MM/g, zeroPad(totalMinutes))
-    .replace(/SS/g, zeroPad(totalSeconds))
-    .replace(/dd/g, currentDays)
-    .replace(/hh/g, zeroPad(currentHours))
-    .replace(/mm/g, zeroPad(currentMinutes))
-    .replace(/ss/g, zeroPad(currentSeconds));
+    .replace(/\{?\}?/g, '') // Remove any remaining curly braces before formatting.
+    .replace(/(DD)?(HH)?(MM)?(SS)?/gi, (match) => {
+      if (match.length === 0) return ''; // removes whitespace caught in regex match
 
+      return /DD/i.test(match) ? raw[match] : zeroPad(raw[match]); // Only pad hours minutes and seconds.
+    });
 
   return {
     formattedTime,
-    raw: {
-      totalDays: padRaw ? zeroPad(totalDays) : totalDays,
-      totalHours: padRaw ? zeroPad(totalHours) : totalHours,
-      totalMinutes: padRaw ? zeroPad(totalMinutes) : totalMinutes,
-      totalSeconds: padRaw ? zeroPad(totalSeconds) : totalSeconds,
-      currentDays: padRaw ? zeroPad(currentDays) : currentDays,
-      currentHours: padRaw ? zeroPad(currentHours) : currentHours,
-      currentMinutes: padRaw ? zeroPad(currentMinutes) : currentMinutes,
-      currentSeconds: padRaw ? zeroPad(currentSeconds) : currentSeconds,
-    },
+    raw: Object.keys(raw).reduce((prev, curr) => ({
+      ...prev,
+      // Apply zeroPad function to values if specified in options.
+      [curr]: padRaw ? zeroPad(raw[curr]) : raw[curr],
+    }), {}),
   };
 }
