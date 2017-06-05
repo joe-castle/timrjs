@@ -12,7 +12,7 @@ const zeroPad = number => (number < 10 ? `0${number}` : `${number}`);
  * raw values used to calculate the time.
  */
 export default function formatTime(seconds, options) {
-  const { formatOutput, padRaw } = buildOptions(options);
+  const { formatOutput } = buildOptions(options);
 
   const raw = {};
   raw.SS = seconds;
@@ -68,10 +68,6 @@ export default function formatTime(seconds, options) {
 
   return {
     formattedTime,
-    raw: Object.keys(raw).reduce((prev, curr) => ({
-      ...prev,
-      // Apply zeroPad function to values if specified in options.
-      [curr]: padRaw ? zeroPad(raw[curr]) : raw[curr],
-    }), {}),
+    raw,
   };
 }
