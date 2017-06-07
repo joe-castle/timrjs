@@ -1,9 +1,9 @@
 import objectAssign from 'object-assign';
 
-import validateStartTime from './validateStartTime';
 import formatTime from './formatTime';
 import timeToSeconds from './timeToSeconds';
 import createStore from './createStore';
+import zeroPad from './zeroPad';
 
 import Timr from './Timr';
 
@@ -20,7 +20,7 @@ const init = objectAssign(
 
   // Exposed helper methods.
   {
-    validateStartTime,
+    zeroPad,
     formatTime,
     timeToSeconds,
     createStore,

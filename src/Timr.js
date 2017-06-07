@@ -3,7 +3,7 @@ import objectAssign from 'object-assign';
 import EventEmitter from './EventEmitter';
 
 import buildOptions from './buildOptions';
-import validateStartTime from './validateStartTime';
+import timeToSeconds from './timeToSeconds';
 import formatTime from './formatTime';
 import dateToSeconds from './dateToSeconds';
 
@@ -37,7 +37,7 @@ function Timr(startTime, options) {
 }
 
 /**
- * @description Creats event listeners.
+ * @description Creates event listeners.
  *
  * @param {String} The name of the listener.
  *
@@ -296,7 +296,7 @@ Timr.prototype = objectAssign(Object.create(EventEmitter.prototype), {
       this.changeOptions({ countdown: false });
     }
 
-    this.startTime = validateStartTime(newStartTime);
+    this.startTime = timeToSeconds(newStartTime);
     this.currentTime = this.startTime;
 
     return this;

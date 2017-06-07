@@ -20,7 +20,7 @@ describe('Index function', () => {
 
   it('Exposes the top level api', () => {
     expect(init).to.be.a('function');
-    expect(init.validateStartTime).to.exist();
+    expect(init.zeroPad).to.exist();
     expect(init.formatTime).to.exist();
     expect(init.timeToSeconds).to.exist();
     expect(init.createStore).to.exist();
