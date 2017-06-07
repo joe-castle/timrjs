@@ -2,7 +2,7 @@ import { expect } from 'chai';
 
 import zeroPad from '../src/zeroPad';
 
-describe.only('zeroPad function', () => {
+describe('zeroPad function', () => {
   it('Returns a string 0 padded to the beginning if the number is between 0 (inclusive) and 10 (exclusive)', () => {
     expect(zeroPad(5)).to.equal('05');
     expect(zeroPad(2)).to.equal('02');

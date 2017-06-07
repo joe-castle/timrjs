@@ -1,7 +1,5 @@
 import buildOptions from './buildOptions';
 
-const zeroPad = number => (number < 10 ? `0${number}` : `${number}`);
-
 /**
  * @description Converts seconds to time format.
  *
@@ -12,7 +10,7 @@ const zeroPad = number => (number < 10 ? `0${number}` : `${number}`);
  * raw values used to calculate the time.
  */
 export default function formatTime(seconds, options) {
-  const { formatOutput } = buildOptions(options);
+  const { formatOutput, formatValues } = buildOptions(options);
 
   const raw = {};
   raw.SS = seconds;
@@ -38,7 +36,8 @@ export default function formatTime(seconds, options) {
     .match(/(DD)?(HH)?(MM)?(SS)?/gi)
     .filter(match => !!match);
 
-  // If no protectedValues then format string exactly as it appears
+  // If protectedValues exist, apply logic to removing them
+  // otherwise, format string exactly as it appears
   if (protectedValues.length > 0) {
     let lastValueAboveZero;
     if (raw.DD > 0) lastValueAboveZero = 'DD';
@@ -59,15 +58,15 @@ export default function formatTime(seconds, options) {
 
   // Replaces all values in string with their respective number values
   const formattedTime = stringToFormat
-    .replace(/\{?\}?/g, '') // Remove any remaining curly braces before formatting.
+    // Remove any remaining curly braces before formatting.
+    .replace(/\{?\}?/g, '')
     .replace(/(DD)?(HH)?(MM)?(SS)?/gi, (match) => {
-      if (match.length === 0) return ''; // removes whitespace caught in regex match
+      // removes whitespace caught in regex match
+      if (!match) return '';
 
-      return /DD/i.test(match) ? raw[match] : zeroPad(raw[match]); // Only pad hours minutes and seconds.
+      // Apply specific function form formatValues to value.
+      return formatValues[match](raw[match]);
     });
 
-  return {
-    formattedTime,
-    raw,
-  };
+  return { formattedTime, raw };
 }
