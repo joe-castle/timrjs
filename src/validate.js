@@ -105,6 +105,24 @@ function isNotObj(value) {
   return !isObj(value);
 }
 
+/**
+ * @description Checks if a value exists, i.e. not undefined.
+ * @param {Any} value - the value to be checked
+ * @return {Boolean} True if it is, false if it isn't
+ */
+function exists(value) {
+  return value !== undefined;
+}
+
+/**
+ * @description Checks if a value doesn't exist, i.e is undefined.
+ * @param {Any} value - the value to be checked
+ * @return {Boolean} True if it is, false if it isn't
+ */
+function notExists(value) {
+  return !exists(value);
+}
+
 /* eslint-disable consistent-return */
 /**
  * @description A more useful type check than typeof.
@@ -145,5 +163,7 @@ export {
   isNotFn,
   isObj,
   isNotObj,
+  exists,
+  notExists,
   checkType,
 };

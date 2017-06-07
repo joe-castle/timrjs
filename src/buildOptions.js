@@ -1,6 +1,6 @@
 import objectAssign from 'object-assign';
 import zeroPad from './zeroPad';
-import { isNotNum, isNotStr, isNotBool, isFn, isObj, checkType } from './validate';
+import { isNotNum, isNotStr, isNotBool, isFn, isObj, exists, checkType } from './validate';
 
 /**
  * @description Builds an options object from default and custom options.
@@ -17,18 +17,24 @@ export default function buildOptions(newOptions, oldOptions) {
 
   // Run through validation first, than create the options afterwards.
   if (newOptions) {
-    const { formatOutput, countdown, formatValues } = newOptions;
+    const { formatOutput, countdown, futureDate, formatValues } = newOptions;
 
-    if (formatOutput) {
-      if (isNotStr(formatOutput)) {
-        throw new Error(
-          'Expected formatOutput to be a string; instead got: ' +
-          `${typeof formatOutput}`,
-        );
-      }
+    if (exists(formatOutput) && isNotStr(formatOutput)) {
+      throw new Error(
+        'Expected formatOutput to be a string; instead got: ' +
+        `${typeof formatOutput}`,
+      );
     }
 
-    if (formatValues) {
+    if (exists(countdown) && isNotBool(countdown)) {
+      throw new Error(`Expected countdown to be a boolean; instead got: ${checkType(countdown)}`);
+    }
+
+    if (exists(futureDate) && isNotBool(futureDate)) {
+      throw new Error(`Expected futureDate to be a boolean; instead got: ${checkType(futureDate)}`);
+    }
+
+    if (exists(formatValues)) {
       if (isFn(formatValues)) {
         if (isNotNum(formatValues(5)) && isNotStr(formatValues(5))) {
           throw new Error(`Expected the return value from formatValues function to be of type string or number; instead got: ${checkType(formatValues(5))}`);
@@ -65,12 +71,6 @@ export default function buildOptions(newOptions, oldOptions) {
         if (toError) throw new Error(error);
       } else {
         throw new Error(`Expected formatValues to be a function or an object of functions; instead got: ${checkType(formatValues)}`);
-      }
-    }
-
-    if (countdown) {
-      if (isNotBool(countdown)) {
-        throw new Error(`Expected countdown to be a boolean; instead got: ${checkType(countdown)}`);
       }
     }
   }
@@ -118,6 +118,7 @@ export default function buildOptions(newOptions, oldOptions) {
     formatOutput: 'DD hh:{mm:ss}',
     countdown: true,
     formatValues: makeValues(zeroPad),
+    futureDate: false,
   };
 
   return objectAssign(defaults, oldOptions, newOptions);

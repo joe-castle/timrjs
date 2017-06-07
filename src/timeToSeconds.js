@@ -39,7 +39,7 @@ export default function timeToSeconds(time) {
   // Checks if the string can't be converted to a number, i.e someone passed 10:00.
   // Then tests for the correct format
   if (isNaN(Number(newTime))) {
-    if (!/^\d+:\d+$/.test(newTime) && !/^\d+:\d+:\d+$/.test(newTime)) {
+    if (!/^(\d+)(:\d+)?(:\d+)?$/.test(newTime)) {
       throw new Error(`Expected time to be in (hh:mm:ss) format, instead got: ${newTime}`);
     }
   }

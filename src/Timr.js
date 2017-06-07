@@ -6,6 +6,7 @@ import buildOptions from './buildOptions';
 import timeToSeconds from './timeToSeconds';
 import formatTime from './formatTime';
 import dateToSeconds from './dateToSeconds';
+import { isFn, isNotFn, isObj, checkType } from './validate';
 
 /**
  * @description Creates a Timr.
@@ -45,8 +46,8 @@ function Timr(startTime, options) {
  */
 function makeListenerGenerator(name) {
   return function listenerGenerator(fn) {
-    if (typeof fn !== 'function') {
-      throw new Error(`Expected ${name} to be a function, instead got: ${typeof fn}`);
+    if (isNotFn(fn)) {
+      throw new Error(`Expected ${name} to be a function, instead got: ${checkType(fn)}`);
     }
 
     this.on(name, fn);
@@ -186,7 +187,7 @@ Timr.prototype = objectAssign(Object.create(EventEmitter.prototype), {
 
     // removeFromStore is added when the timr is added to a store,
     // so need to check if it's in a store before removing it.
-    if (typeof this.removeFromStore === 'function') {
+    if (isFn(this.removeFromStore)) {
       this.removeFromStore();
     }
 
@@ -280,7 +281,7 @@ Timr.prototype = objectAssign(Object.create(EventEmitter.prototype), {
 
       // Double checks parsedDate has a parsed property, in case an empty object is passed
       // in startTime.
-      if (typeof parsedDate === 'object' && parsedDate.parsed) {
+      if (isObj(parsedDate) && parsedDate.parsed) {
         this.originalDate = parsedDate.originalDate;
         newStartTime = parsedDate.parsed;
       } else {

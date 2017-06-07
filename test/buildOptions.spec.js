@@ -15,15 +15,16 @@ describe('Build Options Function', () => {
       formatOutput: 'DD hh:{mm:ss}',
       countdown: true,
       formatValues: defaultFormatValues,
+      futureDate: false,
     });
   });
 
   it('Returns an object with amended formatOutput option', () => {
     expect(buildOptions({ formatOutput: 'HH:MM:SS' })).to.deep.equal(
-      { formatOutput: 'HH:MM:SS', formatValues: defaultFormatValues, countdown: true },
+      { formatOutput: 'HH:MM:SS', formatValues: defaultFormatValues, countdown: true, futureDate: false },
     );
     expect(buildOptions({ formatOutput: 'DD day hh:mm:ss' })).to.deep.equal(
-      { formatOutput: 'DD day hh:mm:ss', formatValues: defaultFormatValues, countdown: true },
+      { formatOutput: 'DD day hh:mm:ss', formatValues: defaultFormatValues, countdown: true, futureDate: false },
     );
   });
 
@@ -35,13 +36,25 @@ describe('Build Options Function', () => {
 
   it('Returns an object with amended countdown option', () => {
     expect(buildOptions({ countdown: false })).to.deep.equal(
-      { formatOutput: 'DD hh:{mm:ss}', formatValues: defaultFormatValues, countdown: false },
+      { formatOutput: 'DD hh:{mm:ss}', formatValues: defaultFormatValues, countdown: false, futureDate: false },
     );
   });
 
   it('Throws an error if countdown is not a boolean', () => {
     expect(() => buildOptions({ countdown: 'hey' })).to.throw(
       'Expected countdown to be a boolean; instead got: string',
+    );
+  });
+
+  it('Returns an object with amended futureDate option', () => {
+    expect(buildOptions({ futureDate: true })).to.deep.equal(
+      { formatOutput: 'DD hh:{mm:ss}', formatValues: defaultFormatValues, countdown: true, futureDate: true },
+    );
+  });
+
+  it('Throws an error if countdown is not a boolean', () => {
+    expect(() => buildOptions({ futureDate: 0 })).to.throw(
+      'Expected futureDate to be a boolean; instead got: number',
     );
   });
 

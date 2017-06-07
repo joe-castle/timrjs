@@ -1,4 +1,5 @@
 import Timr from './Timr';
+import { isNotFn } from './validate';
 
 /**
  * @description Flattens arrays to their base values
@@ -18,6 +19,7 @@ function flattenArray(arr) {
   }, []);
 }
 
+/* eslint-disable no-param-reassign */
 /**
  * @description Creates a store that can store multiple timr objects
  * and perform functions on all of them.
@@ -32,12 +34,11 @@ export default function createStore(...args) {
   // Filters out non timr objects and timrs that exist in another store.
   let timrs = flattenArray(args)
     .filter(item => item instanceof Timr)
-    .filter(timr => typeof timr.removeFromStore !== 'function');
+    .filter(timr => isNotFn(timr.removeFromStore));
 
   const removeFromStore = (timr) => {
     if (timr instanceof Timr) {
       timrs = timrs.filter(x => x !== timr);
-      /* eslint-disable no-param-reassign */
       timr.removeFromStore = null;
     }
   };
@@ -61,7 +62,7 @@ export default function createStore(...args) {
      * @return {Object} The provided timr object.
      */
     add: (timr) => {
-      if (timr instanceof Timr && typeof timr.removeFromStore !== 'function') {
+      if (timr instanceof Timr && isNotFn(timr.removeFromStore)) {
         timrs.push(timr);
 
 
