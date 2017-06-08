@@ -1,14 +1,7 @@
-import chai from 'chai';
-import dirtyChai from 'dirty-chai';
-import sinon from 'sinon';
+import { expect } from 'chai';
 
 import Timr from '../src/Timr';
 import createStore from '../src/createStore';
-
-// Turns methods like to.be.true into to.be.true() to stop eslint failing
-chai.use(dirtyChai);
-
-const { expect } = chai;
 
 describe('Timr Class', () => {
   describe('Timr instantiation', () => {
@@ -50,7 +43,7 @@ describe('Timr Class', () => {
     'to be called at a later time.', (done) => {
       const year = new Date().getFullYear() + 1;
 
-      const timer = new Timr(`${year}-12-15T10:00:00`)
+      const timer = new Timr(`${year}-12-15T10:00:00`, { futureDate: true })
         .ticker(({ currentTime }) => {
           const testStart = Math.ceil((Date.parse(`${year}-12-15T10:00:00`) - Date.now()) / 1000);
 
@@ -66,7 +59,7 @@ describe('Timr Class', () => {
     it('Same test as above, but using starts delay feature', (done) => {
       const year = new Date().getFullYear() + 1;
 
-      const timer = new Timr(`${year}-12-15T10:00:00`)
+      const timer = new Timr(`${year}-12-15T10:00:00`, { futureDate: true })
         .ticker(({ currentTime }) => {
           const testStart = Math.ceil((Date.parse(`${year}-12-15T10:00:00`) - Date.now()) / 1000);
 
@@ -78,21 +71,6 @@ describe('Timr Class', () => {
         .start(2000);
     });
 
-    /* eslint-disable no-console */
-    it('If a timer is running and the user tries to start it again, ' +
-      'a warning in the console is logged', () => {
-      sinon.stub(console, 'warn');
-
-      new Timr(600)
-        .start()
-        .start()
-        .destroy();
-
-      expect(console.warn.calledWith('Timer already running')).to.be.true();
-      console.warn.restore();
-    });
-    /* eslint-disable no-console */
-
     it('Emits the onStart event', (done) => {
       const timer = new Timr(600)
         .onStart((self) => {
@@ -102,6 +80,28 @@ describe('Timr Class', () => {
         });
 
       timer.start();
+    });
+
+    it('Throws an error if start is called with countdown set to true and startTime set to 0', () => {
+      expect(() => new Timr(0).start()).to.throw(
+        'Unable to start timer when countdown = true and startTime = 0. ' +
+        'This would cause the timer to count into negative numbers and never stop. ' +
+        'Try setting countdown to false or amending the startTime',
+      );
+    });
+
+    it('Throws an error if start is called with a delay argument that isn\'t a number', () => {
+      expect(() => new Timr(500).start([])).throw(
+        'The delay argument passed to start must be a number, you passed: array',
+      );
+
+      expect(() => new Timr(500).start(null)).throw(
+        'The delay argument passed to start must be a number, you passed: null',
+      );
+
+      expect(() => new Timr(500).start(NaN)).throw(
+        'The delay argument passed to start must be a number, you passed: NaN',
+      );
     });
 
     it('Returns a reference to the Timr', () => {
@@ -229,7 +229,7 @@ describe('Timr Class', () => {
 
     it('As a stopwatch, fires the ticker function every second the timer runs, ' +
       'returning the formattedTime, startTime, currentTime and original Timr object.', (done) => {
-      const timer = new Timr().start().ticker(
+      const timer = new Timr(0, { countdown: false }).start().ticker(
         ({ formattedTime, currentTime, startTime, self }) => {
           expect(formattedTime).to.equal('00:01');
           expect(currentTime).to.equal(1);
@@ -345,17 +345,6 @@ describe('Timr Class', () => {
       expect(timer.formatTime().raw.mm).to.equal(10);
     });
 
-    it('Ignores { countdown: true } when the startTime has been set to 0', (done) => {
-      const timer = new Timr()
-        .changeOptions({ countdown: true })
-        .ticker(({ formattedTime }) => {
-          expect(formattedTime).to.equal('00:01');
-          timer.destroy();
-          done();
-        })
-        .start();
-    });
-
     it('Returns a reference to the Timr', () => {
       const timer = new Timr(600).changeOptions();
       expect(timer).equal(timer);
@@ -393,22 +382,8 @@ describe('Timr Class', () => {
       expect(() => timer.setStartTime('invalid')).to.throw(Error);
     });
 
-    it('Sets up a stopwatch if the newStartTime is falsy or 0', (done) => {
-      const timer = new Timr(600);
-
-      timer.setStartTime(0);
-
-      timer.ticker(({ formattedTime, currentTime }) => {
-        expect(formattedTime).to.equal('00:01');
-        expect(currentTime).to.equal(1);
-        timer.destroy();
-        done();
-      })
-      .start();
-    });
-
     it('Returns a reference to the Timr', () => {
-      const timer = new Timr(600).setStartTime();
+      const timer = new Timr(600).setStartTime(0);
       expect(timer).equal(timer);
       timer.destroy();
     });

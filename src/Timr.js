@@ -6,7 +6,7 @@ import buildOptions from './buildOptions';
 import timeToSeconds from './timeToSeconds';
 import formatTime from './formatTime';
 import dateToSeconds from './dateToSeconds';
-import { isFn, isNotFn, isObj, checkType } from './validate';
+import { isFn, isNotFn, notExists, exists, isNotNum, checkType } from './validate';
 
 /**
  * @description Creates a Timr.
@@ -28,13 +28,10 @@ function Timr(startTime, options) {
   EventEmitter.call(this);
 
   this.timer = null;
-  // this.running
-  // this.startTime
-  // this.currentTime
-  // this.originalDate
-  this.setStartTime(startTime);
-  // this.options
+  // options needs to be built before startTime is set,
+  // so it can work out the future date properly.
   this.changeOptions(options);
+  this.setStartTime(startTime);
 }
 
 /**
@@ -44,8 +41,8 @@ function Timr(startTime, options) {
  *
  * @return {Function} The function that makes listeners.
  */
-function makeListenerGenerator(name) {
-  return function listenerGenerator(fn) {
+function makeEventListener(name) {
+  return function listener(fn) {
     if (isNotFn(fn)) {
       throw new Error(`Expected ${name} to be a function, instead got: ${checkType(fn)}`);
     }
@@ -102,14 +99,24 @@ Timr.prototype = objectAssign(Object.create(EventEmitter.prototype), {
    * @return {Object} Returns a reference to the Timr so calls can be chained.
    */
   start(delay) {
-    /* eslint-disable no-console */
-    if (this.running && typeof console !== 'undefined' && typeof console.warn === 'function') {
-      console.warn('Timer already running', this);
-    } else {
-    /* eslint-disable no-console */
+    if (!this.running) {
+      if (this.options.countdown && this.startTime === 0) {
+        throw new Error(
+          'Unable to start timer when countdown = true and startTime = 0. ' +
+          'This would cause the timer to count into negative numbers and never stop. ' +
+          'Try setting countdown to false or amending the startTime.',
+        );
+      }
+
       const startFn = () => {
-        if (this.originalDate) {
-          this.setStartTime(this.originalDate);
+        /**
+         * futureDate records the original date used when futureDate option is set to true,
+         * this will re-run setStarTime to ensure the startTime is upto date.
+         *
+         * Note: Inside startFn so that delay works properly.
+         */
+        if (this.futureDate) {
+          this.setStartTime(this.futureDate);
         }
 
         this.running = true;
@@ -119,7 +126,10 @@ Timr.prototype = objectAssign(Object.create(EventEmitter.prototype), {
           : setInterval(stopwatch.bind(this), 1000);
       };
 
-      if (delay) {
+      if (exists(delay)) {
+        if (isNotNum(delay)) {
+          throw new Error(`The delay argument passed to start must be a number, you passed: ${checkType(delay)}`);
+        }
         this.delayTimer = setTimeout(startFn, delay);
       } else {
         startFn();
@@ -209,18 +219,18 @@ Timr.prototype = objectAssign(Object.create(EventEmitter.prototype), {
    * @param {Function} fn - Function to be called every second.
    * @return {Object} Returns a reference to the Timr so calls can be chained.
    */
-  ticker: makeListenerGenerator('ticker'),
-  finish: makeListenerGenerator('finish'),
-  onStart: makeListenerGenerator('onStart'),
-  onPause: makeListenerGenerator('onPause'),
-  onStop: makeListenerGenerator('onStop'),
-  onDestroy: makeListenerGenerator('onDestroy'),
+  ticker: makeEventListener('ticker'),
+  finish: makeEventListener('finish'),
+  onStart: makeEventListener('onStart'),
+  onPause: makeEventListener('onPause'),
+  onStop: makeEventListener('onStop'),
+  onDestroy: makeEventListener('onDestroy'),
 
   /**
    * @description Converts seconds to time format.
    * This is provided to the ticker.
    *
-   * @param {String} [time=currentTime] - option do format the startTime
+   * @param {String} [time=currentTime] - option to format the startTime
    *
    * @return {Object} The formatted time and raw values.
    */
@@ -242,63 +252,44 @@ Timr.prototype = objectAssign(Object.create(EventEmitter.prototype), {
    * @description Creates / changes options for a Timr.
    * Merges with existing or default options.
    *
-   * Ignores { countdown: true } if startTime is 0 or falsy
-   *
    * @param {Object} options - The options to create / change.
    * @return {Object} Returns a reference to the Timr so calls can be chained.
    */
   changeOptions(options) {
-    const newOptions = this.startTime > 0
-      ? options
-      : objectAssign({}, options, { countdown: false });
-
-    this.options = buildOptions(newOptions, this.options);
+    this.options = buildOptions(options, this.options);
 
     return this;
   },
 
   /**
    * @description Sets new startTime after Timr has been created.
-   *
    * Will clear currentTime and reset to new startTime.
-   * Will also change the timer to a stopwatch if the startTime is falsy or 0,
-   * as per constructor.
    *
    * @param {String|Number} startTime - The new start time.
    *
-   * @throws If the starttime is invalid.
+   * @throws If no startTime is provided.
    *
    * @return {Object} The original Timr object.
    */
   setStartTime(startTime) {
     this.clear();
 
-    // Coerces falsy values into 0.
-    let newStartTime = 0;
-
-    if (startTime) {
-      const parsedDate = dateToSeconds(startTime);
-
-      // Double checks parsedDate has a parsed property, in case an empty object is passed
-      // in startTime.
-      if (isObj(parsedDate) && parsedDate.parsed) {
-        this.originalDate = parsedDate.originalDate;
-        newStartTime = parsedDate.parsed;
-      } else {
-        this.originalDate = false;
-        newStartTime = parsedDate;
-      }
+    if (notExists(startTime)) {
+      throw new Error('You must provide a startTime value.');
     }
 
-    // Changes to stopwatch only if setStartTime is run after Timr creation
-    // and the startTime is 0.
-    // The constructor will handle this on instantiation.
-    if (!newStartTime && this.options) {
-      this.changeOptions({ countdown: false });
+    let newStartTime;
+
+    if (this.options.futureDate) {
+      newStartTime = dateToSeconds(startTime);
+      this.futureDate = startTime;
+    } else {
+      newStartTime = timeToSeconds(startTime);
+      this.futureDate = null;
     }
 
-    this.startTime = timeToSeconds(newStartTime);
-    this.currentTime = this.startTime;
+    this.startTime = newStartTime;
+    this.currentTime = newStartTime;
 
     return this;
   },
