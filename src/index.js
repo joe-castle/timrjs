@@ -1,13 +1,11 @@
-import objectAssign from 'object-assign';
-
 import formatTime from './formatTime';
 import timeToSeconds from './timeToSeconds';
+import dateToSeconds from './dateToSeconds';
 import createStore from './createStore';
 import zeroPad from './zeroPad';
 
 import Timr from './Timr';
 
-const init = objectAssign(
   /**
    * @description Creates a new Timr object.
    *
@@ -16,15 +14,15 @@ const init = objectAssign(
    *
    * @return {Object} A new Timr object.
    */
-  (startTime, options) => new Timr(startTime, options),
+function create(startTime, options) {
+  return new Timr(startTime, options);
+}
 
-  // Exposed helper methods.
-  {
-    zeroPad,
-    formatTime,
-    timeToSeconds,
-    createStore,
-  },
-);
-
-export default init;
+export {
+  create,
+  formatTime,
+  timeToSeconds,
+  dateToSeconds,
+  createStore,
+  zeroPad,
+};

@@ -133,6 +133,22 @@ describe('Create Store Function', () => {
     expect(timer.removeFromStore).to.equal(null);
   });
 
+  it('A timr is able to remove itself from the a store.', () => {
+    const timer1 = new Timr(5);
+    const timer2 = new Timr(5);
+    const timer3 = new Timr(5);
+
+    const store = createStore(timer1, timer2, timer3);
+
+    expect(store.getAll()).to.have.length(3);
+
+    timer1.destroy();
+
+    expect(timer1.removeFromStore).to.equal(null);
+    expect(store.getAll()).to.have.length(2);
+    expect(store.getAll().includes(timer1)).to.equal(false);
+  });
+
   it('Destroys all timers.', () => {
     const timer1 = new Timr(600);
     const timer2 = new Timr(600);
