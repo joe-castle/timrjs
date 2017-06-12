@@ -11,11 +11,6 @@ import { isFn, isNotFn, notExists, exists, isNotNum, checkType } from './validat
 /**
  * @description Creates a Timr.
  *
- * If the provided startTime is 0 or fasly, the constructor will automatically
- * setup the timr as stopwatch, this prevents the timer from counting down into
- * negative numbers and covers previous ( < v1.0.0 ) use case where 0 was used to setup a
- * stopwatch.
- *
  * @param {String|Number} startTime - The starting time for the timr object.
  * @param {Object} [options] - Options to customise the timer.
  *
@@ -115,9 +110,7 @@ Timr.prototype = objectAssign(Object.create(EventEmitter.prototype), {
          *
          * Note: Inside startFn so that delay works properly.
          */
-        if (this.futureDate) {
-          this.setStartTime(this.futureDate);
-        }
+        if (this.futureDate) this.setStartTime(this.futureDate);
 
         this.running = true;
 
@@ -197,9 +190,7 @@ Timr.prototype = objectAssign(Object.create(EventEmitter.prototype), {
 
     // removeFromStore is added when the timr is added to a store,
     // so need to check if it's in a store before removing it.
-    if (isFn(this.removeFromStore)) {
-      this.removeFromStore();
-    }
+    if (isFn(this.removeFromStore)) this.removeFromStore();
 
     return this;
   },
@@ -274,9 +265,7 @@ Timr.prototype = objectAssign(Object.create(EventEmitter.prototype), {
   setStartTime(startTime) {
     this.clear();
 
-    if (notExists(startTime)) {
-      throw new Error('You must provide a startTime value.');
-    }
+    if (notExists(startTime)) throw new Error('You must provide a startTime value.');
 
     let newStartTime;
 

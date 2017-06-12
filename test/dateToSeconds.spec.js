@@ -41,7 +41,7 @@ describe('Date to Seconds function', () => {
     expect(() => dateToSeconds('howdo')).to.throw(
       'The provided date is not in the right format.\n' +
       'Expected a string in the format: YYYY-MM-DDTHH:MM:SS-01:00.\n' +
-      '(year)-(month)-(day)T(hour):(minute):(second)-(timezone)\n' +
+      '(year)-(month)-(day)T(hour):(minute):(second)(-timezone)\n' +
       'Time is optional, but must seperate the date with a T (exclude the T if only providing a date).\n' +
       'Seconds and the timezone are also optional.\n' +
       'You passed: "howdo"',

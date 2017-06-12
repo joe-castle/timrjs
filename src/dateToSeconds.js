@@ -9,16 +9,14 @@ import { isNotNum } from './validate';
  * @throws If the date matches the regex but is not ISO format.
  * @throws If the date is in the past.
  *
- * @return {Object|Any} - Returns the converted seconds and the original date.
- * The originalDate is used to re-run the function when the timer starts, to ensure
- * that it is up to date.
+ * @return {Number} - Returns the converted seconds.
  */
 export default function dateToSeconds(startTime) {
   if (!/^(\d{4}-\d{2}-\d{2})?(T\d{2}:\d{2}(:\d{2})?)?(([-+]\d{2}:\d{2})?Z?)?$/i.test(startTime) && isNotNum(startTime)) {
     throw new Error(
       'The provided date is not in the right format.\n' +
       'Expected a string in the format: YYYY-MM-DDTHH:MM:SS-01:00.\n' +
-      '(year)-(month)-(day)T(hour):(minute):(second)-(timezone)\n' +
+      '(year)-(month)-(day)T(hour):(minute):(second)(-timezone)\n' +
       'Time is optional, but must seperate the date with a T (exclude the T if only providing a date).\n' +
       'Seconds and the timezone are also optional.\n' +
       `You passed: "${startTime}"`,
