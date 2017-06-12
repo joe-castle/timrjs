@@ -10,18 +10,13 @@ describe('Create Store Function', () => {
     expect(store.getAll()).to.have.lengthOf(0);
   });
 
-  it('Creates a new store with the provided arguments' +
-   'will only accept timr objects that dont exist in another store.', () => {
+  it('Creates a new store with the provided arguments', () => {
     const timer = new Timr(0);
-    const store1 = createStore(new Timr(0), 1, () => {}, timer);
-    const store2 = createStore([[[new Timr(0)], 'nope'], [[[new Timr(0)]]], {}, timer]);
+    const store1 = createStore(new Timr(0), timer);
 
     expect(store1.getAll()).to.have.lengthOf(2);
-    expect(store1.getAll()[0]).to.be.instanceof(Timr);
 
-    expect(store2.getAll()).to.have.lengthOf(2);
-
-    store2.getAll().forEach((item) => {
+    store1.getAll().forEach((item) => {
       expect(item).to.be.instanceof(Timr);
     });
   });
@@ -66,6 +61,13 @@ describe('Create Store Function', () => {
     );
     expect(store.add).to.throw(
       'Unable to add to store; provided argument is either already in a store or not a timr object.',
+    );
+  });
+
+  it('Throws an error if the provided argument is either in a store or not a Timr object when the store is created', () => {
+    expect(() => createStore('not a timer', 1, new Timr(50))).to.throw(
+      'Unable to add to store; provided argument is either already in a store ' +
+      'or not a timr object.',
     );
   });
 

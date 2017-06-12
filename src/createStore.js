@@ -20,8 +20,9 @@ function flattenArray(arr) {
 }
 
 /* eslint-disable no-param-reassign */
+
 /**
- * @description Creates a store that can store multiple timr objects
+ * @description Creates a store that can hold multiple timr objects
  * and perform functions on all of them.
  *
  * @param {Array} [args] - Optional timers to start the store with.
@@ -30,57 +31,49 @@ function flattenArray(arr) {
  * @return {Object} Returns a store object with methods.
  */
 export default function createStore(...args) {
-  // Array to store all timrs.
-  // Filters out non timr objects and timrs that exist in another store.
-  let timrs = flattenArray(args)
-    .filter(item => item instanceof Timr)
-    .filter(timr => isNotFn(timr.removeFromStore));
+  let timrs = [];
 
-  const removeFromStore = (timr) => {
+  function removeFromStore(timr) {
+    // Instanceof check required as it's exposed as a store method.
     if (timr instanceof Timr) {
       timrs = timrs.filter(x => x !== timr);
       timr.removeFromStore = null;
     }
-  };
+  }
 
-  // Provides each Timr with the ability to remove itself from the store.
-  timrs.forEach((timr) => {
-    timr.removeFromStore = () => {
-      removeFromStore(timr);
-    };
-  });
+  /**
+   * @description Adds the provided timr to the store.
+   *
+   * @param {Object} timr - A timr object.
+   *
+   * @throws If the provided timr is not a Timr object.
+   * @throws If the provided timr is already in a store.
+   *
+   * @return {Object} The provided timr object.
+   */
+  function add(timr) {
+    if (timr instanceof Timr && isNotFn(timr.removeFromStore)) {
+      timrs.push(timr);
+
+      timr.removeFromStore = () => {
+        removeFromStore(timr);
+      };
+    } else {
+      throw new Error(
+        'Unable to add to store; provided argument is either already in a store ' +
+        'or not a timr object.',
+      );
+    }
+
+    return timr;
+  }
+
+  // Flatten args down to their values and add them to the store
+  // if they pass validation.
+  flattenArray(args).forEach(add);
 
   return {
-    /**
-     * @description Adds the provided timr to the store.
-     *
-     * @param {Object} timr - A timr object.
-     *
-     * @throws If the provided timr is not a Timr object.
-     * @throws If the provided timr is already in a store.
-     *
-     * @return {Object} The provided timr object.
-     */
-    add: (timr) => {
-      if (timr instanceof Timr && isNotFn(timr.removeFromStore)) {
-        timrs.push(timr);
-
-
-        timr.removeFromStore = () => {
-          removeFromStore(timr);
-        };
-        /* eslint-disable no-param-reassign */
-      } else {
-        throw new Error(
-          'Unable to add to store; provided argument is either already in a store ' +
-          'or not a timr object.',
-        );
-      }
-
-      return timr;
-    },
-
-    // Methods associated with all Timrs.
+    add,
     getAll: () => timrs,
     startAll: () => timrs.forEach(timr => timr.start()),
     pauseAll: () => timrs.forEach(timr => timr.pause()),
