@@ -31,7 +31,7 @@ export default function timeToSeconds(time) {
   }
 
   if (isNotStr(newTime) && isNotNum(newTime)) {
-    throw new Error(
+    throw new TypeError(
       `Expected time to be a string or number, instead got: ${checkType(newTime)}`,
     );
   }
@@ -40,7 +40,7 @@ export default function timeToSeconds(time) {
   // Then tests for the correct format
   if (isNaN(Number(newTime))) {
     if (!/^(\d+)(:\d+)?(:\d+)?$/.test(newTime)) {
-      throw new Error(`Expected time to be in (hh:mm:ss) format, instead got: ${newTime}`);
+      throw new SyntaxError(`Expected time to be in (hh:mm:ss) format, instead got: ${newTime}`);
     }
   }
 

@@ -181,18 +181,20 @@ describe('Timr Class', () => {
 
       timer.destroy();
 
-      expect(timer.events).to.be.empty();
+      expect(timer.events.ticker).to.equal(undefined);
+      expect(timer.events.finish).to.equal(undefined);
     });
 
     it('Removes the timer from the store', () => {
       const timer = new Timr(600);
       const store = createStore(timer);
 
-      expect(store.getAll().indexOf(timer)).to.equal(0);
+      expect(store.getAll().includes(timer)).to.equal(true);
 
       timer.destroy();
 
-      expect(store.getAll().indexOf(timer)).to.equal(-1);
+      expect(store.getAll().includes(timer)).to.equal(false);
+      expect(timer.removeFromStore).to.equal(null);
     });
 
     it('Emits the onDestroy event', (done) => {

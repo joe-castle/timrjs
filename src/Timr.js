@@ -39,7 +39,7 @@ function Timr(startTime, options) {
 function makeEventListener(name) {
   return function listener(fn) {
     if (isNotFn(fn)) {
-      throw new Error(`Expected ${name} to be a function, instead got: ${checkType(fn)}`);
+      throw new TypeError(`Expected ${name} to be a function, instead got: ${checkType(fn)}`);
     }
 
     this.on(name, fn);
@@ -121,7 +121,7 @@ Timr.prototype = objectAssign(Object.create(EventEmitter.prototype), {
 
       if (exists(delay)) {
         if (isNotNum(delay)) {
-          throw new Error(`The delay argument passed to start must be a number, you passed: ${checkType(delay)}`);
+          throw new TypeError(`The delay argument passed to start must be a number, you passed: ${checkType(delay)}`);
         }
         this.delayTimer = setTimeout(startFn, delay);
       } else {

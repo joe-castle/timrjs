@@ -20,24 +20,24 @@ export default function buildOptions(newOptions, oldOptions) {
     const { formatOutput, countdown, futureDate, formatValues } = newOptions;
 
     if (exists(formatOutput) && isNotStr(formatOutput)) {
-      throw new Error(
+      throw new TypeError(
         'Expected formatOutput to be a string; instead got: ' +
         `${typeof formatOutput}`,
       );
     }
 
     if (exists(countdown) && isNotBool(countdown)) {
-      throw new Error(`Expected countdown to be a boolean; instead got: ${checkType(countdown)}`);
+      throw new TypeError(`Expected countdown to be a boolean; instead got: ${checkType(countdown)}`);
     }
 
     if (exists(futureDate) && isNotBool(futureDate)) {
-      throw new Error(`Expected futureDate to be a boolean; instead got: ${checkType(futureDate)}`);
+      throw new TypeError(`Expected futureDate to be a boolean; instead got: ${checkType(futureDate)}`);
     }
 
     if (exists(formatValues)) {
       if (isFn(formatValues)) {
         if (isNotNum(formatValues(5)) && isNotStr(formatValues(5))) {
-          throw new Error(`Expected the return value from formatValues function to be of type string or number; instead got: ${checkType(formatValues(5))}`);
+          throw new TypeError(`Expected the return value from formatValues function to be of type string or number; instead got: ${checkType(formatValues(5))}`);
         }
       } else if (isObj(formatValues)) {
         let toError = false;
@@ -70,7 +70,7 @@ export default function buildOptions(newOptions, oldOptions) {
 
         if (toError) throw new Error(error);
       } else {
-        throw new Error(`Expected formatValues to be a function or an object of functions; instead got: ${checkType(formatValues)}`);
+        throw new TypeError(`Expected formatValues to be a function or an object of functions; instead got: ${checkType(formatValues)}`);
       }
     }
   }
