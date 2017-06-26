@@ -5,6 +5,6 @@
  *
  * @returns {String|Any} The padded number or the original argument.
  */
-export default function zeroPad(num) {
-  return (num >= 0 && num < 10) ? `0${num}` : num;
+export default function zeroPad (num) {
+  return (num >= 0 && num < 10) ? `0${num}` : num
 }

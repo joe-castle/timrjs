@@ -1,5 +1,5 @@
-import Timr from './Timr';
-import { isNotFn } from './validate';
+import Timr from './Timr'
+import { isNotFn } from './validate'
 
 /**
  * @description Flattens arrays to their base values
@@ -9,14 +9,14 @@ import { isNotFn } from './validate';
  *
  * @return {Array} The flattened array
  */
-function flattenArray(arr) {
+function flattenArray (arr) {
   return arr.reduce((prev, curr) => {
     if (Array.isArray(curr)) {
-      return prev.concat(flattenArray(curr));
+      return prev.concat(flattenArray(curr))
     }
 
-    return prev.concat(curr);
-  }, []);
+    return prev.concat(curr)
+  }, [])
 }
 
 /* eslint-disable no-param-reassign */
@@ -30,14 +30,14 @@ function flattenArray(arr) {
  *
  * @return {Object} Returns a store object with methods.
  */
-export default function createStore(...args) {
-  let timrs = [];
+export default function createStore (...args) {
+  let timrs = []
 
-  function removeFromStore(timr) {
+  function removeFromStore (timr) {
     // Instanceof check required as it's exposed as a store method.
     if (timr instanceof Timr) {
-      timrs = timrs.filter(x => x !== timr);
-      timr.removeFromStore = null;
+      timrs = timrs.filter(x => x !== timr)
+      timr.removeFromStore = null
     }
   }
 
@@ -51,26 +51,26 @@ export default function createStore(...args) {
    *
    * @return {Object} The provided timr object.
    */
-  function add(timr) {
+  function add (timr) {
     if (timr instanceof Timr && isNotFn(timr.removeFromStore)) {
-      timrs.push(timr);
+      timrs.push(timr)
 
       timr.removeFromStore = () => {
-        removeFromStore(timr);
-      };
+        removeFromStore(timr)
+      }
     } else {
       throw new Error(
         'Unable to add to store; provided argument is either already in a store ' +
-        'or not a timr object.',
-      );
+        'or not a timr object.'
+      )
     }
 
-    return timr;
+    return timr
   }
 
   // Flatten args down to their values and add them to the store
   // if they pass validation.
-  flattenArray(args).forEach(add);
+  flattenArray(args).forEach(add)
 
   return {
     add,
@@ -81,8 +81,8 @@ export default function createStore(...args) {
     isRunning: () => timrs.filter(timr => timr.isRunning()),
     removeFromStore,
     destroyAll: () => {
-      timrs.forEach(timr => timr.destroy());
-      timrs = [];
-    },
-  };
+      timrs.forEach(timr => timr.destroy())
+      timrs = []
+    }
+  }
 }

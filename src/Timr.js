@@ -1,12 +1,12 @@
-import objectAssign from 'object-assign';
+import objectAssign from 'object-assign'
 
-import EventEmitter from './EventEmitter';
+import EventEmitter from './EventEmitter'
 
-import buildOptions from './buildOptions';
-import timeToSeconds from './timeToSeconds';
-import formatTime from './formatTime';
-import dateToSeconds from './dateToSeconds';
-import { isFn, isNotFn, notExists, exists, isNotNum, checkType } from './validate';
+import buildOptions from './buildOptions'
+import timeToSeconds from './timeToSeconds'
+import formatTime from './formatTime'
+import dateToSeconds from './dateToSeconds'
+import { isFn, isNotFn, notExists, exists, isNotNum, checkType } from './validate'
 
 /**
  * @description Creates a Timr.
@@ -19,14 +19,14 @@ import { isFn, isNotFn, notExists, exists, isNotNum, checkType } from './validat
  *
  * @return {Object} - The newly created Timr object.
  */
-function Timr(startTime, options) {
-  EventEmitter.call(this);
+function Timr (startTime, options) {
+  EventEmitter.call(this)
 
-  this.timer = null;
+  this.timer = null
   // options needs to be built before startTime is set,
   // so it can work out the future date properly.
-  this.changeOptions(options);
-  this.setStartTime(startTime);
+  this.changeOptions(options)
+  this.setStartTime(startTime)
 }
 
 /**
@@ -36,35 +36,35 @@ function Timr(startTime, options) {
  *
  * @return {Function} The function that makes listeners.
  */
-function makeEventListener(name) {
-  return function listener(fn) {
+function makeEventListener (name) {
+  return function listener (fn) {
     if (isNotFn(fn)) {
-      throw new TypeError(`Expected ${name} to be a function, instead got: ${checkType(fn)}`);
+      throw new TypeError(`Expected ${name} to be a function, instead got: ${checkType(fn)}`)
     }
 
-    this.on(name, fn);
+    this.on(name, fn)
 
-    return this;
-  };
+    return this
+  }
 }
 
 /**
  * @description Countdown function.
  * Bound to a setInterval when start() is called.
  */
-function countdown() {
-  this.currentTime -= 1;
+function countdown () {
+  this.currentTime -= 1
 
   this.emit('ticker', objectAssign(this.formatTime(), {
     percentDone: this.percentDone(),
     currentTime: this.currentTime,
     startTime: this.startTime,
-    self: this,
-  }));
+    self: this
+  }))
 
   if (this.currentTime <= 0) {
-    this.stop();
-    this.emit('finish', this);
+    this.stop()
+    this.emit('finish', this)
   }
 }
 
@@ -72,14 +72,14 @@ function countdown() {
  * @description Stopwatch function.
  * Bound to a setInterval when start() is called.
  */
-function stopwatch() {
-  this.currentTime += 1;
+function stopwatch () {
+  this.currentTime += 1
 
   this.emit('ticker', objectAssign(this.formatTime(), {
     currentTime: this.currentTime,
     startTime: this.startTime,
-    self: this,
-  }));
+    self: this
+  }))
 }
 
 Timr.prototype = objectAssign(Object.create(EventEmitter.prototype), {
@@ -93,14 +93,14 @@ Timr.prototype = objectAssign(Object.create(EventEmitter.prototype), {
    *
    * @return {Object} Returns a reference to the Timr so calls can be chained.
    */
-  start(delay) {
+  start (delay) {
     if (!this.running) {
       if (this.options.countdown && this.startTime === 0) {
         throw new Error(
           'Unable to start timer when countdown = true and startTime = 0. ' +
           'This would cause the timer to count into negative numbers and never stop. ' +
-          'Try setting countdown to false or amending the startTime.',
-        );
+          'Try setting countdown to false or amending the startTime.'
+        )
       }
 
       const startFn = () => {
@@ -110,28 +110,28 @@ Timr.prototype = objectAssign(Object.create(EventEmitter.prototype), {
          *
          * Note: Inside startFn so that delay works properly.
          */
-        if (this.futureDate) this.setStartTime(this.futureDate);
+        if (this.futureDate) this.setStartTime(this.futureDate)
 
-        this.running = true;
+        this.running = true
 
         this.timer = this.options.countdown
           ? setInterval(countdown.bind(this), 1000)
-          : setInterval(stopwatch.bind(this), 1000);
-      };
+          : setInterval(stopwatch.bind(this), 1000)
+      }
 
       if (exists(delay)) {
         if (isNotNum(delay)) {
-          throw new TypeError(`The delay argument passed to start must be a number, you passed: ${checkType(delay)}`);
+          throw new TypeError(`The delay argument passed to start must be a number, you passed: ${checkType(delay)}`)
         }
-        this.delayTimer = setTimeout(startFn, delay);
+        this.delayTimer = setTimeout(startFn, delay)
       } else {
-        startFn();
+        startFn()
       }
 
-      this.emit('onStart', this);
+      this.emit('onStart', this)
     }
 
-    return this;
+    return this
   },
 
   /**
@@ -139,12 +139,12 @@ Timr.prototype = objectAssign(Object.create(EventEmitter.prototype), {
    *
    * @return {Object} Returns a reference to the Timr so calls can be chained.
    */
-  pause() {
-    this.clear();
+  pause () {
+    this.clear()
 
-    this.emit('onPause', this);
+    this.emit('onPause', this)
 
-    return this;
+    return this
   },
 
   /**
@@ -152,14 +152,14 @@ Timr.prototype = objectAssign(Object.create(EventEmitter.prototype), {
    *
    * @return {Object} Returns a reference to the Timr so calls can be chained.
    */
-  stop() {
-    this.clear();
+  stop () {
+    this.clear()
 
-    this.currentTime = this.startTime;
+    this.currentTime = this.startTime
 
-    this.emit('onStop', this);
+    this.emit('onStop', this)
 
-    return this;
+    return this
   },
 
   /**
@@ -167,13 +167,13 @@ Timr.prototype = objectAssign(Object.create(EventEmitter.prototype), {
    *
    * @return {Object} Returns a reference to the Timr so calls can be chained.
    */
-  clear() {
-    clearInterval(this.timer);
-    clearTimeout(this.delayTimer);
+  clear () {
+    clearInterval(this.timer)
+    clearTimeout(this.delayTimer)
 
-    this.running = false;
+    this.running = false
 
-    return this;
+    return this
   },
 
   /**
@@ -183,16 +183,16 @@ Timr.prototype = objectAssign(Object.create(EventEmitter.prototype), {
    *
    * @return {Object} Returns a reference to the Timr so calls can be chained.
    */
-  destroy() {
-    this.emit('onDestroy', this);
+  destroy () {
+    this.emit('onDestroy', this)
 
-    this.clear().removeAllListeners();
+    this.clear().removeAllListeners()
 
     // removeFromStore is added when the timr is added to a store,
     // so need to check if it's in a store before removing it.
-    if (isFn(this.removeFromStore)) this.removeFromStore();
+    if (isFn(this.removeFromStore)) this.removeFromStore()
 
-    return this;
+    return this
   },
 
   /**
@@ -225,8 +225,8 @@ Timr.prototype = objectAssign(Object.create(EventEmitter.prototype), {
    *
    * @return {Object} The formatted time and raw values.
    */
-  formatTime(time = 'currentTime') {
-    return formatTime(this[time], this.options);
+  formatTime (time = 'currentTime') {
+    return formatTime(this[time], this.options)
   },
 
   /**
@@ -235,8 +235,8 @@ Timr.prototype = objectAssign(Object.create(EventEmitter.prototype), {
    *
    * @return {Number} Time elapsed in percent.
    */
-  percentDone() {
-    return 100 - Math.round((this.currentTime / this.startTime) * 100);
+  percentDone () {
+    return 100 - Math.round((this.currentTime / this.startTime) * 100)
   },
 
   /**
@@ -246,10 +246,10 @@ Timr.prototype = objectAssign(Object.create(EventEmitter.prototype), {
    * @param {Object} options - The options to create / change.
    * @return {Object} Returns a reference to the Timr so calls can be chained.
    */
-  changeOptions(options) {
-    this.options = buildOptions(options, this.options);
+  changeOptions (options) {
+    this.options = buildOptions(options, this.options)
 
-    return this;
+    return this
   },
 
   /**
@@ -262,39 +262,39 @@ Timr.prototype = objectAssign(Object.create(EventEmitter.prototype), {
    *
    * @return {Object} The original Timr object.
    */
-  setStartTime(startTime) {
-    this.clear();
+  setStartTime (startTime) {
+    this.clear()
 
-    if (notExists(startTime)) throw new Error('You must provide a startTime value.');
+    if (notExists(startTime)) throw new Error('You must provide a startTime value.')
 
-    let newStartTime;
+    let newStartTime
 
     if (this.options.futureDate) {
-      newStartTime = dateToSeconds(startTime);
-      this.futureDate = startTime;
+      newStartTime = dateToSeconds(startTime)
+      this.futureDate = startTime
     } else {
-      newStartTime = timeToSeconds(startTime);
-      this.futureDate = null;
+      newStartTime = timeToSeconds(startTime)
+      this.futureDate = null
     }
 
-    this.startTime = newStartTime;
-    this.currentTime = newStartTime;
+    this.startTime = newStartTime
+    this.currentTime = newStartTime
 
-    return this;
+    return this
   },
 
   /**
    * @description Shorthand for this.formatTime(time).formattedTime
    */
-  getFt(time = 'currentTime') {
-    return this.formatTime(time).formattedTime;
+  getFt (time = 'currentTime') {
+    return this.formatTime(time).formattedTime
   },
 
   /**
    * @description Shorthand for this.formatTime(time).raw
    */
-  getRaw(time = 'currentTime') {
-    return this.formatTime(time).raw;
+  getRaw (time = 'currentTime') {
+    return this.formatTime(time).raw
   },
 
   /**
@@ -302,8 +302,8 @@ Timr.prototype = objectAssign(Object.create(EventEmitter.prototype), {
    *
    * @return {Number} Start time in seconds.
    */
-  getStartTime() {
-    return this.startTime;
+  getStartTime () {
+    return this.startTime
   },
 
   /**
@@ -311,8 +311,8 @@ Timr.prototype = objectAssign(Object.create(EventEmitter.prototype), {
    *
    * @return {Number} Current time in seconds.
    */
-  getCurrentTime() {
-    return this.currentTime;
+  getCurrentTime () {
+    return this.currentTime
   },
 
   /**
@@ -320,9 +320,9 @@ Timr.prototype = objectAssign(Object.create(EventEmitter.prototype), {
    *
    * @return {Boolean} True if running, false if not.
    */
-  isRunning() {
-    return this.running;
-  },
-});
+  isRunning () {
+    return this.running
+  }
+})
 
-export default Timr;
+export default Timr

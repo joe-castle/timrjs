@@ -1,11 +1,11 @@
-import formatTime from './formatTime';
-import timeToSeconds from './timeToSeconds';
-import dateToSeconds from './dateToSeconds';
-import createStore from './createStore';
-import zeroPad from './zeroPad';
+import formatTime from './formatTime'
+import timeToSeconds from './timeToSeconds'
+import dateToSeconds from './dateToSeconds'
+import createStore from './createStore'
+import zeroPad from './zeroPad'
 
-import Timr from './Timr';
-import { isObj, exists } from './validate';
+import Timr from './Timr'
+import { isObj, exists } from './validate'
 
   /**
    * @description Creates a new Timr object.
@@ -16,16 +16,16 @@ import { isObj, exists } from './validate';
    *
    * @return {Object} A new Timr object.
    */
-function create(startTime, options) {
+function create (startTime, options) {
   if (isObj(startTime)) {
     if (exists(startTime.startTime)) {
-      return new Timr(startTime.startTime, startTime);
+      return new Timr(startTime.startTime, startTime)
     }
 
-    throw new Error('When providing only an object when creating a timer, it must have a startTime property.');
+    throw new Error('When providing only an object when creating a timer, it must have a startTime property.')
   }
 
-  return new Timr(startTime, options);
+  return new Timr(startTime, options)
 }
 
 export {
@@ -34,5 +34,5 @@ export {
   timeToSeconds,
   dateToSeconds,
   createStore,
-  zeroPad,
-};
+  zeroPad
+}

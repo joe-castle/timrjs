@@ -3,17 +3,17 @@
  * @param {Any} value - the value to be checked
  * @return {Boolean} True if it is, false if it isn't
  */
-function isNum(value) {
+function isNum (value) {
   if (
-    typeof value === 'number'
-    && !isNaN(value)
-    && value !== Infinity
-    && value !== -Infinity
+    typeof value === 'number' &&
+    !isNaN(value) &&
+    value !== Infinity &&
+    value !== -Infinity
   ) {
-    return true;
+    return true
   }
 
-  return false;
+  return false
 }
 
 /**
@@ -21,8 +21,8 @@ function isNum(value) {
  * @param {Any} value - the value to be checked
  * @return {Boolean} True if it is, false if it isn't
  */
-function isNotNum(value) {
-  return !isNum(value);
+function isNotNum (value) {
+  return !isNum(value)
 }
 
 /**
@@ -30,8 +30,8 @@ function isNotNum(value) {
  * @param {Any} value - the value to be checked
  * @return {Boolean} True if it is, false if it isn't
  */
-function isStr(value) {
-  return typeof value === 'string';
+function isStr (value) {
+  return typeof value === 'string'
 }
 
 /**
@@ -39,8 +39,8 @@ function isStr(value) {
  * @param {Any} value - the value to be checked
  * @return {Boolean} True if it is, false if it isn't
  */
-function isNotStr(value) {
-  return !isStr(value);
+function isNotStr (value) {
+  return !isStr(value)
 }
 
 /**
@@ -48,8 +48,8 @@ function isNotStr(value) {
  * @param {Any} value - the value to be checked
  * @return {Boolean} True if it is, false if it isn't
  */
-function isBool(value) {
-  return typeof value === 'boolean';
+function isBool (value) {
+  return typeof value === 'boolean'
 }
 
 /**
@@ -57,8 +57,8 @@ function isBool(value) {
  * @param {Any} value - the value to be checked
  * @return {Boolean} True if it is, false if it isn't
  */
-function isNotBool(value) {
-  return !isBool(value);
+function isNotBool (value) {
+  return !isBool(value)
 }
 
 /**
@@ -66,8 +66,8 @@ function isNotBool(value) {
  * @param {Any} value - the value to be checked
  * @return {Boolean} True if it is, false if it isn't
  */
-function isFn(value) {
-  return typeof value === 'function';
+function isFn (value) {
+  return typeof value === 'function'
 }
 
 /**
@@ -75,8 +75,8 @@ function isFn(value) {
  * @param {Any} value - the value to be checked
  * @return {Boolean} True if it is, false if it isn't
  */
-function isNotFn(value) {
-  return !isFn(value);
+function isNotFn (value) {
+  return !isFn(value)
 }
 
 /**
@@ -84,16 +84,16 @@ function isNotFn(value) {
  * @param {Any} value - the value to be checked
  * @return {Boolean} True if it is, false if it isn't
  */
-function isObj(value) {
+function isObj (value) {
   if (
-    value !== null
-    && typeof value === 'object'
-    && !Array.isArray(value)
+    value !== null &&
+    typeof value === 'object' &&
+    !Array.isArray(value)
   ) {
-    return true;
+    return true
   }
 
-  return false;
+  return false
 }
 
 /**
@@ -101,8 +101,8 @@ function isObj(value) {
  * @param {Any} value - the value to be checked
  * @return {Boolean} True if it is, false if it isn't
  */
-function isNotObj(value) {
-  return !isObj(value);
+function isNotObj (value) {
+  return !isObj(value)
 }
 
 /**
@@ -110,8 +110,8 @@ function isNotObj(value) {
  * @param {Any} value - the value to be checked
  * @return {Boolean} True if it is, false if it isn't
  */
-function exists(value) {
-  return value !== undefined;
+function exists (value) {
+  return value !== undefined
 }
 
 /**
@@ -119,8 +119,8 @@ function exists(value) {
  * @param {Any} value - the value to be checked
  * @return {Boolean} True if it is, false if it isn't
  */
-function notExists(value) {
-  return !exists(value);
+function notExists (value) {
+  return !exists(value)
 }
 
 /* eslint-disable consistent-return */
@@ -133,23 +133,23 @@ function notExists(value) {
  *
  * @return {String} The type of the value.
  */
-function checkType(value) {
+function checkType (value) {
   if (
-    value === undefined
-    || value === null
-    || value === Infinity
-    || value === -Infinity
+    value === undefined ||
+    value === null ||
+    value === Infinity ||
+    value === -Infinity
   ) {
-    return `${value}`;
+    return `${value}`
   }
 
-  if (isNum(value)) return 'number';
-  if (isStr(value)) return 'string';
-  if (isBool(value)) return 'boolean';
-  if (isFn(value)) return 'function';
-  if (isObj(value)) return 'object';
-  if (Array.isArray(value)) return 'array';
-  if (isNaN(value)) return `${NaN}`;
+  if (isNum(value)) return 'number'
+  if (isStr(value)) return 'string'
+  if (isBool(value)) return 'boolean'
+  if (isFn(value)) return 'function'
+  if (isObj(value)) return 'object'
+  if (Array.isArray(value)) return 'array'
+  if (isNaN(value)) return `${NaN}`
 }
 
 export {
@@ -165,5 +165,5 @@ export {
   isNotObj,
   exists,
   notExists,
-  checkType,
-};
+  checkType
+}

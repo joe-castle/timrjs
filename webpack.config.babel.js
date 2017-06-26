@@ -1,11 +1,11 @@
-import path from 'path';
-import webpack from 'webpack';
-import { getIfUtils, removeEmpty } from 'webpack-config-utils';
+import path from 'path'
+import webpack from 'webpack'
+import { getIfUtils, removeEmpty } from 'webpack-config-utils'
 
-import { version } from './package.json';
+import { version } from './package.json'
 
 export default (env) => {
-  const { ifProduction } = getIfUtils(env);
+  const { ifProduction } = getIfUtils(env)
 
   const banner = ifProduction(
     `/* TimrJS v${version} | (c) 2016 Joe Smith | https://github.com/joesmith100/timrjs */`,
@@ -19,8 +19,8 @@ export default (env) => {
  * Copyright (c) 2016 Joe Smith
  * Released under the MIT license
  * https://github.com/joesmith100/timrjs/blob/master/LICENSE.md
- */`,
-  );
+ */`
+  )
 
   return {
     entry: './src/index.js',
@@ -28,17 +28,17 @@ export default (env) => {
       path: path.join(__dirname, 'dist'),
       filename: ifProduction(
         'timr.min.js',
-        'timr.js',
+        'timr.js'
       ),
       library: 'Timr',
       libraryTarget: 'umd',
-      umdNamedDefine: true,
+      umdNamedDefine: true
     },
     plugins: removeEmpty([
       ifProduction(
-        new webpack.optimize.UglifyJsPlugin(),
+        new webpack.optimize.UglifyJsPlugin()
       ),
-      new webpack.BannerPlugin({ banner, raw: true }),
+      new webpack.BannerPlugin({ banner, raw: true })
     ]),
     module: {
       rules: [
@@ -50,12 +50,12 @@ export default (env) => {
               // Enables webpack tree-shaking
               babelrc: false,
               presets: [['latest', { es2015: { modules: false } }]],
-              plugins: ['transform-object-rest-spread'],
-            },
+              plugins: ['transform-object-rest-spread']
+            }
           },
-          exclude: /node_modules/,
-        },
-      ],
-    },
-  };
-};
+          exclude: /node_modules/
+        }
+      ]
+    }
+  }
+}
