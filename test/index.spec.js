@@ -13,7 +13,7 @@ import Timr from '../src/Timr';
 
 const requireTimr = require('../src/index');
 
-describe.only('Index function', () => {
+describe('Index function', () => {
   it('Returns a new timr object.', () => {
     expect(create('10:00')).to.be.an.instanceof(Timr);
     expect(create('10m')).to.be.an.instanceof(Timr);
