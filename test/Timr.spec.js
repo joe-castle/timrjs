@@ -1,34 +1,32 @@
-import { expect } from 'chai'
-
 import Timr from '../src/Timr'
 import createStore from '../src/createStore'
 
 describe('Timr Class', () => {
   describe('Timr instantiation', () => {
-    it('Creates a new Timr object', () => {
-      expect(new Timr(600).startTime).to.equal(600)
-      expect(new Timr(600).currentTime).to.equal(600)
-      expect(new Timr(0).currentTime).to.equal(0)
+    test('Creates a new Timr object', () => {
+      expect(new Timr(600).startTime).toBe(600)
+      expect(new Timr(600).currentTime).toBe(600)
+      expect(new Timr(0).currentTime).toBe(0)
     })
 
-    it('Throws an error if startTime is not a string or a number', () => {
-      expect(() => new Timr({})).to.throw(
+    test('Throws an error if startTime is not a string or a number', () => {
+      expect(() => new Timr({})).toThrow(
         'Expected time to be a string or number, instead got: object'
       )
     })
   })
 
   describe('start method', () => {
-    it('Starts the timer', (done) => {
+    test('Starts the timer', (done) => {
       const timer = new Timr(600).start()
         .ticker(({ formattedTime }) => {
-          expect(formattedTime).to.equal('09:59')
+          expect(formattedTime).toBe('09:59')
           timer.stop()
           done()
         })
     })
 
-    it('Starts the timer after a delay', (done) => {
+    test('Starts the timer after a delay', (done) => {
       const startTime = Date.now()
       const timer = new Timr(600).start(1000)
         .ticker(() => {
@@ -38,7 +36,7 @@ describe('Timr Class', () => {
         })
     })
 
-    it('If an ISO date has been used to start the timer, start will re-run setStartTime ' +
+    test('If an ISO date has been used to start the timer, start will re-run setStartTime ' +
     'to ensure the startTime is in sync. Allowing .start() ' +
     'to be called at a later time.', (done) => {
       const year = new Date().getFullYear() + 1
@@ -47,7 +45,7 @@ describe('Timr Class', () => {
         .ticker(({ currentTime }) => {
           const testStart = Math.ceil((Date.parse(`${year}-12-15T10:00:00`) - Date.now()) / 1000)
 
-          expect(currentTime).to.equal(testStart)
+          expect(currentTime).toBe(testStart)
 
           timer.destroy()
           done()
@@ -56,14 +54,14 @@ describe('Timr Class', () => {
       setTimeout(() => timer.start(), 2000)
     })
 
-    it('Same test as above, but using starts delay feature', (done) => {
+    test('Same test as above, but using starts delay feature', (done) => {
       const year = new Date().getFullYear() + 1
 
       const timer = new Timr(`${year}-12-15T10:00:00`, { futureDate: true })
         .ticker(({ currentTime }) => {
           const testStart = Math.ceil((Date.parse(`${year}-12-15T10:00:00`) - Date.now()) / 1000)
 
-          expect(currentTime).to.equal(testStart)
+          expect(currentTime).toBe(testStart)
 
           timer.destroy()
           done()
@@ -71,10 +69,10 @@ describe('Timr Class', () => {
         .start(2000)
     })
 
-    it('Emits the onStart event', (done) => {
+    test('Emits the onStart event', (done) => {
       const timer = new Timr(600)
         .onStart((self) => {
-          expect(self).to.equal(timer)
+          expect(self).toBe(timer)
           timer.destroy()
           done()
         })
@@ -82,50 +80,52 @@ describe('Timr Class', () => {
       timer.start()
     })
 
-    it('Throws an error if start is called with countdown set to true and startTime set to 0', () => {
-      expect(() => new Timr(0).start()).to.throw(
+    test('Throws an error if start is called with countdown set to true and startTime set to 0', () => {
+      expect(() => new Timr(0).start()).toThrow(
         'Unable to start timer when countdown = true and startTime = 0. ' +
         'This would cause the timer to count into negative numbers and never stop. ' +
         'Try setting countdown to false or amending the startTime'
       )
     })
 
-    it('Throws an error if start is called with a delay argument that isn\'t a number', () => {
-      expect(() => new Timr(500).start([])).throw(
+    test('Throws an error if start is called with a delay argument that isn\'t a number', () => {
+      expect(() => new Timr(500).start([])).toThrow(
         'The delay argument passed to start must be a number, you passed: array'
       )
 
-      expect(() => new Timr(500).start(null)).throw(
+      expect(() => new Timr(500).start(null)).toThrow(
         'The delay argument passed to start must be a number, you passed: null'
       )
 
-      expect(() => new Timr(500).start(NaN)).throw(
+      expect(() => new Timr(500).start(NaN)).toThrow(
         'The delay argument passed to start must be a number, you passed: NaN'
       )
     })
 
-    it('Returns a reference to the Timr', () => {
-      const timer = new Timr(600).start()
-      expect(timer).equal(timer)
+    test('Returns a reference to the Timr', () => {
+      const timer = new Timr(600)
+      const returnVal = timer.start()
+      expect(returnVal).toBe(timer)
       timer.destroy()
     })
   })
 
   describe('pause method', () => {
-    it('Pauses the timer', (done) => {
-      const timer = new Timr(600).start()
+    test('Pauses the timer', (done) => {
+      const timer = new Timr(600)
         .ticker(() => {
-          expect(timer.isRunning()).to.equal(true)
+          expect(timer.isRunning()).toBe(true)
           timer.pause()
-          expect(timer.isRunning()).to.equal(false)
+          expect(timer.isRunning()).toBe(false)
           done()
         })
+        .start()
     })
 
-    it('Emits the onPause event', (done) => {
+    test('Emits the onPause event', (done) => {
       const timer = new Timr(600)
         .onPause((self) => {
-          expect(self).to.equal(timer)
+          expect(self).toBe(timer)
           timer.destroy()
           done()
         })
@@ -134,27 +134,29 @@ describe('Timr Class', () => {
       timer.pause()
     })
 
-    it('Returns a reference to the Timr', () => {
-      const timer = new Timr(600).pause()
-      expect(timer).equal(timer)
+    test('Returns a reference to the Timr', () => {
+      const timer = new Timr(600)
+      const returnVal = timer.pause()
+      expect(returnVal).toBe(timer)
     })
   })
 
   describe('stop method', () => {
-    it('Stops the timer', (done) => {
-      const timer = new Timr(600).start()
-      timer.ticker(({ formattedTime }) => {
-        expect(formattedTime).to.equal('09:59')
-        timer.stop()
-        expect(timer.getCurrentTime()).to.equal(600)
-        done()
-      })
+    test('Stops the timer', (done) => {
+      const timer = new Timr(600)
+        .ticker(({ formattedTime }) => {
+          expect(formattedTime).toBe('09:59')
+          timer.stop()
+          expect(timer.getCurrentTime()).toBe(600)
+          done()
+        })
+        .start()
     })
 
-    it('Emits the onStop event', (done) => {
+    test('Emits the onStop event', (done) => {
       const timer = new Timr(600)
         .onStop((self) => {
-          expect(self).to.equal(timer)
+          expect(self).toBe(timer)
           timer.destroy()
           done()
         })
@@ -163,243 +165,250 @@ describe('Timr Class', () => {
       timer.stop()
     })
 
-    it('Returns a reference to the Timr', () => {
-      const timer = new Timr(600).stop()
-      expect(timer).equal(timer)
+    test('Returns a reference to the Timr', () => {
+      const timer = new Timr(600)
+      const returnVal = timer.stop()
+      expect(returnVal).toBe(timer)
     })
   })
 
   describe('destroy method', () => {
-    it('Clears the timer and removes all event listeners', () => {
+    test('Clears the timer and removes all event listeners', () => {
       const timer = new Timr(600)
       timer.ticker(() => {})
       timer.ticker(() => {})
       timer.finish(() => {})
 
-      expect(timer.events.ticker.length).to.equal(2)
-      expect(timer.events.finish.length).to.equal(1)
+      expect(timer.events.ticker).toHaveLength(2)
+      expect(timer.events.finish).toHaveLength(1)
 
       timer.destroy()
 
-      expect(timer.events.ticker).to.equal(undefined)
-      expect(timer.events.finish).to.equal(undefined)
+      expect(timer.events.ticker).toBeUndefined()
+      expect(timer.events.finish).toBeUndefined()
     })
 
-    it('Removes the timer from the store', () => {
+    test('Removes the timer from the store', () => {
       const timer = new Timr(600)
       const store = createStore(timer)
 
-      expect(store.getAll().includes(timer)).to.equal(true)
+      expect(store.getAll()).toContain(timer)
 
       timer.destroy()
 
-      expect(store.getAll().includes(timer)).to.equal(false)
-      expect(timer.removeFromStore).to.equal(null)
+      expect(store.getAll()).not.toContain(timer)
+      expect(timer.removeFromStore).toBeNull()
     })
 
-    it('Emits the onDestroy event', (done) => {
+    test('Emits the onDestroy event', (done) => {
       const timer = new Timr(600)
         .onDestroy((self) => {
-          expect(self).to.equal(timer)
+          expect(self).toBe(timer)
           done()
         })
 
       timer.destroy()
     })
 
-    it('Returns a reference to the Timr', () => {
-      const timer = new Timr(600).destroy()
-      expect(timer).equal(timer)
+    test('Returns a reference to the Timr', () => {
+      const timer = new Timr(600)
+      const returnVal = timer.destroy()
+      expect(returnVal).toBe(timer)
     })
   })
 
   describe('ticker method', () => {
-    it('Fires the ticker function every second the timer runs, ' +
+    test('Fires the ticker function every second the timer runs, ' +
       'returning the formattedTime, precentDone, currentTime, ' +
       'startTime and the original Timr object.', (done) => {
-      const timer = new Timr(600).start()
+      const timer = new Timr(600)
         .ticker(({ formattedTime, percentDone, currentTime, startTime, self }) => {
-          expect(formattedTime).to.equal('09:59')
-          expect(percentDone).to.equal(0)
-          expect(currentTime).to.equal(599)
-          expect(startTime).to.equal(600)
-          expect(self).to.equal(timer)
+          expect(formattedTime).toBe('09:59')
+          expect(percentDone).toBe(0)
+          expect(currentTime).toBe(599)
+          expect(startTime).toBe(600)
+          expect(self).toBe(timer)
           timer.stop()
           done()
         })
+        .start()
     })
 
-    it('As a stopwatch, fires the ticker function every second the timer runs, ' +
+    test('As a stopwatch, fires the ticker function every second the timer runs, ' +
       'returning the formattedTime, startTime, currentTime and original Timr object.', (done) => {
-      const timer = new Timr(0, { countdown: false }).start().ticker(
-        ({ formattedTime, currentTime, startTime, self }) => {
-          expect(formattedTime).to.equal('00:01')
-          expect(currentTime).to.equal(1)
-          expect(startTime).to.equal(0)
-          expect(self).to.equal(timer)
+      const timer = new Timr(0, { countdown: false })
+        .ticker(({ formattedTime, currentTime, startTime, self }) => {
+          expect(formattedTime).toBe('00:01')
+          expect(currentTime).toBe(1)
+          expect(startTime).toBe(0)
+          expect(self).toBe(timer)
           timer.stop()
           done()
-        }
-      )
+        })
+        .start()
     })
 
-    it('The stopwatch is able to be started at any given time; previously in ' +
+    test('The stopwatch is able to be started at any given time; previously in ' +
      'pre v1.0.0 a stopwatch could only be started at 0.', (done) => {
-      const timer = new Timr(600, { countdown: false }).start().ticker(
-        ({ formattedTime, currentTime, startTime, self }) => {
-          expect(formattedTime).to.equal('10:01')
-          expect(currentTime).to.equal(601)
-          expect(startTime).to.equal(600)
-          expect(self).to.equal(timer)
+      const timer = new Timr(600, { countdown: false })
+        .ticker(({ formattedTime, currentTime, startTime, self }) => {
+          expect(formattedTime).toBe('10:01')
+          expect(currentTime).toBe(601)
+          expect(startTime).toBe(600)
+          expect(self).toBe(timer)
           timer.stop()
           done()
-        }
-      )
+        })
+        .start()
     })
 
-    it('Throws an error if the ticker method is called with no ' +
+    test('Throws an error if the ticker method is called with no ' +
       'function provided as the first argument', () => {
-      expect(() => new Timr(600).ticker()).to.throw(
+      expect(() => new Timr(600).ticker()).toThrow(
         'Expected ticker to be a function, instead got: undefined'
       )
     })
 
-    it('Returns a reference to the Timr', () => {
-      const timer = new Timr(600).ticker(() => {})
-      expect(timer).equal(timer)
+    test('Returns a reference to the Timr', () => {
+      const timer = new Timr(600);
+      const returnVal = timer.ticker(() => {})
+      expect(returnVal).toBe(timer)
     })
   })
 
   describe('finish method', () => {
-    it('Fires the finish function when the timer finishes ' +
+    test('Fires the finish function when the timer finishes ' +
       'and provides the original Timr object.', (done) => {
       const timer = new Timr(1).start()
       timer.finish((self) => {
-        expect(self).to.equal(timer)
+        expect(self).toBe(timer)
         done()
       })
     })
 
-    it('Throws an error if the finish method is called with no ' +
+    test('Throws an error if the finish method is called with no ' +
       'function provided as the first argument', () => {
-      expect(() => new Timr(600).finish()).to.throw(
+      expect(() => new Timr(600).finish()).toThrow(
         'Expected finish to be a function, instead got: undefined'
       )
     })
 
-    it('Returns a reference to the Timr', () => {
-      const timer = new Timr(600).finish(() => {})
-      expect(timer).equal(timer)
+    test('Returns a reference to the Timr', () => {
+      const timer = new Timr(600)
+      const returnVal = timer.finish(() => {})
+      expect(returnVal).toBe(timer)
     })
   })
 
   describe('formatTime method', () => {
-    it('Returns the currentTime formatted into a time string', () => {
-      expect(new Timr(50).formatTime().formattedTime).to.equal('00:50')
-      expect(new Timr(600).formatTime().formattedTime).to.equal('10:00')
-      expect(new Timr(9600).formatTime().formattedTime).to.equal('02:40:00')
+    test('Returns the currentTime formatted into a time string', () => {
+      expect(new Timr(50).formatTime().formattedTime).toBe('00:50')
+      expect(new Timr(600).formatTime().formattedTime).toBe('10:00')
+      expect(new Timr(9600).formatTime().formattedTime).toBe('02:40:00')
     })
 
-    it('Returns the currentTime formatted into a time string with a modified formatOutput', () => {
+    test('Returns the currentTime formatted into a time string with a modified formatOutput', () => {
       expect(new Timr(600, { formatOutput: 'MM-SS' }).formatTime().formattedTime)
-        .to.equal('10-600')
+        .toBe('10-600')
       expect(new Timr(600, { formatOutput: 'boop' }).formatTime().formattedTime)
-        .to.equal('boop')
+        .toBe('boop')
     })
 
-    it('Returns the startTime formatted into a time string', () => {
-      expect(new Timr(50).formatTime('startTime').formattedTime).to.equal('00:50')
-      expect(new Timr(600).formatTime('startTime').formattedTime).to.equal('10:00')
-      expect(new Timr(9600).formatTime('startTime').formattedTime).to.equal('02:40:00')
+    test('Returns the startTime formatted into a time string', () => {
+      expect(new Timr(50).formatTime('startTime').formattedTime).toBe('00:50')
+      expect(new Timr(600).formatTime('startTime').formattedTime).toBe('10:00')
+      expect(new Timr(9600).formatTime('startTime').formattedTime).toBe('02:40:00')
     })
 
-    it('Returns the startTime formatted into a time string with a modified formatOutput', () => {
+    test('Returns the startTime formatted into a time string with a modified formatOutput', () => {
       expect(new Timr(600, { formatOutput: '00:mm:ss' }).formatTime('startTime').formattedTime)
-        .to.equal('00:10:00')
+        .toBe('00:10:00')
       expect(new Timr(50, { formatOutput: 'SS' }).formatTime('startTime').formattedTime)
-        .to.equal('50')
+        .toBe('50')
     })
   })
 
   describe('percentDone method', () => {
-    it('Returns the time elapsed in percent', () => {
+    test('Returns the time elapsed in percent', () => {
       const timer = new Timr(600)
-      expect(timer.percentDone()).to.equal(0)
+      expect(timer.percentDone()).toBe(0)
       timer.currentTime = 400
-      expect(timer.percentDone()).to.equal(33)
+      expect(timer.percentDone()).toBe(33)
     })
   })
 
   describe('changeOptions methods', () => {
-    it('Changes the timrs options after creation.', () => {
+    test('Changes the timrs options after creation.', () => {
       const timer = new Timr(600)
-      expect(timer.formatTime().formattedTime).to.equal('10:00')
+      expect(timer.formatTime().formattedTime).toBe('10:00')
       timer.changeOptions({ formatOutput: '00-mm-ss' })
-      expect(timer.formatTime().formattedTime).to.equal('00-10-00')
+      expect(timer.formatTime().formattedTime).toBe('00-10-00')
     })
 
-    it('Changes the timrs options after creation and merges with existing ones.', () => {
+    test('Changes the timrs options after creation and merges with existing ones.', () => {
       const timer = new Timr(600)
-      expect(timer.formatTime().formattedTime).to.equal('10:00')
-      expect(timer.formatTime().raw.mm).to.equal(10)
+      expect(timer.formatTime().formattedTime).toBe('10:00')
+      expect(timer.formatTime().raw.mm).toBe(10)
       timer.changeOptions({ formatOutput: '00-mm-ss' })
-      expect(timer.formatTime().formattedTime).to.equal('00-10-00')
-      expect(timer.formatTime().raw.mm).to.equal(10)
+      expect(timer.formatTime().formattedTime).toBe('00-10-00')
+      expect(timer.formatTime().raw.mm).toBe(10)
     })
 
-    it('Returns a reference to the Timr', () => {
-      const timer = new Timr(600).changeOptions()
-      expect(timer).equal(timer)
+    test('Returns a reference to the Timr', () => {
+      const timer = new Timr(600)
+      const returnVal = timer.changeOptions()
+      expect(returnVal).toBe(timer)
       timer.destroy()
     })
   })
 
   describe('setStartTime method', () => {
-    it('Changes the startTime after Timr created', () => {
+    test('Changes the startTime after Timr created', () => {
       const timer = new Timr(600)
-      expect(timer.startTime).to.equal(600)
+      expect(timer.startTime).toBe(600)
       timer.setStartTime(800)
-      expect(timer.startTime).to.equal(800)
+      expect(timer.startTime).toBe(800)
       timer.setStartTime('10m')
-      expect(timer.startTime).to.equal(600)
+      expect(timer.startTime).toBe(600)
     })
 
-    it('Clears the existing timer and sets the ' +
+    test('Clears the existing timer and sets the ' +
       'currentTime and startTime to the new starTime', (done) => {
       const timer = new Timr(600).start()
       timer.ticker(({ currentTime }) => {
-        expect(currentTime).to.equal(599)
+        expect(currentTime).toBe(599)
         timer.setStartTime('11:00')
-        expect(timer.getStartTime()).to.equal(660)
-        expect(timer.getCurrentTime()).to.equal(660)
+        expect(timer.getStartTime()).toBe(660)
+        expect(timer.getCurrentTime()).toBe(660)
         done()
       })
     })
 
-    it('Throws an error if the newly provided startTime is invalid', () => {
+    test('Throws an error if the newly provided startTime is invalid', () => {
       const timer = new Timr(600)
 
-      expect(() => timer.setStartTime('12-12')).to.throw(Error)
-      expect(() => timer.setStartTime({})).to.throw(Error)
-      expect(() => timer.setStartTime('invalid')).to.throw(Error)
+      expect(() => timer.setStartTime('12-12')).toThrow(Error)
+      expect(() => timer.setStartTime({})).toThrow(Error)
+      expect(() => timer.setStartTime('invalid')).toThrow(Error)
     })
 
-    it('Returns a reference to the Timr', () => {
-      const timer = new Timr(600).setStartTime(0)
-      expect(timer).equal(timer)
+    test('Returns a reference to the Timr', () => {
+      const timer = new Timr(600)
+      const returnVal = timer.setStartTime(0)
+      expect(returnVal).toBe(timer)
       timer.destroy()
     })
   })
 
   describe('getFt', () => {
-    it('Returns the formattedTime.', () => {
-      expect(new Timr(600).getFt()).to.equal('10:00')
+    test('Returns the formattedTime.', () => {
+      expect(new Timr(600).getFt()).toBe('10:00')
     })
   })
 
   describe('getRaw', () => {
-    it('Returns the raw values.', () => {
-      expect(new Timr(600).getRaw()).to.deep.equal({
+    test('Returns the raw values.', () => {
+      expect(new Timr(600).getRaw()).toEqual({
         DD: 0,
         HH: 0,
         MM: 10,
@@ -413,25 +422,25 @@ describe('Timr Class', () => {
   })
 
   describe('getStartTime method', () => {
-    it('Returns the currentTime in seconds', () => {
-      expect(new Timr(600).getStartTime()).to.equal(600)
+    test('Returns the currentTime in seconds', () => {
+      expect(new Timr(600).getStartTime()).toBe(600)
     })
   })
 
   describe('getCurrentTime method', () => {
-    it('Returns the currentTime in seconds', () => {
-      expect(new Timr(600).getCurrentTime()).to.equal(600)
+    test('Returns the currentTime in seconds', () => {
+      expect(new Timr(600).getCurrentTime()).toBe(600)
     })
   })
 
   describe('isRunning method', () => {
-    it('Returns false when the timer isnt running', () => {
-      expect(new Timr(600).isRunning()).to.equal(false)
+    test('Returns false when the timer isnt running', () => {
+      expect(new Timr(600).isRunning()).toBe(false)
     })
 
-    it('Returns true when the timer is running', () => {
+    test('Returns true when the timer is running', () => {
       const timer = new Timr(600).start()
-      expect(timer.isRunning()).to.equal(true)
+      expect(timer.isRunning()).toBe(true)
       timer.stop()
     })
   })
