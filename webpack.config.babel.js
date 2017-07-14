@@ -38,7 +38,8 @@ export default (env) => {
       ifProduction(
         new webpack.optimize.UglifyJsPlugin()
       ),
-      new webpack.BannerPlugin({ banner, raw: true })
+      new webpack.BannerPlugin({ banner, raw: true }),
+      new webpack.optimize.ModuleConcatenationPlugin()
     ]),
     module: {
       rules: [
