@@ -4,7 +4,7 @@
   "description": "Timr is a simple utility for creating timers in JavaScript.",
   "main": "lib/index.js",
   "scripts": {
-    "clean": "rimraf dist/ && rimraf lib/",
+    "clean": "rimraf dist/ && rimraf lib/ && rimraf coverage/",
     "lint": "standard --fix \"src/**/*.js test/**/*.js\"",
     "test": "jest",
     "test:watch": "yarn test -- --watch",
@@ -60,6 +60,7 @@
     ]
   },
   "jest": {
-    "setupTestFrameworkScriptFile": "./test/_jestSetup.js"
+    "setupTestFrameworkScriptFile": "./test/_jestSetup.js",
+    "coveragePathIgnorePatterns": ["./node_modules", "./test"]
   }
 }

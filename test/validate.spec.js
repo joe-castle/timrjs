@@ -1,14 +1,19 @@
 import {
   isNum,
+  isNotNum,
   isStr,
+  isNotStr,
   isBool,
+  isNotBool,
   isFn,
+  isNotFn,
   isObj,
+  isNotObj,
   checkType
 } from '../src/validate'
 
 describe('Validate functions', () => {
-  describe('isNum', () => {
+  describe('isNum & isNotNum', () => {
     test('Returns true when a number is passed in, excluding Infinity, -Infinity or NaN.', () => {
       expect(isNum(5)).toBe(true)
       expect(isNum(25)).toBe(true)
@@ -28,9 +33,27 @@ describe('Validate functions', () => {
       expect(isNum(undefined)).toBe(false)
       expect(isNum(null)).toBe(false)
     })
+
+    test('Tests the reverse of the previous tests using isNotNum', () => {
+      expect(isNotNum(5)).toBe(false)
+      expect(isNotNum(25)).toBe(false)
+      expect(isNotNum(41293190123)).toBe(false)
+
+      expect(isNotNum('This isn\'t a number')).toBe(true)
+      expect(isNotNum({})).toBe(true)
+      expect(isNotNum([])).toBe(true)
+      expect(isNotNum(() => {})).toBe(true)
+      expect(isNotNum(true)).toBe(true)
+      expect(isNotNum(false)).toBe(true)
+      expect(isNotNum(Infinity)).toBe(true)
+      expect(isNotNum(-Infinity)).toBe(true)
+      expect(isNotNum(NaN)).toBe(true)
+      expect(isNotNum(undefined)).toBe(true)
+      expect(isNotNum(null)).toBe(true)
+    })
   })
 
-  describe('isStr', () => {
+  describe('isStr & isNotStr', () => {
     test('Returns true when a string is passed in.', () => {
       expect(isStr('Hey')).toBe(true)
       expect(isStr('Ho')).toBe(true)
@@ -50,9 +73,27 @@ describe('Validate functions', () => {
       expect(isStr(undefined)).toBe(false)
       expect(isStr(null)).toBe(false)
     })
+
+    test('Tests the reverse of the previous tests using isNotStr', () => {
+      expect(isNotStr('Hey')).toBe(false)
+      expect(isNotStr('Ho')).toBe(false)
+      expect(isNotStr('Lets go')).toBe(false)
+
+      expect(isNotStr(5)).toBe(true)
+      expect(isNotStr({})).toBe(true)
+      expect(isNotStr([])).toBe(true)
+      expect(isNotStr(() => {})).toBe(true)
+      expect(isNotStr(true)).toBe(true)
+      expect(isNotStr(false)).toBe(true)
+      expect(isNotStr(Infinity)).toBe(true)
+      expect(isNotStr(-Infinity)).toBe(true)
+      expect(isNotStr(NaN)).toBe(true)
+      expect(isNotStr(undefined)).toBe(true)
+      expect(isNotStr(null)).toBe(true)
+    })
   })
 
-  describe('isBool', () => {
+  describe('isBool & isNotBool', () => {
     test('Returns true when a boolean is passed in.', () => {
       expect(isBool(true)).toBe(true)
       expect(isBool(false)).toBe(true)
@@ -72,9 +113,27 @@ describe('Validate functions', () => {
       expect(isBool(undefined)).toBe(false)
       expect(isBool(null)).toBe(false)
     })
+
+    test('Tests the reverse of the previous tests using isNotBool', () => {
+      expect(isNotBool(true)).toBe(false)
+      expect(isNotBool(false)).toBe(false)
+      // eslint-disable-next-line
+      expect(isNotBool(1 === 1)).toBe(false);
+
+      expect(isNotBool('Not a boolean')).toBe(true)
+      expect(isNotBool(5)).toBe(true)
+      expect(isNotBool({})).toBe(true)
+      expect(isNotBool([])).toBe(true)
+      expect(isNotBool(() => {})).toBe(true)
+      expect(isNotBool(Infinity)).toBe(true)
+      expect(isNotBool(-Infinity)).toBe(true)
+      expect(isNotBool(NaN)).toBe(true)
+      expect(isNotBool(undefined)).toBe(true)
+      expect(isNotBool(null)).toBe(true)
+    })
   })
 
-  describe('isFn', () => {
+  describe('isFn & isNotFn', () => {
     test('Returns true when function is passed in.', () => {
       expect(isFn(() => {})).toBe(true)
       // eslint-disable-next-line
@@ -94,9 +153,27 @@ describe('Validate functions', () => {
       expect(isFn(undefined)).toBe(false)
       expect(isFn(null)).toBe(false)
     })
+
+    test('Tests the reverse of the previous tests using isNotFn', () => {
+      expect(isNotFn(() => {})).toBe(false)
+      // eslint-disable-next-line
+      expect(isNotFn(function() { })).toBe(false);
+
+      expect(isNotFn('This is not a function')).toBe(true)
+      expect(isNotFn(5)).toBe(true)
+      expect(isNotFn({})).toBe(true)
+      expect(isNotFn([])).toBe(true)
+      expect(isNotFn(true)).toBe(true)
+      expect(isNotFn(false)).toBe(true)
+      expect(isNotFn(Infinity)).toBe(true)
+      expect(isNotFn(-Infinity)).toBe(true)
+      expect(isNotFn(NaN)).toBe(true)
+      expect(isNotFn(undefined)).toBe(true)
+      expect(isNotFn(null)).toBe(true)
+    })
   })
 
-  describe('isObj', () => {
+  describe('isObj & isNotObj', () => {
     test('Returns true when an object is passed in.', () => {
       expect(isObj({})).toBe(true)
       expect(isObj({ test: 'value' })).toBe(true)
@@ -114,6 +191,23 @@ describe('Validate functions', () => {
       expect(isObj(NaN)).toBe(false)
       expect(isObj(undefined)).toBe(false)
       expect(isObj(null)).toBe(false)
+    })
+
+    test('Tests the reverse of the previous tests using isNotObj', () => {
+      expect(isNotObj({})).toBe(false)
+      expect(isNotObj({ test: 'value' })).toBe(false)
+
+      expect(isNotObj('This is not a function')).toBe(true)
+      expect(isNotObj(5)).toBe(true)
+      expect(isNotObj(() => {})).toBe(true)
+      expect(isNotObj([])).toBe(true)
+      expect(isNotObj(true)).toBe(true)
+      expect(isNotObj(false)).toBe(true)
+      expect(isNotObj(Infinity)).toBe(true)
+      expect(isNotObj(-Infinity)).toBe(true)
+      expect(isNotObj(NaN)).toBe(true)
+      expect(isNotObj(undefined)).toBe(true)
+      expect(isNotObj(null)).toBe(true)
     })
   })
 

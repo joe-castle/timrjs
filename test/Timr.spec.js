@@ -392,6 +392,12 @@ describe('Timr Class', () => {
       expect(() => timer.setStartTime('invalid')).toThrow(Error)
     })
 
+    test('Throws an error if no startTime value is passed', () => {
+      expect(() => new Timr(600).setStartTime()).toThrow(
+        'You must provide a startTime value'
+      )
+    })
+
     test('Returns a reference to the Timr', () => {
       const timer = new Timr(600)
       const returnVal = timer.setStartTime(0)
