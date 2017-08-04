@@ -44,12 +44,12 @@ export default function buildOptions (newOptions, oldOptions) {
         let error = 'Expected formatValues to contain a list of keys with functions that return a string or number; instead got:\n'
 
         /**
-         * Runs throught each key to check that it:
+         * Runs through each key to check that it:
          *  - Is a valid property, see timeValues above.
          *  - It's value is a function and it returns either a string or number.
          *
          * It will then create a string for all errors it finds,
-         * than throw the error after its finished the loop, if any errros are found.
+         * than throw the error after its finished the loop, if any errors are found.
          */
         Object.keys(formatValues).forEach((key) => {
           const value = formatValues[key]
@@ -87,8 +87,7 @@ export default function buildOptions (newOptions, oldOptions) {
     return timeValues.reduce((obj, item) => ({
       ...obj,
       // If an object, check it's value is a function otherwise apply default (zeroPad).
-      // If not object apply provided fn to all values.
-      /* eslint-disable no-nested-ternary */
+      // If not object apply provided fn to all values
       [item]: isObj(fn) ? (isFn(fn[item]) ? fn[item] : zeroPad) : fn
     }), {})
   }
@@ -109,8 +108,7 @@ export default function buildOptions (newOptions, oldOptions) {
       } else {
         newFormatValues = makeValues(formatValues)
       }
-      // eslint-disable-next-line
-      newOptions.formatValues = newFormatValues;
+      newOptions.formatValues = newFormatValues
     }
   }
 

@@ -1,24 +1,18 @@
 /**
  * @description Checks if a value is a valid number. Guards against NaN and Infinity.
- * @param {Any} value - the value to be checked
+ * @param value - the value to be checked
  * @return {Boolean} True if it is, false if it isn't
  */
 function isNum (value) {
-  if (
-    typeof value === 'number' &&
+  return typeof value === 'number' &&
     !isNaN(value) &&
     value !== Infinity &&
     value !== -Infinity
-  ) {
-    return true
-  }
-
-  return false
 }
 
 /**
  * @description Checks if a value is a not a number.
- * @param {Any} value - the value to be checked
+ * @param value - the value to be checked
  * @return {Boolean} True if it is, false if it isn't
  */
 function isNotNum (value) {
@@ -27,7 +21,7 @@ function isNotNum (value) {
 
 /**
  * @description Checks if a value is a string.
- * @param {Any} value - the value to be checked
+ * @param value - the value to be checked
  * @return {Boolean} True if it is, false if it isn't
  */
 function isStr (value) {
@@ -36,7 +30,7 @@ function isStr (value) {
 
 /**
  * @description Checks if a value is not a string.
- * @param {Any} value - the value to be checked
+ * @param value - the value to be checked
  * @return {Boolean} True if it is, false if it isn't
  */
 function isNotStr (value) {
@@ -45,7 +39,7 @@ function isNotStr (value) {
 
 /**
  * @description Checks if a value is a boolean.
- * @param {Any} value - the value to be checked
+ * @param value - the value to be checked
  * @return {Boolean} True if it is, false if it isn't
  */
 function isBool (value) {
@@ -54,7 +48,7 @@ function isBool (value) {
 
 /**
  * @description Checks if a value is not a boolean.
- * @param {Any} value - the value to be checked
+ * @param value - the value to be checked
  * @return {Boolean} True if it is, false if it isn't
  */
 function isNotBool (value) {
@@ -63,7 +57,7 @@ function isNotBool (value) {
 
 /**
  * @description Checks if a value is a function.
- * @param {Any} value - the value to be checked
+ * @param value - the value to be checked
  * @return {Boolean} True if it is, false if it isn't
  */
 function isFn (value) {
@@ -72,7 +66,7 @@ function isFn (value) {
 
 /**
  * @description Checks if a value is not a function.
- * @param {Any} value - the value to be checked
+ * @param value - the value to be checked
  * @return {Boolean} True if it is, false if it isn't
  */
 function isNotFn (value) {
@@ -81,24 +75,18 @@ function isNotFn (value) {
 
 /**
  * @description Checks if a value is an object. Guards against null and arrays.
- * @param {Any} value - the value to be checked
+ * @param value - the value to be checked
  * @return {Boolean} True if it is, false if it isn't
  */
 function isObj (value) {
-  if (
-    value !== null &&
+  return value !== null &&
     typeof value === 'object' &&
     !Array.isArray(value)
-  ) {
-    return true
-  }
-
-  return false
 }
 
 /**
  * @description Checks if a value is not an object.
- * @param {Any} value - the value to be checked
+ * @param value - the value to be checked
  * @return {Boolean} True if it is, false if it isn't
  */
 function isNotObj (value) {
@@ -107,7 +95,7 @@ function isNotObj (value) {
 
 /**
  * @description Checks if a value exists, i.e. not undefined.
- * @param {Any} value - the value to be checked
+ * @param value - the value to be checked
  * @return {Boolean} True if it is, false if it isn't
  */
 function exists (value) {
@@ -116,20 +104,19 @@ function exists (value) {
 
 /**
  * @description Checks if a value doesn't exist, i.e is undefined.
- * @param {Any} value - the value to be checked
+ * @param value - the value to be checked
  * @return {Boolean} True if it is, false if it isn't
  */
 function notExists (value) {
   return !exists(value)
 }
 
-/* eslint-disable consistent-return */
 /**
  * @description A more useful type check than typeof.
  * Guards against gotchas like null and array being an object and NaN being a number.
- * For this purpose it also explicitily states Infinity as a type rather than a number.
+ * For this purpose it also explicitly states Infinity as a type rather than a number.
  *
- * @param {Any} value - The value to check the type of.
+ * @param value - The value to check the type of.
  *
  * @return {String} The type of the value.
  */

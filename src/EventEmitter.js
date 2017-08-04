@@ -33,6 +33,7 @@ EventEmitter.prototype = {
    * against the provided event.
    *
    * @param {String} event - The event to emit.
+   * @param {Array} args - The functions to run against the event.
    */
   emit (event, ...args) {
     if (this.events[event]) {

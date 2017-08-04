@@ -38,7 +38,7 @@ export default function dateToSeconds (startTime) {
     )
   }
 
-  // TODO: Perhaps not immediatley erroring, becuase if a timer is set then once it
+  // TODO: Perhaps not immediately erroring, because if a timer is set then once it
   // becomes in the past it will break. Or just advise a try { } catch { } ?
   if (startTimeInSeconds < 0) {
     throw new Error(

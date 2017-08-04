@@ -108,10 +108,10 @@ Timr.prototype = objectAssign(Object.create(EventEmitter.prototype), {
          * futureDate records the original date used when futureDate option is set to true,
          * this will re-run setStarTime to ensure the startTime is upto date.
          *
-         * Note: Inside startFn so that delay works properly.
+         * Note: Inside startFn so that delay works properly, if it was outside this scope,
+         * the startTime would be out of sync after the delay finishes.
          */
         if (this.futureDate) this.setStartTime(this.futureDate)
-
         this.running = true
 
         this.timer = this.options.countdown

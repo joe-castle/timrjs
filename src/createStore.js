@@ -5,7 +5,7 @@ import { isNotFn } from './validate'
  * @description Flattens arrays to their base values
  * Example: [[1], 2, [[[3]]]] - [1, 2, 3]
  *
- * @param {Array} The array to flatten
+ * @param {Array} arr - The array to flatten
  *
  * @return {Array} The flattened array
  */
@@ -18,8 +18,6 @@ function flattenArray (arr) {
     return prev.concat(curr)
   }, [])
 }
-
-/* eslint-disable no-param-reassign */
 
 /**
  * @description Creates a store that can hold multiple timr objects
