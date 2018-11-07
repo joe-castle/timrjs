@@ -16,7 +16,7 @@ export default (env) => {
  *
  * Compatible with Browsers, Node.js (CommonJS) and RequireJS.
  *
- * Copyright (c) 2016 Joe Smith
+ * Copyright (c) ${new Date().getFullYear()} Joe Smith
  * Released under the MIT license
  * https://github.com/joesmith100/timrjs/blob/master/LICENSE.md
  */`

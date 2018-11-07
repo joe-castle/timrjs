@@ -11,7 +11,7 @@ import { isObj, exists } from './validate'
    * @description Creates a new Timr object.
    *
    * @param {String|Number|Object} startTime - The starting time for the timr object.
-   * Or an object with startTime and optinos.
+   * Or an object with startTime and options.
    * @param {Object} [options] - Options to customise the timer.
    *
    * @return {Object} A new Timr object.

@@ -15,11 +15,11 @@ export default function formatTime (seconds, options) {
   const raw = {}
   raw.SS = seconds
   raw.MM = Math.floor(raw.SS / 60)
-  raw.HH = raw.MM && Math.floor(raw.MM / 60) // If total minutes exceeds 60, work out hours.
-  raw.DD = raw.HH && Math.floor(raw.HH / 24) // If total hours exceeds 24, work out days.
-  raw.ss = raw.MM ? raw.SS - (raw.MM * 60) : raw.SS
-  raw.mm = raw.HH ? raw.MM - (raw.HH * 60) : raw.MM
-  raw.hh = raw.DD ? raw.HH - (raw.DD * 24) : raw.HH
+  raw.HH = Math.floor(raw.MM / 60)
+  raw.DD = Math.floor(raw.HH / 24)
+  raw.ss = Math.floor(seconds % 60)
+  raw.mm = Math.floor(raw.MM % 60)
+  raw.hh = Math.floor(raw.HH % 24)
   raw.dd = raw.DD
 
   let stringToFormat = formatOutput
