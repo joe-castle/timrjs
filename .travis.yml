@@ -1,14 +1,9 @@
 language: node_js
 node_js:
-  - "4"
-  - "5"
-  - "6"
-  - "7"
-  - "8"
+  - node
 script:
-  - yarn run check:src
+  - yarn run prepublish
   - yarn run coveralls
-  - yarn run build
 branches:
   only:
     - master
