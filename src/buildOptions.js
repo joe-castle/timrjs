@@ -1,4 +1,3 @@
-import objectAssign from 'object-assign'
 import zeroPad from './zeroPad'
 import { isNotNum, isNotStr, isNotBool, isFn, isObj, exists, checkType } from './validate'
 
@@ -103,7 +102,7 @@ export default function buildOptions (newOptions, oldOptions) {
       // Otherwise make new ones from newOptions.
       if (oldOptions) {
         newFormatValues = makeValues(
-          objectAssign({}, oldOptions.formatValues, formatValues)
+          Object.assign({}, oldOptions.formatValues, formatValues)
         )
       } else {
         newFormatValues = makeValues(formatValues)
@@ -119,5 +118,5 @@ export default function buildOptions (newOptions, oldOptions) {
     futureDate: false
   }
 
-  return objectAssign(defaults, oldOptions, newOptions)
+  return Object.assign(defaults, oldOptions, newOptions)
 }

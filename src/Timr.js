@@ -1,5 +1,3 @@
-import objectAssign from 'object-assign'
-
 import EventEmitter from './EventEmitter'
 
 import buildOptions from './buildOptions'
@@ -55,7 +53,7 @@ function makeEventListener (name) {
 function countdown () {
   this.currentTime -= 1
 
-  this.emit('ticker', objectAssign(this.formatTime(), {
+  this.emit('ticker', Object.assign(this.formatTime(), {
     percentDone: this.percentDone(),
     currentTime: this.currentTime,
     startTime: this.startTime,
@@ -75,14 +73,14 @@ function countdown () {
 function stopwatch () {
   this.currentTime += 1
 
-  this.emit('ticker', objectAssign(this.formatTime(), {
+  this.emit('ticker', Object.assign(this.formatTime(), {
     currentTime: this.currentTime,
     startTime: this.startTime,
     self: this
   }))
 }
 
-Timr.prototype = objectAssign(Object.create(EventEmitter.prototype), {
+Timr.prototype = Object.assign(Object.create(EventEmitter.prototype), {
 
   constructor: Timr,
 
