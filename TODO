@@ -73,8 +73,7 @@ Improvments:
       ☐ need to make ammendments if futureDate is set, to avoid erroring incorrectly.
         ☐ perhaps just execute finish if future date and countdown
         ☐ remove error from dateToSeconds for times less than 0?
-        ☐ need to distinguish between when someone is creating it 
-          (throw err so they don't set an incorrect date) and when its in production
+        ☐ need to distinguish between when someone is creating it (throw err so they don't set an incorrect date) and when its in production
     ✔ check for a number on delay argument in start
     ✔ rename originalDate to furtureDate
     ✔ setStartTime comments are a bit confusing, clear them up a bit.
@@ -96,10 +95,13 @@ Tests:
     Babel adds too much unecassary overhead to class transpiling to make this worthwhile
 
 Build:
+  ☐ setup a build pipeline with travis
+    ☐ builds and test
+    ☐ when merging from a release branch, publish to npm
   ☐ Add typescript support @feature   
-  ☐ Update package versions @enhancement @started(18-11-09 15:38)
+  ✔ Update package versions @enhancement @started(18-11-09 15:38) @done(18-11-12 13:29) @lasted(2d21h51m28s)
   ☐ check travis build as it's currently erroring @fix
-  ☐ remove dependency on object-assign? @enhancement
+  ✔ remove dependency on object-assign? maybe use a polyfill from babel? @enhancement @done(18-11-12 12:17)
   ✔ switched from eslint / airbnb to JS standard style 
   ✔ Upgraded to webpack 3.2 for ModuleConcatenationPlugin
 

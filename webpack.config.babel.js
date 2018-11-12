@@ -1,14 +1,14 @@
 import path from 'path'
 import webpack from 'webpack'
-import { getIfUtils, removeEmpty } from 'webpack-config-utils'
+import { getIfUtils } from 'webpack-config-utils'
 
 import { version } from './package.json'
 
-export default (env) => {
-  const { ifProduction } = getIfUtils(env)
+export default (env, config) => {
+  const { ifProduction } = getIfUtils(config.mode)
 
   const banner = ifProduction(
-    `/* TimrJS v${version} | (c) 2016 Joe Smith | https://github.com/joesmith100/timrjs */`,
+    `/* TimrJS v${version} | (c) 2016 Joe Smith | https://github.com/joesmith100/timrjs | @license MIT */`,
     `/**
  * TimrJS v${version}
  * https://github.com/joesmith100/timrjs
@@ -34,26 +34,12 @@ export default (env) => {
       libraryTarget: 'umd',
       umdNamedDefine: true
     },
-    plugins: removeEmpty([
-      ifProduction(
-        new webpack.optimize.UglifyJsPlugin()
-      ),
-      new webpack.BannerPlugin({ banner, raw: true }),
-      new webpack.optimize.ModuleConcatenationPlugin()
-    ]),
+    plugins: [ new webpack.BannerPlugin({ banner, raw: true, entryOnly: true }) ],
     module: {
       rules: [
         {
           test: /\.js$/,
-          use: {
-            loader: 'babel-loader',
-            options: {
-              // Enables webpack tree-shaking
-              babelrc: false,
-              presets: [['latest', { es2015: { modules: false } }]],
-              plugins: ['transform-object-rest-spread']
-            }
-          },
+          use: 'babel-loader',
           exclude: /node_modules/
         }
       ]

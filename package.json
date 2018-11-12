@@ -8,14 +8,14 @@
     "lint": "standard --fix \"src/**/*.js test/**/*.js\"",
     "test": "jest",
     "test:watch": "yarn test -- --watch",
-    "coveralls": "yarn run check:coverage && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage",
-    "check:src": "yarn run lint && yarn run test",
-    "check:coverage": "yarn run test -- --coverage",
+    "coveralls": "yarn check:coverage && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage",
+    "check:src": "yarn lint && yarn test",
+    "check:coverage": "yarn test -- --coverage",
     "build:commonjs": "cross-env NODE_ENV=development babel src --out-dir lib",
     "build:umd": "webpack --mode development --progress --colors",
     "build:umd:min": "webpack --mode production --progress --colors",
-    "build": "yarn run build:commonjs && yarn run build:umd && yarn run build:umd:min",
-    "prepublish": "yarn run clean && yarn run check:src && yarn run build"
+    "build": "yarn build:commonjs && yarn build:umd && yarn build:umd:min",
+    "prepublish": "yarn clean && yarn check:src && yarn build"
   },
   "keywords": [
     "timr",
@@ -38,8 +38,10 @@
   "devDependencies": {
     "@babel/cli": "7.1.5",
     "@babel/core": "7.1.5",
+    "@babel/plugin-transform-object-assign": "^7.0.0",
     "@babel/preset-env": "7.1.5",
     "@babel/register": "7.0.0",
+    "babel-core": "7.0.0-bridge.0",
     "babel-loader": "^8.0.4",
     "coveralls": "^3.0.2",
     "cross-env": "^5.2.0",
@@ -49,6 +51,9 @@
     "webpack": "^4.25.1",
     "webpack-cli": "^3.1.2",
     "webpack-config-utils": "^2.3.1"
+  },
+  "resolutions": {
+    "babel-core": "7.0.0-bridge.0"
   },
   "standard": {
     "globals": [
@@ -63,8 +68,5 @@
       "./node_modules",
       "./test"
     ]
-  },
-  "dependencies": {
-    "@babel/plugin-transform-object-assign": "^7.0.0"
   }
 }
