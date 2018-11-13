@@ -95,9 +95,10 @@ Tests:
     Babel adds too much unecassary overhead to class transpiling to make this worthwhile
 
 Build:
-  ☐ setup a build pipeline with travis
-    ☐ builds and test
-    ☐ when merging from a release branch, publish to npm
+  ✔ setup a build pipeline with travis @done(18-11-13 13:38)
+    ✔ builds and test @done(18-11-13 13:38)
+    ✔ when a new version is merged to master, publish to npm @done(18-11-13 13:38)
+  ☐ prettier? @feature 
   ☐ Add typescript support @feature   
   ✔ Update package versions @enhancement @started(18-11-09 15:38) @done(18-11-12 13:29) @lasted(2d21h51m28s)
   ☐ check travis build as it's currently erroring @fix
