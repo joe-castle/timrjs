@@ -10,7 +10,7 @@ Additionally, the compiled versions support RequireJS.
 [![coverage status](https://img.shields.io/coveralls/joesmith100/timrjs/master.svg?style=flat-square)](https://coveralls.io/github/joesmith100/timrjs?branch=master)
 [![npm version](https://img.shields.io/npm/v/timrjs.svg?style=flat-square)](https://www.npmjs.com/package/timrjs)
 [![npm downloads](https://img.shields.io/npm/dm/timrjs.svg?style=flat-square)](https://www.npmjs.com/package/timrjs)
-[![npm license](https://img.shields.io/npm/l/timrjs.svg?style=flat-square)](https://www.npmjs.com/package/timrjs)
+[![npm license](https://img.shields.io/npm/l/timrjs.svg?style=flat-square)](https://www.npmjs.com/package/timrjs) [![Greenkeeper badge](https://badges.greenkeeper.io/joesmith100/timrjs.svg)](https://greenkeeper.io/)
 
 ## Important
 Version 1.0 has had some substantial changes made to it (some of which are breaking), if you've been using previous versions, go [here](https://github.com/joesmith100/timrjs/releases/tag/v1.0.0) to see whats changed.
