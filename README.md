@@ -18,10 +18,10 @@ Version 1.0 has had some substantial changes made to it (some of which are break
 ## Examples
 Here are a few different ways you could use Timr.
 
- - [Basic Example](http://codepen.io/joesmith/full/mOvbpy/) - A simple 10 minute timer with progress bar.
- - [Protected Values](http://codepen.io/joesmith/full/yVZBwj) - This demonstrates how the protected values work in [formatOutput](#options).
- - [Format Output](http://codepen.io/joesmith/full/PbVora) - A few different ways you could use the [formatOutput](#options) option.
- - [Christmas Countdown](http://codepen.io/joesmith/full/MbLWWq) - A full on countdown to Christmas; using a dynamic timer to keep in sync with the local time and the raw values to place into individual elements.
+ - [Basic Example](http://codepen.io/ej0/full/mOvbpy/) - A simple 10 minute timer with progress bar.
+ - [Protected Values](http://codepen.io/ej0/full/yVZBwj) - This demonstrates how the protected values work in [formatOutput](#options).
+ - [Format Output](http://codepen.io/ej0/full/PbVora) - A few different ways you could use the [formatOutput](#options) option.
+ - [Christmas Countdown](http://codepen.io/ej0/full/MbLWWq) - A full on countdown to Christmas; using a dynamic timer to keep in sync with the local time and the raw values to place into individual elements.
 
 ## Installation
 Install with npm or Bower.
