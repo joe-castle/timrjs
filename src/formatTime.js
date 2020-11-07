@@ -5,12 +5,25 @@ import buildOptions from './buildOptions'
  *
  * @param {Number} seconds - The seconds to convert.
  * @param {Object} [options] - The options to build the string.
+ * @param {Boolean} [toBuild=true] - Specifies wether to run the buildOptions function or not.
+ * For example, if you don't have a fully formed options object to pass in, or none at all.
+ * Primarily used in Timr.formatTime to avoid making unecassary calls to buildOptions on every tick.
  *
  * @return {Object} An object that that contains the formattedTime and the
  * raw values used to calculate the time.
  */
-export default function formatTime (seconds, options) {
-  const { formatOutput, formatValues } = buildOptions(options)
+export default function formatTime (seconds, options, toBuild = true) {
+  /**
+   * If options doesn't exist, build regardless.
+   * If it does and toBuild = true, run buildOptions
+   * Otherwise just return passed in options
+   */
+  const { formatOutput, formatValues } = (() => 
+    options 
+      ? toBuild 
+        ? buildOptions(options) : options 
+      : buildOptions()
+  )()
 
   const raw = {}
   raw.SS = seconds

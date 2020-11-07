@@ -4,6 +4,7 @@ Improvments:
       allowing the use of a time in the future, so a countdown timer can be configured 
       to run everyday. 
     ☐ Have an option in changeOptions to set originalDate to null if future date is set to false after timr created
+    ✔ Need to merge existing formatValues object with old one, as well as providing defaults.
     ✔ add option futureDate, that specifes the date date/time should be run through dateToSeconds, rather than timeToSeconds. 
   Create Store:
     ✔ creatStore, provide the same errors (that add provides) if timr exists in another store when creating it
@@ -13,7 +14,15 @@ Improvments:
     ☐ comment epic regex in dateToSeconds @enhancement 
     ✔ fix up dateToSeconds returning originalDate as it is unecassary, only called from setStartTime and that has access ot the original startTime it's also somewhat confusing as it sometimes returns a number and sometimes and object
   Format Time:
-    ☐ add third argument to format time (boolean - buildOptions) 
+    ☐ add third argument to format time (boolean - buildOptions)
+      ✔ have toBuild set to true by default @done(18-11-22 11:09)
+      ✔ if options don't exist, build regardless. @done(18-11-22 11:09)
+        ☐ have a warning if options is null but toBuild is false?
+      ☐ Update code in Timr and add unit test to ensure it works
+      ☐ check makeup of options when toBuild is set to false require atleast:
+        ☐ generalise validation in buildOptions?
+        ☐ formatOuput: String
+        ☐ formatValues: array of functions (function argument is only valid in buildOPtions)
       specifies with to us the buildOptions function or not. 
       Defaults to true, set to false in Time - formatTime so that it doesn't 
       rerun buildoptions on every call to ticker
@@ -34,8 +43,9 @@ Improvments:
     ✔ update formatTime to use new method of replacing the values (listed in a comment) also refactor so its nicer looking
     ✔ Also remove padRaw option and include an option to pass a function or an object. The function will be applied to all time values where as the object gives the use the opportunity to configure individual values. These functions will be applied in the format string.
     ✔ Test for a function and that it returns a value which is of type number or string in buildOptions.
-    ✔ Need to merge existing formatValues object with old one, as well as providing defaults.
   Index:
+    ☐ provide a date object to starttime
+    ☐ Remove public exports for anything other then create and createStore?
     ✔ provide ability to pass an object with startTime in it as the first argument.
     ✔ Proper ES6 exports, rather than weird object assign: export default Timr; export { createStore, formatTime etc... }
     ✔ change api to create, than default won't be necassary(importing with require in commonjs enviroment): 
@@ -51,7 +61,7 @@ Improvments:
     ✔ figure out how the validateStartTime method is displaying the correct type for the NaN, null Infinity test and make it better / comment it 
     ✔ move timeToSeconds out of validateStartTime and have validate just validate / move the validation into timeToSeconds as dateToSeconds has it's own validation and its slightly confusing.
   Timr:
-    ☐ force countdown to true if futureDate also set to true. @
+    ☐ force countdown to true if futureDate also set to true. @enhancement 
     ☐ Pass function to start when running @feature
       Provide an option to pass a function that runs 
       when start is called when the timer is already running, thus providing
@@ -79,11 +89,13 @@ Improvments:
     ✔ setStartTime comments are a bit confusing, clear them up a bit.
     ✔ check for falsy values (except 0) in setStartTime and throw an error requiring a startTime.
   Validate:
+    ☐ Remove explicit function for isNot and create an object that auto creates isNots for all of the is... fns
     ✔ Write external typeof testers and isFunction etc.
       ✔ Do tests
       ✔ write comments
 
 Tests:
+  ☐ use jest snapshot feature and replace majority of manual assertions (That make sense to replace)
   ☐ clean up tests @enhancement 
     ☐ espeically Timr. Where some testing is duplicated
       e.g. changeOptions / setStartime, only have 1 test to make sure 
@@ -98,10 +110,10 @@ Build:
   ✔ setup a build pipeline with travis @done(18-11-13 13:38)
     ✔ builds and test @done(18-11-13 13:38)
     ✔ when a new version is merged to master, publish to npm @done(18-11-13 13:38)
-  ☐ prettier? @feature 
+  ✘ prettier? @feature @cancelled(18-11-13 15:03)
   ☐ Add typescript support @feature   
   ✔ Update package versions @enhancement @started(18-11-09 15:38) @done(18-11-12 13:29) @lasted(2d21h51m28s)
-  ☐ check travis build as it's currently erroring @fix
+  ✔ check travis build as it's currently erroring @fix @done(18-11-13 13:49)
   ✔ remove dependency on object-assign? maybe use a polyfill from babel? @enhancement @done(18-11-12 12:17)
   ✔ switched from eslint / airbnb to JS standard style 
   ✔ Upgraded to webpack 3.2 for ModuleConcatenationPlugin

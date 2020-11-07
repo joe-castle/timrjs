@@ -1,6 +1,13 @@
 import formatTime from '../src/formatTime'
+import * as buildOptions from '../src/buildOptions'
 
 describe('Format Time function', () => {
+  const buildOptionsSpy = jest.spyOn(buildOptions, 'default')
+
+  afterEach(() => {
+    buildOptionsSpy.mockClear()
+  })
+
   test('Returns seconds formatted into a time string.', () => {
     expect(formatTime(50).formattedTime).toBe('00:50')
     expect(formatTime(600).formattedTime).toBe('10:00')
@@ -46,4 +53,30 @@ describe('Format Time function', () => {
       }
     }).formattedTime).toBe('001 day 200 hours 80 minutes 0 seconds')
   })
+
+  test('Doesn\'t make a call to buildOptions when toBuild is set to false', () => {
+    formatTime(600, buildOptions.default({ formatOutput: '00:MM:ss', formatValues: i => i * 2 }), false)
+    
+    // Called above so the options object is correct, but shouldn't be called inside formatTime
+    expect(buildOptionsSpy).toBeCalledTimes(1)
+  })
+
+  test('Does make a call to buildOptions when toBuild is set to true', () => {
+    formatTime(600, buildOptions.default({ formatOutput: '00:MM:ss', formatValues: i => i * 2 }), true)
+    
+    // Called above so the options object is correct
+    expect(buildOptionsSpy).toBeCalledTimes(2)
+  })
+
+  test('If options doesn\'t exist, build regardless of toBuild being set to false', () => {
+    formatTime(600, null, false)
+
+    expect(buildOptionsSpy).toBeCalledTimes(1)
+  })
+
+  test(`If toBuild set to false and options exist, ensure options contains formatOutput 
+      and formatValues and their values are of the correct type and correct return type / expected value`, () => {
+    
+  })
+
 })

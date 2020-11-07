@@ -1,5 +1,6 @@
 import Timr from '../src/Timr'
 import createStore from '../src/createStore'
+import * as buildOptions from '../src/buildOptions'
 
 describe('Timr Class', () => {
   describe('Timr instantiation', () => {
@@ -325,6 +326,18 @@ describe('Timr Class', () => {
         .toBe('00:10:00')
       expect(new Timr(50, { formatOutput: 'SS' }).formatTime('startTime').formattedTime)
         .toBe('50')
+    })
+
+    test(`Doesn't call buildOptions when calling formatTime`, (done) => {
+      const buildOptionsSpy = jest.spyOn(buildOptions, 'default')
+      
+      new Timr(60).ticker(({ currentTime, self }) => {
+        if (currentTime <= 58) {
+          expect(buildOptionsSpy).toBeCalledTimes(0)
+          self.stop()
+          done()
+        }
+      }).start()
     })
   })
 

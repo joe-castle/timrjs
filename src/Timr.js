@@ -224,7 +224,7 @@ Timr.prototype = Object.assign(Object.create(EventEmitter.prototype), {
    * @return {Object} The formatted time and raw values.
    */
   formatTime (time = 'currentTime') {
-    return formatTime(this[time], this.options)
+    return formatTime(this[time], this.options, false)
   },
 
   /**
