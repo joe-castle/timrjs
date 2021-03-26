@@ -8,7 +8,7 @@ export default (env, config) => {
   const { ifProduction } = getIfUtils(config.mode)
 
   const banner = ifProduction(
-    `/* TimrJS v${version} | (c) 2016 Joe Smith | https://github.com/joesmith100/timrjs | @license MIT */`,
+    `/* TimrJS v${version} | (c) ${new Date().getFullYear()} Joe Castle | https://github.com/joesmith100/timrjs | @license MIT */`,
     `/**
  * TimrJS v${version}
  * https://github.com/joesmith100/timrjs
@@ -16,7 +16,7 @@ export default (env, config) => {
  *
  * Compatible with Browsers, Node.js (CommonJS) and RequireJS.
  *
- * Copyright (c) ${new Date().getFullYear()} Joe Smith
+ * Copyright (c) ${new Date().getFullYear()} Joe Castle
  * Released under the MIT license
  * https://github.com/joesmith100/timrjs/blob/master/LICENSE.md
  */`
@@ -34,7 +34,7 @@ export default (env, config) => {
       libraryTarget: 'umd',
       umdNamedDefine: true
     },
-    plugins: [ new webpack.BannerPlugin({ banner, raw: true, entryOnly: true }) ],
+    plugins: [new webpack.BannerPlugin({ banner, raw: true, entryOnly: true })],
     module: {
       rules: [
         {

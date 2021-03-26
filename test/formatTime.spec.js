@@ -56,14 +56,14 @@ describe('Format Time function', () => {
 
   test('Doesn\'t make a call to buildOptions when toBuild is set to false', () => {
     formatTime(600, buildOptions.default({ formatOutput: '00:MM:ss', formatValues: i => i * 2 }), false)
-    
+
     // Called above so the options object is correct, but shouldn't be called inside formatTime
     expect(buildOptionsSpy).toBeCalledTimes(1)
   })
 
   test('Does make a call to buildOptions when toBuild is set to true', () => {
     formatTime(600, buildOptions.default({ formatOutput: '00:MM:ss', formatValues: i => i * 2 }), true)
-    
+
     // Called above so the options object is correct
     expect(buildOptionsSpy).toBeCalledTimes(2)
   })
@@ -76,7 +76,6 @@ describe('Format Time function', () => {
 
   test(`If toBuild set to false and options exist, ensure options contains formatOutput 
       and formatValues and their values are of the correct type and correct return type / expected value`, () => {
-    
-  })
 
+  })
 })

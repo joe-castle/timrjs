@@ -134,22 +134,22 @@ describe('Build Options Function', () => {
 
   test('Throws an error if formatValues is an object, but one of it\'s keys are invalid', () => {
     expect(() => buildOptions({ formatValues: { invalidKey: 'wey' } })).toThrow(
-      `Expected formatValues to contain a list of keys with functions that return a string or number; instead got:\n` +
-      ` 'invalidKey': is not a recognised property, should be one of: 'ss', 'SS', 'mm', 'MM', 'hh', 'HH', 'dd', 'DD'`
+      'Expected formatValues to contain a list of keys with functions that return a string or number; instead got:\n' +
+      ' \'invalidKey\': is not a recognised property, should be one of: \'ss\', \'SS\', \'mm\', \'MM\', \'hh\', \'HH\', \'dd\', \'DD\''
     )
   })
 
   test('Throws an error if formatValues is an object, but one of its properties isn\'t a function', () => {
     expect(() => buildOptions({ formatValues: { mm: 'Not a function yo' } })).toThrow(
-      `Expected formatValues to contain a list of keys with functions that return a string or number; instead got:\n` +
-      ` 'mm': is not a function, is: string`
+      'Expected formatValues to contain a list of keys with functions that return a string or number; instead got:\n' +
+      ' \'mm\': is not a function, is: string'
     )
   })
 
   test('Throws an error if formatValues is an object, but one of its properties doesn\'t return a string or number', () => {
     expect(() => buildOptions({ formatValues: { DD: () => [] } })).toThrow(
-      `Expected formatValues to contain a list of keys with functions that return a string or number; instead got:\n` +
-      ` 'DD': the return type for this function is not a string or number, is: array`
+      'Expected formatValues to contain a list of keys with functions that return a string or number; instead got:\n' +
+      ' \'DD\': the return type for this function is not a string or number, is: array'
     )
   })
 
@@ -158,7 +158,7 @@ describe('Build Options Function', () => {
       formatValues: {
         mm: 'Not a valid property',
         hh: 5,
-        ss: () => 5,               // These two properties
+        ss: () => 5, // These two properties
         MM: () => 'This is valid', // shouldn't be in the lest of errors.
         HH: () => [],
         DD: null
@@ -166,11 +166,11 @@ describe('Build Options Function', () => {
     }
 
     expect(() => buildOptions(formatValues)).toThrow(
-      `Expected formatValues to contain a list of keys with functions that return a string or number; instead got:\n` +
-      ` 'mm': is not a function, is: string\n` +
-      ` 'hh': is not a function, is: number\n` +
-      ` 'HH': the return type for this function is not a string or number, is: array\n` +
-      ` 'DD': is not a function, is: null\n`
+      'Expected formatValues to contain a list of keys with functions that return a string or number; instead got:\n' +
+      ' \'mm\': is not a function, is: string\n' +
+      ' \'hh\': is not a function, is: number\n' +
+      ' \'HH\': the return type for this function is not a string or number, is: array\n' +
+      ' \'DD\': is not a function, is: null\n'
     )
   })
 })

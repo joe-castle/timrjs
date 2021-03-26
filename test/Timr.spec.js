@@ -271,7 +271,7 @@ describe('Timr Class', () => {
     })
 
     test('Returns a reference to the Timr', () => {
-      const timer = new Timr(600);
+      const timer = new Timr(600)
       const returnVal = timer.ticker(() => {})
       expect(returnVal).toBe(timer)
     })
@@ -328,12 +328,13 @@ describe('Timr Class', () => {
         .toBe('50')
     })
 
-    test(`Doesn't call buildOptions when calling formatTime`, (done) => {
+    test('Doesn\'t call buildOptions when calling formatTime', (done) => {
       const buildOptionsSpy = jest.spyOn(buildOptions, 'default')
-      
+
       new Timr(60).ticker(({ currentTime, self }) => {
         if (currentTime <= 58) {
-          expect(buildOptionsSpy).toBeCalledTimes(0)
+          // Called once when Timr created
+          expect(buildOptionsSpy).toBeCalledTimes(1)
           self.stop()
           done()
         }

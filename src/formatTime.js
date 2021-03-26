@@ -18,12 +18,12 @@ export default function formatTime (seconds, options, toBuild = true) {
    * If it does and toBuild = true, run buildOptions
    * Otherwise just return passed in options
    */
-  const { formatOutput, formatValues } = (() => 
-    options 
-      ? toBuild 
-        ? buildOptions(options) : options 
+  const { formatOutput, formatValues } =
+    options
+      ? toBuild
+          ? buildOptions(options)
+          : options
       : buildOptions()
-  )()
 
   const raw = {}
   raw.SS = seconds

@@ -7,7 +7,7 @@ import zeroPad from './zeroPad'
 import Timr from './Timr'
 import { isObj, exists } from './validate'
 
-  /**
+/**
    * @description Creates a new Timr object.
    *
    * @param {String|Number|Object} startTime - The starting time for the timr object.
