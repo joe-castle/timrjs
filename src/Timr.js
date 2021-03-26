@@ -2,35 +2,14 @@ import EventEmitter from './EventEmitter'
 
 import buildOptions from './buildOptions'
 import timeToSeconds from './timeToSeconds'
-import formatTime from './formatTime'
+import formatTimeFn from './formatTime'
 import dateToSeconds from './dateToSeconds'
 import { isFn, isNotFn, notExists, exists, isNotNum, checkType } from './validate'
 
 /**
- * @description Creates a Timr.
- *
- * @param {String|Number} startTime - The starting time for the timr object.
- * @param {Object} [options] - Options to customise the timer.
- *
- * @throws If the provided startTime is neither a number or a string,
- * or, incorrect format.
- *
- * @return {Object} - The newly created Timr object.
- */
-function Timr (startTime, options) {
-  EventEmitter.call(this)
-
-  this.timer = null
-  // options needs to be built before startTime is set,
-  // so it can work out the future date properly.
-  this.changeOptions(options)
-  this.setStartTime(startTime)
-}
-
-/**
  * @description Creates event listeners.
  *
- * @param {String} The name of the listener.
+ * @param {String} name - The name of the listener.
  *
  * @return {Function} The function that makes listeners.
  */
@@ -46,43 +25,62 @@ function makeEventListener (name) {
   }
 }
 
-/**
- * @description Countdown function.
- * Bound to a setInterval when start() is called.
- */
-function countdown () {
-  this.currentTime -= 1
+class Timr extends EventEmitter {
 
-  this.emit('ticker', Object.assign(this.formatTime(), {
-    percentDone: this.percentDone(),
-    currentTime: this.currentTime,
-    startTime: this.startTime,
-    self: this
-  }))
+  /**
+   * @description Creates a Timr.
+   *
+   * @param {String|Number} startTime - The starting time for the timr object.
+   * @param {Object} [options] - Options to customise the timer.
+   *
+   * @throws If the provided startTime is neither a number or a string,
+   * or, incorrect format.
+   */
+  constructor (startTime, options) {
+    super()
 
-  if (this.currentTime <= 0) {
-    this.stop()
-    this.emit('finish', this)
+    this.timer = null
+    // options needs to be built before startTime is set,
+    // so it can work out the future date properly.
+    this.changeOptions(options)
+    this.setStartTime(startTime)
   }
-}
 
-/**
- * @description Stopwatch function.
- * Bound to a setInterval when start() is called.
- */
-function stopwatch () {
-  this.currentTime += 1
+  /**
+   * @description Countdown function.
+   * 
+   * Bound to a setInterval when start() is called.
+   */
+  _countdown () {
+    this.currentTime -= 1
 
-  this.emit('ticker', Object.assign(this.formatTime(), {
-    currentTime: this.currentTime,
-    startTime: this.startTime,
-    self: this
-  }))
-}
+    this.emit('ticker', Object.assign(this.formatTime(), {
+      percentDone: this.percentDone(),
+      currentTime: this.currentTime,
+      startTime: this.startTime,
+      self: this
+    }))
 
-Timr.prototype = Object.assign(Object.create(EventEmitter.prototype), {
+    if (this.currentTime <= 0) {
+      this.stop()
+      this.emit('finish', this)
+    }
+  }
 
-  constructor: Timr,
+  /**
+   * @description Stopwatch function.
+   * 
+   * Bound to a setInterval when start() is called.
+   */
+  _stopwatch () {
+    this.currentTime += 1
+
+    this.emit('ticker', Object.assign(this.formatTime(), {
+      currentTime: this.currentTime,
+      startTime: this.startTime,
+      self: this
+    }))
+  }
 
   /**
    * @description Starts the timr.
@@ -113,8 +111,8 @@ Timr.prototype = Object.assign(Object.create(EventEmitter.prototype), {
         this.running = true
 
         this.timer = this.options.countdown
-          ? setInterval(countdown.bind(this), 1000)
-          : setInterval(stopwatch.bind(this), 1000)
+          ? setInterval(() => this._countdown(), 1000)
+          : setInterval(() => this._stopwatch(), 1000)
       }
 
       if (exists(delay)) {
@@ -130,7 +128,7 @@ Timr.prototype = Object.assign(Object.create(EventEmitter.prototype), {
     }
 
     return this
-  },
+  }
 
   /**
    * @description Pauses the timr.
@@ -143,7 +141,7 @@ Timr.prototype = Object.assign(Object.create(EventEmitter.prototype), {
     this.emit('onPause', this)
 
     return this
-  },
+  }
 
   /**
    * @description Stops the timr.
@@ -158,7 +156,7 @@ Timr.prototype = Object.assign(Object.create(EventEmitter.prototype), {
     this.emit('onStop', this)
 
     return this
-  },
+  }
 
   /**
    * @description Clears the timr.
@@ -172,7 +170,7 @@ Timr.prototype = Object.assign(Object.create(EventEmitter.prototype), {
     this.running = false
 
     return this
-  },
+  }
 
   /**
    * @description Destroys the timr,
@@ -191,7 +189,7 @@ Timr.prototype = Object.assign(Object.create(EventEmitter.prototype), {
     if (isFn(this.removeFromStore)) this.removeFromStore()
 
     return this
-  },
+  }
 
   /**
    * @description The following methods create listeners.
@@ -208,12 +206,12 @@ Timr.prototype = Object.assign(Object.create(EventEmitter.prototype), {
    * @param {Function} fn - Function to be called every second.
    * @return {Object} Returns a reference to the Timr so calls can be chained.
    */
-  ticker: makeEventListener('ticker'),
-  finish: makeEventListener('finish'),
-  onStart: makeEventListener('onStart'),
-  onPause: makeEventListener('onPause'),
-  onStop: makeEventListener('onStop'),
-  onDestroy: makeEventListener('onDestroy'),
+    ticker = makeEventListener('ticker')
+    finish = makeEventListener('finish')
+    onStart = makeEventListener('onStart')
+    onPause = makeEventListener('onPause')
+    onStop = makeEventListener('onStop')
+    onDestroy = makeEventListener('onDestroy')
 
   /**
    * @description Converts seconds to time format.
@@ -224,8 +222,8 @@ Timr.prototype = Object.assign(Object.create(EventEmitter.prototype), {
    * @return {Object} The formatted time and raw values.
    */
   formatTime (time = 'currentTime') {
-    return formatTime(this[time], this.options, false)
-  },
+    return formatTimeFn(this[time], this.options, false)
+  }
 
   /**
    * @description Returns the time elapsed in percent.
@@ -235,7 +233,7 @@ Timr.prototype = Object.assign(Object.create(EventEmitter.prototype), {
    */
   percentDone () {
     return 100 - Math.round((this.currentTime / this.startTime) * 100)
-  },
+  }
 
   /**
    * @description Creates / changes options for a Timr.
@@ -248,7 +246,7 @@ Timr.prototype = Object.assign(Object.create(EventEmitter.prototype), {
     this.options = buildOptions(options, this.options)
 
     return this
-  },
+  }
 
   /**
    * @description Sets new startTime after Timr has been created.
@@ -279,21 +277,21 @@ Timr.prototype = Object.assign(Object.create(EventEmitter.prototype), {
     this.currentTime = newStartTime
 
     return this
-  },
+  }
 
   /**
    * @description Shorthand for this.formatTime(time).formattedTime
    */
   getFt (time = 'currentTime') {
     return this.formatTime(time).formattedTime
-  },
+  }
 
   /**
    * @description Shorthand for this.formatTime(time).raw
    */
   getRaw (time = 'currentTime') {
     return this.formatTime(time).raw
-  },
+  }
 
   /**
    * @description Gets the Timrs startTime.
@@ -302,7 +300,7 @@ Timr.prototype = Object.assign(Object.create(EventEmitter.prototype), {
    */
   getStartTime () {
     return this.startTime
-  },
+  }
 
   /**
    * @description Gets the Timrs currentTime.
@@ -311,7 +309,7 @@ Timr.prototype = Object.assign(Object.create(EventEmitter.prototype), {
    */
   getCurrentTime () {
     return this.currentTime
-  },
+  }
 
   /**
    * @description Gets the Timrs running value.
@@ -321,6 +319,7 @@ Timr.prototype = Object.assign(Object.create(EventEmitter.prototype), {
   isRunning () {
     return this.running
   }
-})
+
+}
 
 export default Timr

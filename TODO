@@ -60,7 +60,10 @@ Improvments:
     ✔ have sepearte code to convert 25h/m into 25:00/25:00:00 before validate runs. thus making validate more self contained
     ✔ figure out how the validateStartTime method is displaying the correct type for the NaN, null Infinity test and make it better / comment it 
     ✔ move timeToSeconds out of validateStartTime and have validate just validate / move the validation into timeToSeconds as dateToSeconds has it's own validation and its slightly confusing.
+  EventEmitter:
+    ☐ Use Class syntax
   Timr:
+    ☐ Use Class syntax
     ☐ force countdown to true if futureDate also set to true. @enhancement 
     ☐ Pass function to start when running @feature
       Provide an option to pass a function that runs 

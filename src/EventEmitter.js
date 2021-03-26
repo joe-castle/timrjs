@@ -6,13 +6,11 @@
  * This is only intended for internal use, as there is
  * no real error checking.
  */
-function EventEmitter () {
-  this.events = {}
-}
+class EventEmitter {
 
-EventEmitter.prototype = {
-
-  constructor: EventEmitter,
+  constructor () {
+    this.events = {}
+  }
 
   /**
    * @description Registers a listener to an event array.
@@ -26,7 +24,7 @@ EventEmitter.prototype = {
     }
 
     this.events[event].push(listener)
-  },
+  }
 
   /**
    * @description Emits an event, calling all listeners store
@@ -41,7 +39,7 @@ EventEmitter.prototype = {
         listener.apply(this, args)
       })
     }
-  },
+  }
 
   /**
    * @description Removes all listeners.
@@ -49,6 +47,7 @@ EventEmitter.prototype = {
   removeAllListeners () {
     this.events = {}
   }
+  
 }
 
 export default EventEmitter
