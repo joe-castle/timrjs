@@ -1,39 +1,33 @@
-import path from 'path'
-import webpack from 'webpack'
-import { getIfUtils } from 'webpack-config-utils'
+const path = require('path')
+const webpack = require('webpack')
 
-import { version } from './package.json'
+const { version } = require('./package.json')
 
-export default (env, config) => {
-  const { ifProduction } = getIfUtils(config.mode)
+const banner = `/**
+* TimrJS v${version}
+* https://github.com/joesmith100/timrjs
+* https://www.npmjs.com/package/timrjs
+*
+* Compatible with Browsers, Node.js (CommonJS) and RequireJS.
+*
+* Copyright (c) ${new Date().getFullYear()} Joe Castle
+* Released under the MIT license
+* https://github.com/joesmith100/timrjs/blob/master/LICENSE.md
+*/`
 
-  const banner = ifProduction(
-    `/* TimrJS v${version} | (c) ${new Date().getFullYear()} Joe Castle | https://github.com/joesmith100/timrjs | @license MIT */`,
-    `/**
- * TimrJS v${version}
- * https://github.com/joesmith100/timrjs
- * https://www.npmjs.com/package/timrjs
- *
- * Compatible with Browsers, Node.js (CommonJS) and RequireJS.
- *
- * Copyright (c) ${new Date().getFullYear()} Joe Castle
- * Released under the MIT license
- * https://github.com/joesmith100/timrjs/blob/master/LICENSE.md
- */`
-  )
-
-  return {
+module.exports = [
+  {
+    name: 'commonjs',
     entry: './src/index',
     output: {
-      path: path.join(__dirname, 'dist'),
-      filename: ifProduction(
-        'timr.min.js',
-        'timr.js'
-      ),
-      library: 'Timr',
-      libraryTarget: 'umd',
-      umdNamedDefine: true
+      path: path.join(__dirname, 'lib'),
+      filename: 'timr.js',
+      library: {
+        type: 'commonjs',
+        name: 'Timr'
+      }
     },
+    mode: 'development',
     resolve: {
       extensions: ['.ts', '.js', '.json']
     },
@@ -42,10 +36,120 @@ export default (env, config) => {
       rules: [
         {
           test: /\.ts$/,
-          use: 'babel-loader',
+          use: 'ts-loader',
+          exclude: /node_modules/
+        }
+      ]
+    }
+  },
+  {
+    name: 'es',
+    entry: './src/index',
+    output: {
+      path: path.join(__dirname, 'es'),
+      filename: 'timr.js',
+      library: {
+        type: 'module'
+      }
+    },
+    mode: 'development',
+    resolve: {
+      extensions: ['.ts', '.js', '.json']
+    },
+    plugins: [new webpack.BannerPlugin({ banner, raw: true, entryOnly: true })],
+    module: {
+      rules: [
+        {
+          test: /\.ts$/,
+          use: 'ts-loader',
+          exclude: /node_modules/
+        }
+      ]
+    },
+    experiments: {
+      outputModule: true
+    }
+  },
+  {
+    name: 'es-browsers',
+    entry: './src/index',
+    output: {
+      path: path.join(__dirname, 'es'),
+      filename: 'timr.mjs',
+      library: {
+        type: 'module'
+      }
+    },
+    mode: 'production',
+    resolve: {
+      extensions: ['.ts', '.js', '.json']
+    },
+    plugins: [new webpack.BannerPlugin({ banner, raw: true, entryOnly: true })],
+    module: {
+      rules: [
+        {
+          test: /\.ts$/,
+          use: 'ts-loader',
+          exclude: /node_modules/
+        }
+      ]
+    },
+    experiments: {
+      outputModule: true
+    }
+  },
+  {
+    name: 'umd-dev',
+    entry: './src/index',
+    output: {
+      path: path.join(__dirname, 'dist'),
+      filename: 'timr.js',
+      library: {
+        type: 'umd2',
+        name: 'Timr',
+        umdNamedDefine: true
+      }
+    },
+    mode: 'development',
+    resolve: {
+      extensions: ['.ts', '.js', '.json']
+    },
+    plugins: [new webpack.BannerPlugin({ banner, raw: true, entryOnly: true })],
+    module: {
+      rules: [
+        {
+          test: /\.ts$/,
+          use: 'ts-loader',
+          exclude: /node_modules/
+        }
+      ]
+    }
+  },
+  {
+    name: 'umd-prod',
+    entry: './src/index',
+    output: {
+      path: path.join(__dirname, 'dist'),
+      filename: 'timr.min.js',
+      library: {
+        type: 'umd2',
+        name: 'Timr',
+        umdNamedDefine: true
+      }
+    },
+    mode: 'production',
+    resolve: {
+      extensions: ['.ts', '.js', '.json']
+    },
+    plugins: [new webpack.BannerPlugin({ banner, raw: true, entryOnly: true })],
+    module: {
+      rules: [
+        {
+          test: /\.ts$/,
+          use: 'ts-loader',
           exclude: /node_modules/
         }
       ]
     }
   }
-}
+]

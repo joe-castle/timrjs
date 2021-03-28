@@ -154,5 +154,7 @@ temp/
 
 # End of https://www.toptal.com/developers/gitignore/api/yarn,node,vscode
 
-lib
 dist
+es
+lib
+types

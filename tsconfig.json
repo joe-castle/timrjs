@@ -1,10 +1,10 @@
 {
   "compilerOptions": {
     "declaration": true,
-    "module": "commonjs",
+    // "module": "commonjs",
     "skipLibCheck": true,
-    "outDir": "_typescript",
-    "target": "ESNext",
+    "declarationDir": "types",
+    "target": "ES5",
     // Rules
     "allowSyntheticDefaultImports": true,
     "forceConsistentCasingInFileNames": true,

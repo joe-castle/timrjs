@@ -16,15 +16,15 @@ Improvments:
     ☐ comment epic regex in dateToSeconds @enhancement 
     ✔ fix up dateToSeconds returning originalDate as it is unecassary, only called from setStartTime and that has access ot the original startTime it's also somewhat confusing as it sometimes returns a number and sometimes and object
   Format Time:
-    ☐ add third argument to format time (boolean - buildOptions)
+    ✔ add third argument to format time (boolean - buildOptions) @done(21-03-28 17:45)
       ✔ have toBuild set to true by default @done(18-11-22 11:09)
       ✔ if options don't exist, build regardless. @done(18-11-22 11:09)
-        ☐ have a warning if options is null but toBuild is false?
-      ☐ Update code in Timr and add unit test to ensure it works
-      ☐ check makeup of options when toBuild is set to false require atleast:
-        ☐ generalise validation in buildOptions?
-        ☐ formatOuput: String
-        ☐ formatValues: array of functions (function argument is only valid in buildOPtions)
+        ✘ have a warning if options is null but toBuild is false? @cancelled(21-03-28 17:45)
+      ✔ Update code in Timr and add unit test to ensure it works @done(21-03-28 17:45)
+      ✔ check makeup of options when toBuild is set to false require atleast: @done(21-03-28 17:45)
+        ✔ generalise validation in buildOptions? @done(21-03-28 17:45)
+        ✔ formatOuput: String @done(21-03-28 17:45)
+        ✔ formatValues: array of functions (function argument is only valid in buildOPtions) @done(21-03-28 17:45)
       specifies with to us the buildOptions function or not. 
       Defaults to true, set to false in Time - formatTime so that it doesn't 
       rerun buildoptions on every call to ticker
@@ -117,9 +117,9 @@ Build:
     ✔ builds and test @done(18-11-13 13:38)
     ✔ when a new version is merged to master, publish to npm @done(18-11-13 13:38)
   ✘ prettier? @feature @cancelled(18-11-13 15:03)
-  ☐ Add typescript support @feature   
-  ☐ move all build to weebpack with multi config return
-  ☐ typescript export type defs
+  ✔ Add typescript support @feature @done(21-03-28 17:43)
+  ✔ move all build to weebpack with multi config return @done(21-03-28 17:43)
+  ✔ typescript export type defs @done(21-03-28 17:43)
   ✔ Update package versions @enhancement @started(18-11-09 15:38) @done(18-11-12 13:29) @lasted(2d21h51m28s)
   ✔ check travis build as it's currently erroring @fix @done(18-11-13 13:49)
   ✔ remove dependency on object-assign? maybe use a polyfill from babel? @enhancement @done(18-11-12 12:17)
