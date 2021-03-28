@@ -64,12 +64,13 @@ class Timr extends EventEmitter {
   _countdown (): void {
     this.currentTime -= 1
 
-    this.emit('ticker', Object.assign(this.formatTime(), {
+    this.emit('ticker', {
+      ...this.formatTime(),
       percentDone: this.percentDone(),
       currentTime: this.currentTime,
       startTime: this.startTime,
       self: this
-    }))
+    })
 
     if (this.currentTime <= 0) {
       this.stop()
@@ -85,11 +86,12 @@ class Timr extends EventEmitter {
   _stopwatch (): void {
     this.currentTime += 1
 
-    this.emit('ticker', Object.assign(this.formatTime(), {
+    this.emit('ticker', {
+      ...this.formatTime(),
       currentTime: this.currentTime,
       startTime: this.startTime,
       self: this
-    }))
+    })
   }
 
   /**

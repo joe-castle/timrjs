@@ -31,7 +31,6 @@ module.exports = [
     resolve: {
       extensions: ['.ts', '.js', '.json']
     },
-    plugins: [new webpack.BannerPlugin({ banner, raw: true, entryOnly: true })],
     module: {
       rules: [
         {
@@ -56,7 +55,6 @@ module.exports = [
     resolve: {
       extensions: ['.ts', '.js', '.json']
     },
-    plugins: [new webpack.BannerPlugin({ banner, raw: true, entryOnly: true })],
     module: {
       rules: [
         {

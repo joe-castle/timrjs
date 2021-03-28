@@ -103,9 +103,10 @@ export default function buildOptions (newOptions?: OptionalOptions, oldOptions?:
       // If oldOptions provided, merge previous formatValues with new ones
       // Otherwise make new ones from newOptions.
       if (oldOptions != null) {
-        newFormatValues = makeValues(
-          Object.assign({}, oldOptions.formatValues, formatValues)
-        )
+        newFormatValues = makeValues({
+          ...oldOptions.formatValues,
+          ...formatValues
+        })
       } else {
         newFormatValues = makeValues(formatValues)
       }
@@ -113,12 +114,13 @@ export default function buildOptions (newOptions?: OptionalOptions, oldOptions?:
     }
   }
 
-  const defaults = {
+  return {
     formatOutput: 'DD hh:{mm:ss}',
     countdown: true,
+    // @ts-expect-error
     formatValues: makeValues(zeroPad),
-    futureDate: false
+    futureDate: false,
+    ...oldOptions,
+    ...newOptions
   }
-
-  return Object.assign(defaults, oldOptions, newOptions)
 }
