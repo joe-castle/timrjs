@@ -1,6 +1,7 @@
 import Timr from '../src/Timr'
 import createStore from '../src/createStore'
 import * as buildOptions from '../src/buildOptions'
+import { Status } from '../src/types'
 
 describe('Timr Class', () => {
   describe('Timr instantiation', () => {
@@ -8,6 +9,12 @@ describe('Timr Class', () => {
       expect(new Timr(600).startTime).toBe(600)
       expect(new Timr(600).currentTime).toBe(600)
       expect(new Timr(0).currentTime).toBe(0)
+    })
+
+    test('Status is set to initialised when Timr created', () => {
+      const timer = new Timr(600)
+
+      expect(timer.getStatus(Status.initialized)).toBeTruthy()
     })
 
     test('Throws an error if startTime is not a string or a number', () => {
@@ -81,6 +88,13 @@ describe('Timr Class', () => {
       timer.start()
     })
 
+    test('Status is set to started when .start() called', () => {
+      const timer = new Timr(600)
+        .start()
+
+      expect(timer.getStatus(Status.started)).toBeTruthy()
+    })
+
     test('Throws an error if start is called with countdown set to true and startTime set to 0', () => {
       expect(() => new Timr(0).start()).toThrow(
         'Unable to start timer when countdown = true and startTime = 0. ' +
@@ -135,6 +149,14 @@ describe('Timr Class', () => {
       timer.pause()
     })
 
+    test('Status is set to paused when .pause() called', () => {
+      const timer = new Timr(600)
+        .start()
+        .pause()
+
+      expect(timer.getStatus(Status.paused)).toBeTruthy()
+    })
+
     test('Returns a reference to the Timr', () => {
       const timer = new Timr(600)
       const returnVal = timer.pause()
@@ -164,6 +186,14 @@ describe('Timr Class', () => {
 
       timer.start()
       timer.stop()
+    })
+
+    test('Status is set to started when .stop() called', () => {
+      const timer = new Timr(600)
+        .start()
+        .stop()
+
+      expect(timer.getStatus(Status.stopped)).toBeTruthy()
     })
 
     test('Returns a reference to the Timr', () => {
@@ -209,6 +239,14 @@ describe('Timr Class', () => {
         })
 
       timer.destroy()
+    })
+
+    test('Status is set to destroyed when .destroy() called', () => {
+      const timer = new Timr(600)
+        .start()
+        .destroy()
+
+      expect(timer.getStatus(Status.destroyed)).toBeTruthy()
     })
 
     test('Returns a reference to the Timr', () => {

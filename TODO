@@ -1,6 +1,6 @@
 Improvments:
-  ☐ remove objectAssign and use rest object
-  ☐ status feild, initialised, started, paused etc...
+  ✔ remove objectAssign and use rest object @done(21-03-28 18:57)
+  ✔ status feild, initialised, started, paused etc... @done(21-03-28 18:57)
   Build Options:
     ☐ Add option to start countdown timer in the future
       allowing the use of a time in the future, so a countdown timer can be configured 

@@ -6,7 +6,7 @@ import formatTimeFn from './formatTime'
 import dateToSeconds from './dateToSeconds'
 import { isFn, isNotFn, notExists, exists, isNotNum, checkType, isStr } from './validate'
 
-import { FormattedTime, Listener, OptionalOptions, Options, Raw } from './types'
+import { FormattedTime, Listener, OptionalOptions, Options, Raw, Status } from './types'
 
 /**
  * @description Creates event listeners.
@@ -32,9 +32,9 @@ class Timr extends EventEmitter {
   delayTimer: NodeJS.Timeout
   currentTime: number
   startTime: number
-  running: boolean
   options: Options
   futureDate: string | number | null
+  status: Status
   removeFromStore?: () => void
   [key: string]: any
 
@@ -54,6 +54,16 @@ class Timr extends EventEmitter {
     // so it can work out the future date properly.
     this.changeOptions(options)
     this.setStartTime(startTime)
+
+    this.status = Status.initialized
+  }
+
+  /**
+   * @deprecated running is no longer used and checks this.status for Status.started
+   * and will be removed in future versions
+   */
+  get running(): boolean {
+    return this.getStatus(Status.started) as boolean
   }
 
   /**
@@ -102,7 +112,7 @@ class Timr extends EventEmitter {
    * @return {Object} Returns a reference to the Timr so calls can be chained.
    */
   start (delay?: number): Timr {
-    if (!this.running) {
+    if (!this.getStatus(Status.started)) {
       if (this.options.countdown && this.startTime === 0) {
         throw new Error(
           'Unable to start timer when countdown = true and startTime = 0. ' +
@@ -120,7 +130,7 @@ class Timr extends EventEmitter {
          * the startTime would be out of sync after the delay finishes.
          */
         if (isStr(this.futureDate)) this.setStartTime(this.futureDate)
-        this.running = true
+        this.status = Status.started
 
         this.timer = this.options.countdown
           ? setInterval(() => this._countdown(), 1000)
@@ -152,6 +162,8 @@ class Timr extends EventEmitter {
 
     this.emit('onPause', this)
 
+    this.status = Status.paused
+
     return this
   }
 
@@ -167,6 +179,8 @@ class Timr extends EventEmitter {
 
     this.emit('onStop', this)
 
+    this.status = Status.stopped
+
     return this
   }
 
@@ -178,8 +192,6 @@ class Timr extends EventEmitter {
   clear (): Timr {
     clearInterval(this.timer)
     clearTimeout(this.delayTimer)
-
-    this.running = false
 
     return this
   }
@@ -199,6 +211,8 @@ class Timr extends EventEmitter {
     // removeFromStore is added when the timr is added to a store,
     // so need to check if it's in a store before removing it.
     if (isFn<() => void>(this.removeFromStore)) this.removeFromStore()
+
+    this.status = Status.destroyed
 
     return this
   }
@@ -324,12 +338,30 @@ class Timr extends EventEmitter {
   }
 
   /**
+   * @description Returns the current status. Or returns
+   * a boolean comparing the provided statusName to the current
+   * status.
+   * 
+   * @param {Status} [statusName] optional statusname to check
+   * 
+   * @returns either the current status, or a boolean confirming the current status if
+   * a statusName is provided. Will check `statusName === this.status`
+   */
+  getStatus (statusName?: Status): boolean | string {
+    return exists(statusName)
+      ? this.status === statusName
+      : this.status
+  }
+
+  /**
+   * @deprecated use this.getStatus('started')
+   * 
    * @description Gets the Timrs running value.
    *
    * @return {Boolean} True if running, false if not.
    */
   isRunning (): boolean {
-    return this.running
+    return this.getStatus(Status.started) as boolean
   }
 }
 
