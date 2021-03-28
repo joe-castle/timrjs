@@ -1,6 +1,8 @@
 import Timr from './Timr'
 import { isNotFn } from './validate'
 
+import { Store } from './types'
+
 /**
  * @description Flattens arrays to their base values
  * Example: [[1], 2, [[[3]]]] - [1, 2, 3]
@@ -9,8 +11,8 @@ import { isNotFn } from './validate'
  *
  * @return {Array} The flattened array
  */
-function flattenArray (arr) {
-  return arr.reduce((prev, curr) => {
+function flattenArray<T> (arr: T[]): T[] {
+  return arr.reduce((prev: T[], curr: T) => {
     if (Array.isArray(curr)) {
       return prev.concat(flattenArray(curr))
     }
@@ -28,14 +30,14 @@ function flattenArray (arr) {
  *
  * @return {Object} Returns a store object with methods.
  */
-export default function createStore (...args) {
-  let timrs = []
+export default function createStore (...args: Timr[]): Store {
+  let timrs: Timr[] = []
 
-  function removeFromStore (timr) {
+  function removeFromStore (timr: Timr): void {
     // Instanceof check required as it's exposed as a store method.
     if (timr instanceof Timr) {
       timrs = timrs.filter(x => x !== timr)
-      timr.removeFromStore = null
+      timr.removeFromStore = undefined
     }
   }
 
@@ -49,11 +51,11 @@ export default function createStore (...args) {
    *
    * @return {Object} The provided timr object.
    */
-  function add (timr) {
+  function add (timr: Timr): Timr {
     if (timr instanceof Timr && isNotFn(timr.removeFromStore)) {
       timrs.push(timr)
 
-      timr.removeFromStore = () => {
+      timr.removeFromStore = (): void => {
         removeFromStore(timr)
       }
     } else {

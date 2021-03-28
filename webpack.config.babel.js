@@ -23,7 +23,7 @@ export default (env, config) => {
   )
 
   return {
-    entry: './src/index.js',
+    entry: './src/index',
     output: {
       path: path.join(__dirname, 'dist'),
       filename: ifProduction(
@@ -34,11 +34,14 @@ export default (env, config) => {
       libraryTarget: 'umd',
       umdNamedDefine: true
     },
+    resolve: {
+      extensions: ['.ts', '.js', '.json']
+    },
     plugins: [new webpack.BannerPlugin({ banner, raw: true, entryOnly: true })],
     module: {
       rules: [
         {
-          test: /\.js$/,
+          test: /\.ts$/,
           use: 'babel-loader',
           exclude: /node_modules/
         }

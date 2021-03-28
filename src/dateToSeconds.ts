@@ -11,8 +11,8 @@ import { isNotNum } from './validate'
  *
  * @return {Number} - Returns the converted seconds.
  */
-export default function dateToSeconds (startTime) {
-  if (!/^(\d{4}-\d{2}-\d{2})?(T\d{2}:\d{2}(:\d{2})?)?(([-+]\d{2}:\d{2})?Z?)?$/i.test(startTime) && isNotNum(startTime)) {
+export default function dateToSeconds (startTime: string | number): number {
+  if (!/^(\d{4}-\d{2}-\d{2})?(T\d{2}:\d{2}(:\d{2})?)?(([-+]\d{2}:\d{2})?Z?)?$/i.test(startTime as string) && isNotNum(startTime)) {
     throw new Error(
       'The provided date is not in the right format.\n' +
       'Expected a string in the format: YYYY-MM-DDTHH:MM:SS-01:00.\n' +

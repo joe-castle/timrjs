@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "declaration": true,
+    "module": "commonjs",
+    "skipLibCheck": true,
+    "outDir": "_typescript",
+    "target": "ESNext",
+    // Rules
+    "allowSyntheticDefaultImports": true,
+    "forceConsistentCasingInFileNames": true,
+    "noImplicitReturns": true,
+    "noImplicitAny": true,
+    "noUnusedLocals": true,
+    "strict": true,
+    "strictPropertyInitialization": false
+  },
+  "include": ["./src/**/*.ts"],
+  "exclude": ["node_modules", "**/spec.js"]
+}

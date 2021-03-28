@@ -1,3 +1,7 @@
+import { exists, notExists } from './validate'
+
+import { Events, Listener } from './types'
+
 /**
  * @description Creates an EventEmitter.
  *
@@ -7,6 +11,7 @@
  * no real error checking.
  */
 class EventEmitter {
+  events: Events
 
   constructor () {
     this.events = {}
@@ -18,8 +23,8 @@ class EventEmitter {
    * @param {String} event - The event to attach to.
    * @param {Function} listener - The event listener.
    */
-  on (event, listener) {
-    if (!this.events[event]) {
+  on (event: string, listener: Listener): void {
+    if (notExists(this.events[event])) {
       this.events[event] = []
     }
 
@@ -33,8 +38,8 @@ class EventEmitter {
    * @param {String} event - The event to emit.
    * @param {Array} args - The functions to run against the event.
    */
-  emit (event, ...args) {
-    if (this.events[event]) {
+  emit (event: string, ...args: any[]): void {
+    if (exists(this.events[event])) {
       this.events[event].forEach((listener) => {
         listener.apply(this, args)
       })
@@ -44,10 +49,9 @@ class EventEmitter {
   /**
    * @description Removes all listeners.
    */
-  removeAllListeners () {
+  removeAllListeners (): void {
     this.events = {}
   }
-  
 }
 
 export default EventEmitter

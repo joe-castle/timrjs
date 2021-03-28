@@ -198,7 +198,7 @@ describe('Timr Class', () => {
       timer.destroy()
 
       expect(store.getAll()).not.toContain(timer)
-      expect(timer.removeFromStore).toBeNull()
+      expect(timer.removeFromStore).toBeUndefined()
     })
 
     test('Emits the onDestroy event', (done) => {

@@ -1,6 +1,8 @@
 import zeroPad from './zeroPad'
 import { isNotNum, isNotStr, isNotBool, isFn, isObj, exists, checkType } from './validate'
 
+import { FormatValueFn, OptionalOptions, Options, OptionsFormatValues } from './types'
+
 /**
  * @description Builds an options object from default and custom options.
  *
@@ -11,11 +13,11 @@ import { isNotNum, isNotStr, isNotBool, isFn, isObj, exists, checkType } from '.
  *
  * @return {Object} Compiled options from default and custom.
  */
-export default function buildOptions (newOptions, oldOptions) {
+export default function buildOptions (newOptions?: OptionalOptions, oldOptions?: Options): Options {
   const timeValues = ['ss', 'SS', 'mm', 'MM', 'hh', 'HH', 'dd', 'DD']
 
   // Run through validation first, than create the options afterwards.
-  if (newOptions) {
+  if (newOptions != null) {
     const { formatOutput, countdown, futureDate, formatValues } = newOptions
 
     if (exists(formatOutput) && isNotStr(formatOutput)) {
@@ -34,11 +36,11 @@ export default function buildOptions (newOptions, oldOptions) {
     }
 
     if (exists(formatValues)) {
-      if (isFn(formatValues)) {
+      if (isFn<FormatValueFn>(formatValues)) {
         if (isNotNum(formatValues(5)) && isNotStr(formatValues(5))) {
           throw new TypeError(`Expected the return value from formatValues function to be of type string or number; instead got: ${checkType(formatValues(5))}`)
         }
-      } else if (isObj(formatValues)) {
+      } else if (isObj<OptionsFormatValues>(formatValues)) {
         let toError = false
         let error = 'Expected formatValues to contain a list of keys with functions that return a string or number; instead got:\n'
 
@@ -56,7 +58,7 @@ export default function buildOptions (newOptions, oldOptions) {
           if (!timeValues.includes(key)) {
             error += ` '${key}': is not a recognised property, should be one of: ${timeValues.map(val => ` '${val}'`).toString().trim()}\n`
             toError = true
-          } else if (isFn(value)) {
+          } else if (isFn<FormatValueFn>(value)) {
             if (isNotNum(value(5)) && isNotStr(value(5))) {
               error += ` '${key}': the return type for this function is not a string or number, is: ${checkType(value(5))}\n`
               toError = true
@@ -82,25 +84,25 @@ export default function buildOptions (newOptions, oldOptions) {
    *
    * @return {Object} - The created object of functions.
    */
-  function makeValues (fn) {
+  function makeValues (fn: OptionsFormatValues | FormatValueFn): OptionsFormatValues {
     return timeValues.reduce((obj, item) => ({
       ...obj,
       // If an object, check it's value is a function otherwise apply default (zeroPad).
       // If not object apply provided fn to all values
-      [item]: isObj(fn) ? (isFn(fn[item]) ? fn[item] : zeroPad) : fn
+      [item]: isObj<OptionsFormatValues>(fn) ? (isFn(fn[item]) ? fn[item] : zeroPad) : fn
     }), {})
   }
 
   // Build formatValues option.
-  if (newOptions) {
+  if (newOptions != null) {
     const { formatValues } = newOptions
 
-    if (formatValues) {
-      let newFormatValues
+    if (formatValues != null) {
+      let newFormatValues: OptionsFormatValues
 
       // If oldOptions provided, merge previous formatValues with new ones
       // Otherwise make new ones from newOptions.
-      if (oldOptions) {
+      if (oldOptions != null) {
         newFormatValues = makeValues(
           Object.assign({}, oldOptions.formatValues, formatValues)
         )

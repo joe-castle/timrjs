@@ -70,12 +70,17 @@ describe('Format Time function', () => {
 
   test('If options doesn\'t exist, build regardless of toBuild being set to false', () => {
     formatTime(600, null, false)
+    formatTime(600, undefined, false)
 
-    expect(buildOptionsSpy).toBeCalledTimes(1)
+    expect(buildOptionsSpy).toBeCalledTimes(2)
   })
 
   test(`If toBuild set to false and options exist, ensure options contains formatOutput 
       and formatValues and their values are of the correct type and correct return type / expected value`, () => {
+    expect(() => formatTime(600, {}, false)).not.toThrow()
+  })
 
+  test('If formatOutput contains no valid formatting options, skip formatting', () => {
+    expect(() => formatTime(600, { formatOutput: 'no formatting', formatValues: (s) => s }, false)).not.toThrow()
   })
 })

@@ -4,7 +4,9 @@ import buildOptions from './buildOptions'
 import timeToSeconds from './timeToSeconds'
 import formatTimeFn from './formatTime'
 import dateToSeconds from './dateToSeconds'
-import { isFn, isNotFn, notExists, exists, isNotNum, checkType } from './validate'
+import { isFn, isNotFn, notExists, exists, isNotNum, checkType, isStr } from './validate'
+
+import { FormattedTime, Listener, OptionalOptions, Options, Raw } from './types'
 
 /**
  * @description Creates event listeners.
@@ -13,8 +15,8 @@ import { isFn, isNotFn, notExists, exists, isNotNum, checkType } from './validat
  *
  * @return {Function} The function that makes listeners.
  */
-function makeEventListener (name) {
-  return function listener (fn) {
+function makeEventListener (name: string) {
+  return function listener (this: Timr, fn: Listener): Timr {
     if (isNotFn(fn)) {
       throw new TypeError(`Expected ${name} to be a function, instead got: ${checkType(fn)}`)
     }
@@ -26,6 +28,15 @@ function makeEventListener (name) {
 }
 
 class Timr extends EventEmitter {
+  timer: NodeJS.Timeout
+  delayTimer: NodeJS.Timeout
+  currentTime: number
+  startTime: number
+  running: boolean
+  options: Options
+  futureDate: string | number | null
+  removeFromStore?: () => void
+  [key: string]: any
 
   /**
    * @description Creates a Timr.
@@ -36,10 +47,9 @@ class Timr extends EventEmitter {
    * @throws If the provided startTime is neither a number or a string,
    * or, incorrect format.
    */
-  constructor (startTime, options) {
+  constructor (startTime: string | number, options?: OptionalOptions) {
     super()
 
-    this.timer = null
     // options needs to be built before startTime is set,
     // so it can work out the future date properly.
     this.changeOptions(options)
@@ -48,10 +58,10 @@ class Timr extends EventEmitter {
 
   /**
    * @description Countdown function.
-   * 
+   *
    * Bound to a setInterval when start() is called.
    */
-  _countdown () {
+  _countdown (): void {
     this.currentTime -= 1
 
     this.emit('ticker', Object.assign(this.formatTime(), {
@@ -69,10 +79,10 @@ class Timr extends EventEmitter {
 
   /**
    * @description Stopwatch function.
-   * 
+   *
    * Bound to a setInterval when start() is called.
    */
-  _stopwatch () {
+  _stopwatch (): void {
     this.currentTime += 1
 
     this.emit('ticker', Object.assign(this.formatTime(), {
@@ -89,7 +99,7 @@ class Timr extends EventEmitter {
    *
    * @return {Object} Returns a reference to the Timr so calls can be chained.
    */
-  start (delay) {
+  start (delay?: number): Timr {
     if (!this.running) {
       if (this.options.countdown && this.startTime === 0) {
         throw new Error(
@@ -99,7 +109,7 @@ class Timr extends EventEmitter {
         )
       }
 
-      const startFn = () => {
+      const startFn = (): void => {
         /**
          * futureDate records the original date used when futureDate option is set to true,
          * this will re-run setStarTime to ensure the startTime is upto date.
@@ -107,7 +117,7 @@ class Timr extends EventEmitter {
          * Note: Inside startFn so that delay works properly, if it was outside this scope,
          * the startTime would be out of sync after the delay finishes.
          */
-        if (this.futureDate) this.setStartTime(this.futureDate)
+        if (isStr(this.futureDate)) this.setStartTime(this.futureDate)
         this.running = true
 
         this.timer = this.options.countdown
@@ -135,7 +145,7 @@ class Timr extends EventEmitter {
    *
    * @return {Object} Returns a reference to the Timr so calls can be chained.
    */
-  pause () {
+  pause (): Timr {
     this.clear()
 
     this.emit('onPause', this)
@@ -148,7 +158,7 @@ class Timr extends EventEmitter {
    *
    * @return {Object} Returns a reference to the Timr so calls can be chained.
    */
-  stop () {
+  stop (): Timr {
     this.clear()
 
     this.currentTime = this.startTime
@@ -163,7 +173,7 @@ class Timr extends EventEmitter {
    *
    * @return {Object} Returns a reference to the Timr so calls can be chained.
    */
-  clear () {
+  clear (): Timr {
     clearInterval(this.timer)
     clearTimeout(this.delayTimer)
 
@@ -179,14 +189,14 @@ class Timr extends EventEmitter {
    *
    * @return {Object} Returns a reference to the Timr so calls can be chained.
    */
-  destroy () {
+  destroy (): Timr {
     this.emit('onDestroy', this)
 
     this.clear().removeAllListeners()
 
     // removeFromStore is added when the timr is added to a store,
     // so need to check if it's in a store before removing it.
-    if (isFn(this.removeFromStore)) this.removeFromStore()
+    if (isFn<() => void>(this.removeFromStore)) this.removeFromStore()
 
     return this
   }
@@ -206,12 +216,12 @@ class Timr extends EventEmitter {
    * @param {Function} fn - Function to be called every second.
    * @return {Object} Returns a reference to the Timr so calls can be chained.
    */
-    ticker = makeEventListener('ticker')
-    finish = makeEventListener('finish')
-    onStart = makeEventListener('onStart')
-    onPause = makeEventListener('onPause')
-    onStop = makeEventListener('onStop')
-    onDestroy = makeEventListener('onDestroy')
+  ticker = makeEventListener('ticker')
+  finish = makeEventListener('finish')
+  onStart = makeEventListener('onStart')
+  onPause = makeEventListener('onPause')
+  onStop = makeEventListener('onStop')
+  onDestroy = makeEventListener('onDestroy')
 
   /**
    * @description Converts seconds to time format.
@@ -221,7 +231,7 @@ class Timr extends EventEmitter {
    *
    * @return {Object} The formatted time and raw values.
    */
-  formatTime (time = 'currentTime') {
+  formatTime (time: string = 'currentTime'): FormattedTime {
     return formatTimeFn(this[time], this.options, false)
   }
 
@@ -231,7 +241,7 @@ class Timr extends EventEmitter {
    *
    * @return {Number} Time elapsed in percent.
    */
-  percentDone () {
+  percentDone (): number {
     return 100 - Math.round((this.currentTime / this.startTime) * 100)
   }
 
@@ -242,7 +252,7 @@ class Timr extends EventEmitter {
    * @param {Object} options - The options to create / change.
    * @return {Object} Returns a reference to the Timr so calls can be chained.
    */
-  changeOptions (options) {
+  changeOptions (options?: OptionalOptions): Timr {
     this.options = buildOptions(options, this.options)
 
     return this
@@ -258,14 +268,14 @@ class Timr extends EventEmitter {
    *
    * @return {Object} The original Timr object.
    */
-  setStartTime (startTime) {
+  setStartTime (startTime: string | number): Timr {
     this.clear()
 
     if (notExists(startTime)) throw new Error('You must provide a startTime value.')
 
-    let newStartTime
+    let newStartTime: number
 
-    if (this.options.futureDate) {
+    if (this.options.futureDate === true) {
       newStartTime = dateToSeconds(startTime)
       this.futureDate = startTime
     } else {
@@ -282,14 +292,14 @@ class Timr extends EventEmitter {
   /**
    * @description Shorthand for this.formatTime(time).formattedTime
    */
-  getFt (time = 'currentTime') {
+  getFt (time: string = 'currentTime'): string {
     return this.formatTime(time).formattedTime
   }
 
   /**
    * @description Shorthand for this.formatTime(time).raw
    */
-  getRaw (time = 'currentTime') {
+  getRaw (time: string = 'currentTime'): Raw {
     return this.formatTime(time).raw
   }
 
@@ -298,7 +308,7 @@ class Timr extends EventEmitter {
    *
    * @return {Number} Start time in seconds.
    */
-  getStartTime () {
+  getStartTime (): number {
     return this.startTime
   }
 
@@ -307,7 +317,7 @@ class Timr extends EventEmitter {
    *
    * @return {Number} Current time in seconds.
    */
-  getCurrentTime () {
+  getCurrentTime (): number {
     return this.currentTime
   }
 
@@ -316,10 +326,9 @@ class Timr extends EventEmitter {
    *
    * @return {Boolean} True if running, false if not.
    */
-  isRunning () {
+  isRunning (): boolean {
     return this.running
   }
-
 }
 
 export default Timr
