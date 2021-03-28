@@ -42,6 +42,7 @@ export interface Store {
   startAll: () => void
   pauseAll: () => void
   stopAll: () => void
+  getStatus: () => Timr[]
   isRunning: () => Timr[]
   removeFromStore: (timr: Timr) => void
   destroyAll: () => void
@@ -74,4 +75,15 @@ export interface Raw {
   hh: number
   dd: number
   [key: string]: number
+}
+
+/**
+ * Timr
+ */
+export enum Status {
+  initialized = 'initialized',
+  started = 'started',
+  paused = 'paused',
+  stopped = 'stopped',
+  destroyed = 'destroyed'
 }

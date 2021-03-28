@@ -1,7 +1,7 @@
 import Timr from './Timr'
 import { isNotFn } from './validate'
 
-import { Store } from './types'
+import { Status, Store } from './types'
 
 /**
  * @description Flattens arrays to their base values
@@ -78,6 +78,7 @@ export default function createStore (...args: Timr[]): Store {
     startAll: () => timrs.forEach(timr => timr.start()),
     pauseAll: () => timrs.forEach(timr => timr.pause()),
     stopAll: () => timrs.forEach(timr => timr.stop()),
+    getStatus: (statusName?: Status) => timrs.filter(timr => timr.getStatus(statusName)),
     isRunning: () => timrs.filter(timr => timr.isRunning()),
     removeFromStore,
     destroyAll: () => {
