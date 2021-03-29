@@ -18,7 +18,7 @@ import { OptionalOptions } from './types'
    *
    * @return {object} A new Timr object.
    */
-function create (startTime: string | number | OptionalOptions, options: OptionalOptions): Timr {
+function create (startTime: string | number | OptionalOptions, options?: OptionalOptions): Timr {
   if (isObj<OptionalOptions>(startTime)) {
     if (exists(startTime.startTime)) {
       return new Timr(startTime.startTime as string | number, startTime)
@@ -40,7 +40,8 @@ export {
   Events,
   Listener,
   FormattedTime,
-  Raw
+  Raw,
+  Status
 } from './types'
 
 export {

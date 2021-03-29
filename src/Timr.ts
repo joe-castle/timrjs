@@ -294,7 +294,7 @@ class Timr extends EventEmitter {
     let newStartTime: number
 
     if (this.options.futureDate === true) {
-      newStartTime = dateToSeconds(startTime)
+      newStartTime = dateToSeconds(startTime, this.options.backupStartTime)
       this.futureDate = startTime
     } else {
       newStartTime = timeToSeconds(startTime)

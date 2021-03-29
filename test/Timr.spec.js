@@ -49,7 +49,7 @@ describe('Timr Class', () => {
     'to be called at a later time.', (done) => {
       const year = new Date().getFullYear() + 1
 
-      const timer = new Timr(`${year}-12-15T10:00:00`, { futureDate: true })
+      const timer = new Timr(`${year}-12-15 10:00:00`, { futureDate: true })
         .ticker(({ currentTime }) => {
           const testStart = Math.ceil((Date.parse(`${year}-12-15T10:00:00`) - Date.now()) / 1000)
 
@@ -65,7 +65,7 @@ describe('Timr Class', () => {
     test('Same test as above, but using starts delay feature', (done) => {
       const year = new Date().getFullYear() + 1
 
-      const timer = new Timr(`${year}-12-15T10:00:00`, { futureDate: true })
+      const timer = new Timr(`${year}-12-15 10:00:00`, { futureDate: true })
         .ticker(({ currentTime }) => {
           const testStart = Math.ceil((Date.parse(`${year}-12-15T10:00:00`) - Date.now()) / 1000)
 

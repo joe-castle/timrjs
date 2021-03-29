@@ -9,6 +9,7 @@ export interface OptionalOptions {
   formatValues?: OptionsFormatValues | FormatValueFn
   futureDate?: boolean | number
   startTime?: string | number
+  backupStartTime?: string | number
 }
 
 export interface Options {
@@ -17,6 +18,7 @@ export interface Options {
   formatValues: OptionsFormatValues
   futureDate: boolean | number
   startTime?: string | number
+  backupStartTime?: string | number
 }
 
 export interface OptionsFormatValues {
