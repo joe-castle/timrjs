@@ -1,12 +1,13 @@
 {
   "compilerOptions": {
     "declaration": true,
-    // "module": "commonjs",
-    "skipLibCheck": true,
     "declarationDir": "types",
-    "target": "ES5",
+    "target": "ESNext",
+    "module": "ESNext",
+    "importHelpers": true,
+    "skipLibCheck": true,
     // Rules
-    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "noImplicitReturns": true,
     "noImplicitAny": true,

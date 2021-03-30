@@ -11,6 +11,7 @@
     "timrjs",
     "utility",
     "stopwatch",
+    "counbtdown",
     "date"
   ],
   "author": "Joe Smith <joesmith0488@gmail.com>",
@@ -22,12 +23,12 @@
     "clean": "rimraf dist lib es coverage types",
     "lint": "ts-standard --fix \"src/**/*.ts\" \"test/**/*.js\"",
     "test": "jest",
-    "test:watch": "yarn test --watch",
-    "coveralls": "yarn check:coverage && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage",
-    "check:src": "yarn lint && yarn test",
-    "check:coverage": "yarn test --coverage",
-    "build": "webpack --progress --color",
-    "prepublish": "yarn clean && yarn check:src && yarn build"
+    "test:watch": "npm run test -- --watch",
+    "coveralls": "npm run check:coverage && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage",
+    "check:src": "npm run lint && npm test",
+    "check:coverage": "npm test -- --coverage",
+    "build": "rollup -c",
+    "prepublish": "npm run clean && npm run check:src && npm run build"
   },
   "devDependencies": {
     "@babel/core": "^7.13.13",
@@ -38,11 +39,12 @@
     "coveralls": "^3.0.2",
     "jest": "^26.6.3",
     "rimraf": "^3.0.2",
+    "rollup": "^2.44.0",
+    "rollup-plugin-terser": "^7.0.2",
+    "rollup-plugin-typescript2": "^0.30.0",
     "ts-loader": "^8.1.0",
     "ts-standard": "^10.0.0",
-    "typescript": "^4.2.3",
-    "webpack": "^5.28.0",
-    "webpack-cli": "^4.5.0"
+    "typescript": "^4.2.3"
   },
   "ts-standard": {
     "globals": [

@@ -5,7 +5,7 @@ test
 .gitignore
 .travis.yml
 bower.json
-tsconfig.json
-webpack.config.babel.json
+rollup.config.js
 TODO
+tsconfig.json
 yarn.lock

@@ -116,7 +116,8 @@ Tests:
     Babel adds too much unecassary overhead to class transpiling to make this worthwhile
 
 Build:
-  ☐ properly sort out different build states, maybe use rollup????
+  ☐ change yarn references to npm to make future collab easier
+  ✔ properly sort out different build states, maybe use rollup???? @done(21-03-30 13:12)
   ✔ setup a build pipeline with travis @done(18-11-13 13:38)
     ✔ builds and test @done(18-11-13 13:38)
     ✔ when a new version is merged to master, publish to npm @done(18-11-13 13:38)
@@ -139,5 +140,6 @@ README:
   ☐ fix error in readme, getRaw() shorthand: formatTime().raw; also read through readme and try and clean it up a bit.
   ☐ assuming date provided is local time
   ☐ backup starttime for future date
+  ☐ change jsdelivr to unpkg
 
 Archive:
