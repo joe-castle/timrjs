@@ -2,7 +2,6 @@ Improvments:
   ✔ remove objectAssign and use rest object @done(21-03-28 18:57)
   ✔ status feild, initialised, started, paused etc... @done(21-03-28 18:57)
   Build Options:
-    ☐ add another type for changeOptions that omits startTime
     ✘ if startTime is passed in changeOptions, run setStartTime again with startTime after optionsBuilt @cancelled(21-04-01 15:13)
     ☐ Add option to start countdown timer in the future
       allowing the use of a time in the future, so a countdown timer can be configured 
@@ -75,6 +74,7 @@ Improvments:
     ☐ add remove(listener) and removeAll(name)
     ✔ Use Class syntax @done(21-03-26 15:53)
   Timr:
+    ✔ move lisetner methods to their own proper method so they appear as a method ratrher then a property @done(21-04-01 15:53)
     ✔ Use Class syntax @done(21-03-26 15:53)
     ☐ force countdown to true if futureDate also set to true. @enhancement 
     ✔ Pass function to start when running @feature @done(21-04-01 12:04)

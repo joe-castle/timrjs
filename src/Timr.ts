@@ -8,25 +8,6 @@ import { isFn, isNotFn, notExists, exists, isNotNum, checkType } from './validat
 
 import { FormattedTime, Listener, OptionalOptions, Options, Raw, Status } from './types'
 
-/**
- * @description Creates event listeners.
- *
- * @param {String} name - The name of the listener.
- *
- * @return {Function} The function that makes listeners.
- */
-function makeEventListener (name: string) {
-  return function listener (this: Timr, fn: Listener): Timr {
-    if (isNotFn(fn)) {
-      throw new TypeError(`Expected ${name} to be a function, instead got: ${checkType(fn)}`)
-    }
-
-    this.on(name, fn)
-
-    return this
-  }
-}
-
 class Timr extends EventEmitter {
   timer: NodeJS.Timeout
   delayTimer: NodeJS.Timeout
@@ -94,6 +75,16 @@ class Timr extends EventEmitter {
       startTime: this.startTime,
       self: this
     })
+  }
+
+  _listener(this: Timr, name: string, listener: Listener): Timr {
+    if (isNotFn(listener)) {
+      throw new TypeError(`Expected ${name} to be a function, instead got: ${checkType(listener)}`)
+    }
+
+    this.on(name, listener)
+
+    return this
   }
 
   /**
@@ -217,28 +208,88 @@ class Timr extends EventEmitter {
   }
 
   /**
-   * @description The following methods create listeners.
-   *
-   * Ticker: Called every second the timer ticks down.
-   * Finish: Called once when the timer finishes.
-   * onStart: Called when the timer starts.
-   * onAlreadyStarted: Called when the timer is already running and start is called
-   * onPause: Called when the timer is paused.
-   * onStop: Called when the timer is stopped.
-   * onDestroy: Called when the timer is destroyed.
+   * @description Called every second the timer ticks down.
    *
    * @throws If the argument is not of type function.
    *
-   * @param {Function} fn - Function to be called every second.
+   * @param {Function} listener - Function to added to events.
    * @return {Object} Returns a reference to the Timr so calls can be chained.
    */
-  ticker = makeEventListener('ticker')
-  finish = makeEventListener('finish')
-  onStart = makeEventListener('onStart')
-  onAlreadyStarted = makeEventListener('onAlreadyStarted')
-  onPause = makeEventListener('onPause')
-  onStop = makeEventListener('onStop')
-  onDestroy = makeEventListener('onDestroy')
+  ticker (listener: Listener): Timr {
+    return this._listener('ticker', listener)
+  }
+
+  /**
+   * @description Called once when the timer finishes.
+   *
+   * @throws If the argument is not of type function.
+   *
+   * @param {Function} listener - Function to added to events.
+   * @return {Object} Returns a reference to the Timr so calls can be chained.
+   */
+  finish (listener: Listener): Timr {
+    return this._listener('finish', listener)
+  }
+
+  /**
+   * @description Called when the timer starts.
+   *
+   * @throws If the argument is not of type function.
+   *
+   * @param {Function} listener - Function to added to events.
+   * @return {Object} Returns a reference to the Timr so calls can be chained.
+   */
+  onStart (listener: Listener): Timr {
+    return this._listener('onStart', listener)
+  }
+
+  /**
+  * @description Called when the timer is already running and start is called
+  *
+  * @throws If the argument is not of type function.
+  *
+  * @param {Function} listener - Function to added to events.
+  * @return {Object} Returns a reference to the Timr so calls can be chained.
+  */
+  onAlreadyStarted (listener: Listener): Timr {
+    return this._listener('onAlreadyStarted', listener)
+  }
+
+  /**
+   * @description Called when the timer is paused.
+   * 
+   * @throws If the argument is not of type function.
+   *
+   * @param {Function} listener - Function to added to events.
+   * @return {Object} Returns a reference to the Timr so calls can be chained.
+   */
+  onPause (listener: Listener): Timr {
+    return this._listener('onPause', listener)
+  }
+
+  /**
+   * @description Called when the timer is stopped.
+   *
+   * @throws If the argument is not of type function.
+   *
+   * @param {Function} listener - Function to added to events.
+   * @return {Object} Returns a reference to the Timr so calls can be chained.
+   */
+  onStop (listener: Listener): Timr {
+    return this._listener('onStop', listener)
+  }
+
+  /**
+   * @description Called when the timer is destroyed.
+   * 
+   * @throws If the argument is not of type function.
+   *
+   * @param {Function} listener - Function to added to events.
+   * @return {Object} Returns a reference to the Timr so calls can be chained.
+   */
+  onDestroy (listener: Listener): Timr {
+    return this._listener('onDestroy', listener)
+  }
 
   /**
    * @description Converts seconds to time format.
@@ -285,7 +336,7 @@ class Timr extends EventEmitter {
    *
    * @return {Object} The original Timr object.
    */
-  setStartTime (startTime: string | number | Date): Timr {
+  setStartTime (startTime: string | number | Date, backupStartTime?: string | Date): Timr {
     this.clear()
 
     if (notExists(startTime)) {
@@ -295,7 +346,7 @@ class Timr extends EventEmitter {
     let newStartTime: number
 
     if (isDateFormat(startTime)) {
-      newStartTime = dateToSeconds(startTime, this.options.backupStartTime)
+      newStartTime = dateToSeconds(startTime, backupStartTime || this.options.backupStartTime)
       this.futureDate = startTime
     } else {
       newStartTime = timeToSeconds(startTime)
