@@ -36,16 +36,16 @@ export default function formatTime (seconds: number, options?: OptionalOptions, 
     }
   })() as { formatOutput: string, formatValues: OptionsFormatValues }
 
-  const raw: Raw = {
-    SS: seconds,
-    get MM () { return Math.floor(raw.SS / 60) },
-    get HH () { return Math.floor(raw.MM / 60) },
-    get DD () { return Math.floor(raw.HH / 24) },
-    get ss () { return Math.floor(seconds % 60) },
-    get mm () { return Math.floor(raw.MM % 60) },
-    get hh () { return Math.floor(raw.HH % 24) },
-    get dd () { return raw.DD }
-  }
+  // @ts-expect-error
+  const raw: Raw = {}
+  raw.SS = seconds
+  raw.MM = Math.floor(raw.SS / 60)
+  raw.HH = Math.floor(raw.MM / 60)
+  raw.DD = Math.floor(raw.HH / 24)
+  raw.ss = Math.floor(seconds % 60)
+  raw.mm = Math.floor(raw.MM % 60)
+  raw.hh = Math.floor(raw.HH % 24)
+  raw.dd = raw.DD
 
   let stringToFormat = formatOutput
 

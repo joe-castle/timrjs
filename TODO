@@ -2,7 +2,8 @@ Improvments:
   ✔ remove objectAssign and use rest object @done(21-03-28 18:57)
   ✔ status feild, initialised, started, paused etc... @done(21-03-28 18:57)
   Build Options:
-    ☐ if startTime is passed in changeOptions, run setStartTime again with startTime after optionsBuilt
+    ☐ add another type for changeOptions that omits startTime
+    ✘ if startTime is passed in changeOptions, run setStartTime again with startTime after optionsBuilt @cancelled(21-04-01 15:13)
     ☐ Add option to start countdown timer in the future
       allowing the use of a time in the future, so a countdown timer can be configured 
       to run everyday. 
@@ -15,13 +16,13 @@ Improvments:
       Instanceof check required as it's exposed as a store method.
   Date To Seconds:
     ✘ use dateToSeconds for all startTime creation? @cancelled(21-04-01 11:18)
-    ☐ use statrtTime for both dates, but if contains a date pass to dateToseconds, remove furtureDate option
+    ✔ use statrtTime for both dates, but if contains a date pass to dateToseconds, remove furtureDate option @done(21-04-01 15:13)
     ✔ comment epic regex in dateToSeconds @enhancement @done(21-03-30 13:15)
     ✔ refactor to definitley support locale dates / timeszones @done(21-03-29 15:54)
     ✔ don't use the new date as its platform independatnt @done(21-03-29 15:54)
     ✔ fix up dateToSeconds returning originalDate as it is unecassary, only called from setStartTime and that has access ot the original startTime it's also somewhat confusing as it sometimes returns a number and sometimes and object
   Format Time:
-    ☐ go back to non accessor raw object
+    ✔ go back to non accessor raw object @done(21-04-01 15:12)
     ☐ proivide the ability to provide a custom formatTime function
     ✔ add third argument to format time (boolean - buildOptions) @done(21-03-28 17:45)
       ✔ have toBuild set to true by default @done(18-11-22 11:09)
