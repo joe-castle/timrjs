@@ -44,7 +44,7 @@ describe('Timr Class', () => {
         })
     })
 
-    test('If an ISO date has been used to start the timer, start will re-run setStartTime ' +
+    test('If a date has been used to start the timer, start will re-run setStartTime ' +
     'to ensure the startTime is in sync. Allowing .start() ' +
     'to be called at a later time.', (done) => {
       const year = new Date().getFullYear() + 1

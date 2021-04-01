@@ -69,7 +69,9 @@ export default function buildOptions (newOptions?: OptionalOptions, oldOptions?:
           }
         })
 
-        if (toError) throw new Error(error)
+        if (toError) {
+          throw new Error(error)
+        }
       } else {
         throw new TypeError(`Expected formatValues to be a function or an object of functions; instead got: ${checkType(formatValues)}`)
       }

@@ -8,8 +8,8 @@ export interface OptionalOptions {
   countdown?: boolean
   formatValues?: OptionsFormatValues | FormatValueFn
   futureDate?: boolean | number
-  startTime?: string | number
-  backupStartTime?: string | number
+  startTime?: string | number | Date
+  backupStartTime?: string | number | Date
 }
 
 export interface Options {
@@ -17,8 +17,8 @@ export interface Options {
   countdown: boolean
   formatValues: OptionsFormatValues
   futureDate: boolean | number
-  startTime?: string | number
-  backupStartTime?: string | number
+  startTime?: string | number | Date
+  backupStartTime?: string | number | Date
 }
 
 export interface OptionsFormatValues {
@@ -45,7 +45,11 @@ export interface Store {
   pauseAll: () => void
   stopAll: () => void
   getStatus: () => Timr[]
+  /**
+   * @deprecated Please use `started()` instead
+   */
   isRunning: () => Timr[]
+  started: () => Timr[]
   removeFromStore: (timr: Timr) => void
   destroyAll: () => void
 }

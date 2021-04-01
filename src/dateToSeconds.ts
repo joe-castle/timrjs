@@ -1,22 +1,25 @@
+
 import zeroPad from './zeroPad'
-import { checkType, exists, isNum, isStr } from './validate'
+import { checkType, exists, isNum, isStr, isInstanceOf } from './validate'
 
 /**
- * @description Converts an ISO date string, or unix time into seconds until that date/time.
+ * @description Converts a date object, date string, or unix time into seconds until that date/time.
  *
- * @param {string|number} startTime - The ISO date string or unix time in ms.
+ * @param {string|number} startTime - The date object, date string or unix time in ms.
  * @param {string|number} backupStartTime - startTime to use if provided startTime is in the past.
  *
- * @throws If the date matches the regex but is not ISO format.
+ * @throws If the date matches the regex but is not the correct format.
  * @throws If the date is in the past.
  *
  * @return {Number} - Returns the converted seconds.
  */
-function dateToSeconds (startTime: string | number, backupStartTime?: string | number): number {
+function dateToSeconds (startTime: string | number | Date, backupStartTime?: string | number | Date): number {
   // startTime in MS from epoch.
   let parsedStartTime: number
 
-  if (isNum(startTime)) {
+  if (isInstanceOf<Date>(startTime, Date)) {
+    parsedStartTime = startTime.getTime()
+  } else if (isNum(startTime)) {
     parsedStartTime = new Date(startTime).getTime()
   } else if (isStr(startTime)) {
     const error = new Error(
@@ -44,7 +47,7 @@ function dateToSeconds (startTime: string | number, backupStartTime?: string | n
       throw error
     }
   } else {
-    throw new Error(`Expected startTime to be a string or number, instead got: ${checkType(startTime)}`)
+    throw new Error(`Expected startTime to be a string, number or Date object, instead got: ${checkType(startTime)}`)
   }
 
   const dateNow = new Date()
@@ -59,7 +62,7 @@ function dateToSeconds (startTime: string | number, backupStartTime?: string | n
 
     throw new Error(
       'When passing a date/time, it cannot be in the past. ' +
-      `You passed: "${startTime}". It's currently: "` +
+      `You passed: "${startTime as string}". It's currently: "` +
       `${zeroPad(dateNow.getFullYear())}-${zeroPad(dateNow.getMonth() + 1)}-` +
       `${zeroPad(dateNow.getDate())} ` +
       `${zeroPad(dateNow.getHours())}:${zeroPad(dateNow.getMinutes())}:` +

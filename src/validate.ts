@@ -114,6 +114,30 @@ function isNotObj<T> (value: any): boolean {
 }
 
 /**
+ * @description Checks if the provided object extends the provided class
+ *
+ * @param {value} value - the value to be checked
+ * @param {any} clazz - the class to check against
+ *
+ * @returns True if it is, false if it isn't
+ */
+function isInstanceOf<T> (value: any, clazz: any): value is T {
+  return value instanceof clazz
+}
+
+/**
+ * @description Checks if the provided object does not extend the provided class
+ *
+ * @param {value} value - the value to be checked
+ * @param {any} clazz - the class to check against
+ *
+ * @returns True if it is, false if it isn't
+ */
+function isNotOfObj<T> (value: T, clazz: any): boolean {
+  return !isInstanceOf(value, clazz)
+}
+
+/**
  * @description Checks if a value exists, i.e. not undefined.
  *
  * @param {any} value - the value to be checked
@@ -176,6 +200,8 @@ export {
   isNotFn,
   isObj,
   isNotObj,
+  isInstanceOf,
+  isNotOfObj,
   exists,
   notExists,
   checkType

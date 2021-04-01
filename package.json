@@ -30,6 +30,7 @@
     "build": "rollup -c",
     "prepublish": "npm run clean && npm run check:src && npm run build"
   },
+  "dependencies": {},
   "devDependencies": {
     "@babel/core": "^7.13.13",
     "@babel/plugin-proposal-class-properties": "^7.13.0",

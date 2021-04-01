@@ -14,11 +14,13 @@ Improvments:
     ✔ createStore, timr instanceof Time necassary? It's already hcecked before adding to the array.
       Instanceof check required as it's exposed as a store method.
   Date To Seconds:
-    ☐ comment epic regex in dateToSeconds @enhancement 
+    ☐ use dateToSeconds for all startTime creation?
+    ✔ comment epic regex in dateToSeconds @enhancement @done(21-03-30 13:15)
     ✔ refactor to definitley support locale dates / timeszones @done(21-03-29 15:54)
     ✔ don't use the new date as its platform independatnt @done(21-03-29 15:54)
     ✔ fix up dateToSeconds returning originalDate as it is unecassary, only called from setStartTime and that has access ot the original startTime it's also somewhat confusing as it sometimes returns a number and sometimes and object
   Format Time:
+    ☐ proivide the ability to provide a custom formatTime function
     ✔ add third argument to format time (boolean - buildOptions) @done(21-03-28 17:45)
       ✔ have toBuild set to true by default @done(18-11-22 11:09)
       ✔ if options don't exist, build regardless. @done(18-11-22 11:09)
@@ -49,7 +51,7 @@ Improvments:
     ✔ Also remove padRaw option and include an option to pass a function or an object. The function will be applied to all time values where as the object gives the use the opportunity to configure individual values. These functions will be applied in the format string.
     ✔ Test for a function and that it returns a value which is of type number or string in buildOptions.
   Index:
-    ☐ provide a date object to starttime
+    ✔ provide a date object to starttime @done(21-03-31 15:22)
     ☐ Remove public exports for anything other then create and createStore?
     ✔ provide ability to pass an object with startTime in it as the first argument.
     ✔ Proper ES6 exports, rather than weird object assign: export default Timr; export { createStore, formatTime etc... }
@@ -140,6 +142,7 @@ README:
   ☐ fix error in readme, getRaw() shorthand: formatTime().raw; also read through readme and try and clean it up a bit.
   ☐ assuming date provided is local time
   ☐ backup starttime for future date
+  ☐ date can be provided to startTime with futureDate
   ☐ change jsdelivr to unpkg
 
 Archive:

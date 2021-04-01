@@ -33,7 +33,7 @@ class Timr extends EventEmitter {
   currentTime: number
   startTime: number
   options: Options
-  futureDate: string | number | null
+  futureDate: string | number | Date | null
   status: Status
   removeFromStore?: () => void
   [key: string]: any
@@ -47,7 +47,7 @@ class Timr extends EventEmitter {
    * @throws If the provided startTime is neither a number or a string,
    * or, incorrect format.
    */
-  constructor (startTime: string | number, options?: OptionalOptions) {
+  constructor (startTime: string | number | Date, options?: OptionalOptions) {
     super()
 
     // options needs to be built before startTime is set,
@@ -212,7 +212,9 @@ class Timr extends EventEmitter {
 
     // removeFromStore is added when the timr is added to a store,
     // so need to check if it's in a store before removing it.
-    if (isFn<() => void>(this.removeFromStore)) this.removeFromStore()
+    if (isFn<() => void>(this.removeFromStore)) {
+      this.removeFromStore()
+    }
 
     this.status = Status.destroyed
 
@@ -286,10 +288,12 @@ class Timr extends EventEmitter {
    *
    * @return {Object} The original Timr object.
    */
-  setStartTime (startTime: string | number): Timr {
+  setStartTime (startTime: string | number | Date): Timr {
     this.clear()
 
-    if (notExists(startTime)) throw new Error('You must provide a startTime value.')
+    if (notExists(startTime)) {
+      throw new Error('You must provide a startTime value.')
+    }
 
     let newStartTime: number
 
@@ -297,7 +301,7 @@ class Timr extends EventEmitter {
       newStartTime = dateToSeconds(startTime, this.options.backupStartTime)
       this.futureDate = startTime
     } else {
-      newStartTime = timeToSeconds(startTime)
+      newStartTime = timeToSeconds(startTime as string | number)
       this.futureDate = null
     }
 
@@ -357,10 +361,21 @@ class Timr extends EventEmitter {
 
   /**
    * @description Gets the Timrs running value.
+   * 
+   * @deprecated please use `this.started()` instead
    *
    * @return {Boolean} True if running, false if not.
    */
   isRunning (): boolean {
+    return this.getStatus(Status.started) as boolean
+  }
+
+    /**
+   * @description Checks whether the timer has been started or not
+   *
+   * @return {Boolean} True if running, false if not.
+   */
+  started (): boolean {
     return this.getStatus(Status.started) as boolean
   }
 }
