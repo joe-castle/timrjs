@@ -85,9 +85,9 @@ describe('Create Store Function', () => {
     const store = createStore()
     const timer = new Timr(600)
       .ticker(() => {
-        expect(timer.isRunning()).toBe(true)
+        expect(timer.started()).toBe(true)
         store.pauseAll()
-        expect(timer.isRunning()).toBe(false)
+        expect(timer.started()).toBe(false)
         done()
       })
 
@@ -109,13 +109,13 @@ describe('Create Store Function', () => {
     store.startAll()
   })
 
-  test('Returns an array of all the timrs that are running.', () => {
+  test('Returns an array of all the timrs that have started.', () => {
     const timer = new Timr(600)
     const store = createStore(timer)
 
-    expect(store.isRunning()).toHaveLength(0)
+    expect(store.started()).toHaveLength(0)
     store.startAll()
-    expect(store.isRunning()).toHaveLength(1)
+    expect(store.started()).toHaveLength(1)
     store.stopAll()
   })
 

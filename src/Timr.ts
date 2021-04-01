@@ -59,16 +59,6 @@ class Timr extends EventEmitter {
   }
 
   /**
-   * @deprecated running is no longer used and checks this.status for Status.started
-   * and will be removed in future versions.
-   *
-   * Please use `this.isRunning()` or `this.getStatus(Status.started)` instead of accessing property directly
-   */
-  get running (): boolean {
-    return this.isRunning()
-  }
-
-  /**
    * @description Countdown function.
    *
    * Bound to a setInterval when start() is called.
@@ -114,7 +104,7 @@ class Timr extends EventEmitter {
    * @return {Object} Returns a reference to the Timr so calls can be chained.
    */
   start (delay?: number): Timr {
-    if (!this.isRunning()) {
+    if (!this.started()) {
       if (this.options.countdown && this.startTime === 0) {
         throw new Error(
           'Unable to start timer when countdown = true and startTime = 0. ' +
@@ -367,7 +357,7 @@ class Timr extends EventEmitter {
    * @return {Boolean} True if running, false if not.
    */
   isRunning (): boolean {
-    return this.getStatus(Status.started) as boolean
+    return this.started()
   }
 
     /**

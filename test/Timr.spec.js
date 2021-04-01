@@ -129,9 +129,9 @@ describe('Timr Class', () => {
     test('Pauses the timer', (done) => {
       const timer = new Timr(600)
         .ticker(() => {
-          expect(timer.isRunning()).toBe(true)
+          expect(timer.started()).toBe(true)
           timer.pause()
-          expect(timer.isRunning()).toBe(false)
+          expect(timer.started()).toBe(false)
           done()
         })
         .start()
@@ -491,14 +491,14 @@ describe('Timr Class', () => {
     })
   })
 
-  describe('isRunning method', () => {
+  describe('started method', () => {
     test('Returns false when the timer isnt running', () => {
-      expect(new Timr(600).isRunning()).toBe(false)
+      expect(new Timr(600).started()).toBe(false)
     })
 
     test('Returns true when the timer is running', () => {
       const timer = new Timr(600).start()
-      expect(timer.isRunning()).toBe(true)
+      expect(timer.started()).toBe(true)
       timer.stop()
     })
   })

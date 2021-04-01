@@ -144,5 +144,6 @@ README:
   ☐ backup starttime for future date
   ☐ date can be provided to startTime with futureDate
   ☐ change jsdelivr to unpkg
+  ☐ running rmeoved and isRunning deprecated in favour of started
 
 Archive:
