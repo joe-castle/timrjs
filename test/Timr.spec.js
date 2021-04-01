@@ -1,14 +1,38 @@
 import Timr from '../src/Timr'
 import createStore from '../src/createStore'
 import * as buildOptions from '../src/buildOptions'
+import * as dateToSeconds from '../src/dateToSeconds'
+import * as timeToSeconds from '../src/timeToSeconds'
 import { Status } from '../src/types'
 
 describe('Timr Class', () => {
+  const dateToSecondsSpy = jest.spyOn(dateToSeconds, 'default')
+  const timeToSecondsSpy = jest.spyOn(timeToSeconds, 'default')
+
+  afterEach(() => {
+    dateToSecondsSpy.mockClear()
+    timeToSecondsSpy.mockClear()
+  })
+
   describe('Timr instantiation', () => {
     test('Creates a new Timr object', () => {
       expect(new Timr(600).startTime).toBe(600)
       expect(new Timr(600).currentTime).toBe(600)
       expect(new Timr(0).currentTime).toBe(0)
+    })
+
+    test('Calls dateToSeconds if startTime passed with date-time string', () => {
+      const timer = new Timr(`${(new Date()).getFullYear()}-12-31`)
+
+      expect(timer.startTime).toBeTruthy()
+      expect(dateToSecondsSpy).toBeCalledTimes(1)
+    })
+
+    test('Calls timetoSeconds if startTime passed with time string', () => {
+      const timer = new Timr('10:00')
+
+      expect(timer.startTime).toBeTruthy()
+      expect(timeToSecondsSpy).toBeCalledTimes(1)
     })
 
     test('Status is set to initialised when Timr created', () => {
@@ -49,7 +73,7 @@ describe('Timr Class', () => {
     'to be called at a later time.', (done) => {
       const year = new Date().getFullYear() + 1
 
-      const timer = new Timr(`${year}-12-15 10:00:00`, { futureDate: true })
+      const timer = new Timr(`${year}-12-15 10:00:00`)
         .ticker(({ currentTime }) => {
           const testStart = Math.ceil((Date.parse(`${year}-12-15T10:00:00`) - Date.now()) / 1000)
 
@@ -65,7 +89,7 @@ describe('Timr Class', () => {
     test('Same test as above, but using starts delay feature', (done) => {
       const year = new Date().getFullYear() + 1
 
-      const timer = new Timr(`${year}-12-15 10:00:00`, { futureDate: true })
+      const timer = new Timr(`${year}-12-15 10:00:00`)
         .ticker(({ currentTime }) => {
           const testStart = Math.ceil((Date.parse(`${year}-12-15T10:00:00`) - Date.now()) / 1000)
 
@@ -120,8 +144,8 @@ describe('Timr Class', () => {
         'The delay argument passed to start must be a number, you passed: array'
       )
 
-      expect(() => new Timr(500).start(null)).toThrow(
-        'The delay argument passed to start must be a number, you passed: null'
+      expect(() => new Timr(500).start({})).toThrow(
+        'The delay argument passed to start must be a number, you passed: object'
       )
 
       expect(() => new Timr(500).start(NaN)).toThrow(
@@ -240,7 +264,7 @@ describe('Timr Class', () => {
       timer.destroy()
 
       expect(store.getAll()).not.toContain(timer)
-      expect(timer.removeFromStore).toBeUndefined()
+      expect(timer.removeFromStore).toBeNull()
     })
 
     test('Emits the onDestroy event', (done) => {

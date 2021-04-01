@@ -3,6 +3,25 @@ import { isNotNum, isNotStr, isNotBool, isFn, isObj, exists, checkType } from '.
 
 import { FormatValueFn, OptionalOptions, Options, OptionsFormatValues } from './types'
 
+const timeValues = ['ss', 'SS', 'mm', 'MM', 'hh', 'HH', 'dd', 'DD']
+
+/**
+ * @description Creates an object using the provided function / object of functions
+ * and assigns it to all or their respective values.
+ *
+ * @param {Function|Object} fn - The function or object of functions to assign to the time values.
+ *
+ * @return {Object} - The created object of functions.
+ */
+function makeValues (fn: OptionsFormatValues | FormatValueFn): OptionsFormatValues {
+  return timeValues.reduce((obj, item) => ({
+    ...obj,
+    // If an object, check it's value is a function otherwise apply default (zeroPad).
+    // If not object apply provided fn to all values
+    [item]: isObj<OptionsFormatValues>(fn) ? (isFn(fn[item]) ? fn[item] : zeroPad) : fn
+  }), {})
+}
+
 /**
  * @description Builds an options object from default and custom options.
  *
@@ -13,26 +32,17 @@ import { FormatValueFn, OptionalOptions, Options, OptionsFormatValues } from './
  *
  * @return {Object} Compiled options from default and custom.
  */
-export default function buildOptions (newOptions?: OptionalOptions, oldOptions?: Options): Options {
-  const timeValues = ['ss', 'SS', 'mm', 'MM', 'hh', 'HH', 'dd', 'DD']
-
+function buildOptions (newOptions?: OptionalOptions, oldOptions?: Options): Options {
   // Run through validation first, than create the options afterwards.
-  if (newOptions != null) {
-    const { formatOutput, countdown, futureDate, formatValues } = newOptions
+  if (exists(newOptions)) {
+    const { formatOutput, countdown, formatValues } = newOptions
 
     if (exists(formatOutput) && isNotStr(formatOutput)) {
-      throw new TypeError(
-        'Expected formatOutput to be a string; instead got: ' +
-        `${typeof formatOutput}`
-      )
+      throw new TypeError(`Expected formatOutput to be a string; instead got: ${checkType(formatOutput)}`)
     }
 
     if (exists(countdown) && isNotBool(countdown)) {
       throw new TypeError(`Expected countdown to be a boolean; instead got: ${checkType(countdown)}`)
-    }
-
-    if (exists(futureDate) && isNotBool(futureDate)) {
-      throw new TypeError(`Expected futureDate to be a boolean; instead got: ${checkType(futureDate)}`)
     }
 
     if (exists(formatValues)) {
@@ -78,33 +88,16 @@ export default function buildOptions (newOptions?: OptionalOptions, oldOptions?:
     }
   }
 
-  /**
-   * @description Creates an object using the provided function / object of functions
-   * and assigns it to all or their respective values.
-   *
-   * @param {Function|Object} fn - The function or object of functions to assign to the time values.
-   *
-   * @return {Object} - The created object of functions.
-   */
-  function makeValues (fn: OptionsFormatValues | FormatValueFn): OptionsFormatValues {
-    return timeValues.reduce((obj, item) => ({
-      ...obj,
-      // If an object, check it's value is a function otherwise apply default (zeroPad).
-      // If not object apply provided fn to all values
-      [item]: isObj<OptionsFormatValues>(fn) ? (isFn(fn[item]) ? fn[item] : zeroPad) : fn
-    }), {})
-  }
-
   // Build formatValues option.
-  if (newOptions != null) {
+  if (exists(newOptions)) {
     const { formatValues } = newOptions
 
-    if (formatValues != null) {
+    if (exists(formatValues)) {
       let newFormatValues: OptionsFormatValues
 
       // If oldOptions provided, merge previous formatValues with new ones
       // Otherwise make new ones from newOptions.
-      if (oldOptions != null) {
+      if (exists(oldOptions)) {
         newFormatValues = makeValues({
           ...oldOptions.formatValues,
           ...formatValues
@@ -119,10 +112,11 @@ export default function buildOptions (newOptions?: OptionalOptions, oldOptions?:
   return {
     formatOutput: 'DD hh:{mm:ss}',
     countdown: true,
-    // @ts-expect-error
+    // @ts-expect-error validation ensures formatValues will have the correct type
     formatValues: makeValues(zeroPad),
-    futureDate: false,
     ...oldOptions,
     ...newOptions
   }
 }
+
+export default buildOptions

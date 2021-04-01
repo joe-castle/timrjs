@@ -12,18 +12,17 @@ describe('Build Options Function', () => {
     expect(buildOptions()).toEqual({
       formatOutput: 'DD hh:{mm:ss}',
       countdown: true,
-      formatValues: defaultFormatValues,
-      futureDate: false
+      formatValues: defaultFormatValues
     })
   })
 
   test('Returns an object with amended formatOutput option', () => {
-    expect(buildOptions({ formatOutput: 'HH:MM:SS' })).toEqual(
-      { formatOutput: 'HH:MM:SS', formatValues: defaultFormatValues, countdown: true, futureDate: false }
-    )
-    expect(buildOptions({ formatOutput: 'DD day hh:mm:ss' })).toEqual(
-      { formatOutput: 'DD day hh:mm:ss', formatValues: defaultFormatValues, countdown: true, futureDate: false }
-    )
+    expect(buildOptions({ formatOutput: 'HH:MM:SS' })).toEqual({
+      formatOutput: 'HH:MM:SS', formatValues: defaultFormatValues, countdown: true
+    })
+    expect(buildOptions({ formatOutput: 'DD day hh:mm:ss' })).toEqual({
+      formatOutput: 'DD day hh:mm:ss', formatValues: defaultFormatValues, countdown: true
+    })
   })
 
   test('Throws an error if formatOutput is not a string', () => {
@@ -33,26 +32,14 @@ describe('Build Options Function', () => {
   })
 
   test('Returns an object with amended countdown option', () => {
-    expect(buildOptions({ countdown: false })).toEqual(
-      { formatOutput: 'DD hh:{mm:ss}', formatValues: defaultFormatValues, countdown: false, futureDate: false }
-    )
+    expect(buildOptions({ countdown: false })).toEqual({
+      formatOutput: 'DD hh:{mm:ss}', formatValues: defaultFormatValues, countdown: false
+    })
   })
 
   test('Throws an error if countdown is not a boolean', () => {
     expect(() => buildOptions({ countdown: 'hey' })).toThrow(
       'Expected countdown to be a boolean; instead got: string'
-    )
-  })
-
-  test('Returns an object with amended futureDate option', () => {
-    expect(buildOptions({ futureDate: true })).toEqual(
-      { formatOutput: 'DD hh:{mm:ss}', formatValues: defaultFormatValues, countdown: true, futureDate: true }
-    )
-  })
-
-  test('Throws an error if countdown is not a boolean', () => {
-    expect(() => buildOptions({ futureDate: 0 })).toThrow(
-      'Expected futureDate to be a boolean; instead got: number'
     )
   })
 

@@ -138,14 +138,14 @@ function isNotOfObj<T> (value: T, clazz: any): boolean {
 }
 
 /**
- * @description Checks if a value exists, i.e. not undefined.
+ * @description Checks if a value exists, i.e. not undefined or null.
  *
  * @param {any} value - the value to be checked
  *
  * @return {boolean} True if it is, false if it isn't
  */
-function exists (value: any): boolean {
-  return value !== undefined
+function exists<T> (value: T | undefined | null): value is T {
+  return value !== undefined && value !== null
 }
 
 /**

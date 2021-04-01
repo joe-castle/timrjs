@@ -7,18 +7,16 @@ export interface OptionalOptions {
   formatOutput?: string
   countdown?: boolean
   formatValues?: OptionsFormatValues | FormatValueFn
-  futureDate?: boolean | number
   startTime?: string | number | Date
-  backupStartTime?: string | number | Date
+  backupStartTime?: string | Date
 }
 
 export interface Options {
   formatOutput: string
   countdown: boolean
   formatValues: OptionsFormatValues
-  futureDate: boolean | number
   startTime?: string | number | Date
-  backupStartTime?: string | number | Date
+  backupStartTime?: string | Date
 }
 
 export interface OptionsFormatValues {

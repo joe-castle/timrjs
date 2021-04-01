@@ -21,6 +21,7 @@ Improvments:
     ✔ don't use the new date as its platform independatnt @done(21-03-29 15:54)
     ✔ fix up dateToSeconds returning originalDate as it is unecassary, only called from setStartTime and that has access ot the original startTime it's also somewhat confusing as it sometimes returns a number and sometimes and object
   Format Time:
+    ☐ go back to non accessor raw object
     ☐ proivide the ability to provide a custom formatTime function
     ✔ add third argument to format time (boolean - buildOptions) @done(21-03-28 17:45)
       ✔ have toBuild set to true by default @done(18-11-22 11:09)
@@ -69,7 +70,7 @@ Improvments:
     ✔ figure out how the validateStartTime method is displaying the correct type for the NaN, null Infinity test and make it better / comment it 
     ✔ move timeToSeconds out of validateStartTime and have validate just validate / move the validation into timeToSeconds as dateToSeconds has it's own validation and its slightly confusing.
   EventEmitter:
-    ☐ use enum for eventEmitter listeners
+    ✘ use enum for eventEmitter listeners @cancelled(21-04-01 12:59)
     ☐ add remove(listener) and removeAll(name)
     ✔ Use Class syntax @done(21-03-26 15:53)
   Timr:
@@ -112,9 +113,9 @@ Improvments:
       ✔ write comments
 
 Tests:
-  ☐ use jest snapshot feature and replace majority of manual assertions (That make sense to replace)
-  ☐ clean up tests @enhancement 
-    ☐ espeically Timr. Where some testing is duplicated
+  ✘ use jest snapshot feature and replace majority of manual assertions (That make sense to replace) @cancelled(21-04-01 14:55)
+  ✘ clean up tests @enhancement @cancelled(21-04-01 14:55)
+    ✘ espeically Timr. Where some testing is duplicated @cancelled(21-04-01 14:55)
       e.g. changeOptions / setStartime, only have 1 test to make sure 
       it works in that context.
   ☐ karma for different browsers @feature

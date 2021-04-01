@@ -3,8 +3,8 @@ import EventEmitter from './EventEmitter'
 import buildOptions from './buildOptions'
 import timeToSeconds from './timeToSeconds'
 import formatTimeFn from './formatTime'
-import dateToSeconds from './dateToSeconds'
-import { isFn, isNotFn, notExists, exists, isNotNum, checkType, isStr } from './validate'
+import dateToSeconds, { isDateFormat } from './dateToSeconds'
+import { isFn, isNotFn, notExists, exists, isNotNum, checkType } from './validate'
 
 import { FormattedTime, Listener, OptionalOptions, Options, Raw, Status } from './types'
 
@@ -35,7 +35,7 @@ class Timr extends EventEmitter {
   options: Options
   futureDate: string | number | Date | null
   status: Status
-  removeFromStore?: () => void
+  removeFromStore?: null | (() => void)
   [key: string]: any
 
   /**
@@ -121,7 +121,10 @@ class Timr extends EventEmitter {
          * Note: Inside startFn so that delay works properly, if it was outside this scope,
          * the startTime would be out of sync after the delay finishes.
          */
-        if (isStr(this.futureDate)) this.setStartTime(this.futureDate)
+        if (exists(this.futureDate)) {
+          this.setStartTime(this.futureDate)
+        }
+
         this.status = Status.started
 
         this.timer = this.options.countdown
@@ -291,11 +294,11 @@ class Timr extends EventEmitter {
 
     let newStartTime: number
 
-    if (this.options.futureDate === true) {
+    if (isDateFormat(startTime)) {
       newStartTime = dateToSeconds(startTime, this.options.backupStartTime)
       this.futureDate = startTime
     } else {
-      newStartTime = timeToSeconds(startTime as string | number)
+      newStartTime = timeToSeconds(startTime)
       this.futureDate = null
     }
 
@@ -355,7 +358,7 @@ class Timr extends EventEmitter {
 
   /**
    * @description Gets the Timrs running value.
-   * 
+   *
    * @deprecated please use `this.started()` instead
    *
    * @return {Boolean} True if running, false if not.
@@ -364,7 +367,7 @@ class Timr extends EventEmitter {
     return this.started()
   }
 
-    /**
+  /**
    * @description Checks whether the timer has been started or not
    *
    * @return {Boolean} True if running, false if not.

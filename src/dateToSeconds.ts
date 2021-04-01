@@ -1,11 +1,22 @@
 
 import zeroPad from './zeroPad'
-import { checkType, exists, isNum, isStr, isInstanceOf } from './validate'
+import { checkType, exists, isStr, isInstanceOf } from './validate'
 
 /**
- * @description Converts a date object, date string, or unix time into seconds until that date/time.
+ * @description Confirms if provided startTime is a futureDate parseable by dateToSeconds
  *
- * @param {string|number} startTime - The date object, date string or unix time in ms.
+ * @param startTime the startTime
+ *
+ * @returns True if it is, false otherwise
+ */
+export function isDateFormat (startTime: string | number | Date): startTime is string | Date {
+  return isInstanceOf<Date>(startTime, Date) || (isStr(startTime) && /^\d{4}-\d{2}-\d{2}/.test(startTime))
+}
+
+/**
+ * @description Converts a date object or date string into seconds until that date/time.
+ *
+ * @param {string|number} startTime - The date object or date string.
  * @param {string|number} backupStartTime - startTime to use if provided startTime is in the past.
  *
  * @throws If the date matches the regex but is not the correct format.
@@ -13,25 +24,23 @@ import { checkType, exists, isNum, isStr, isInstanceOf } from './validate'
  *
  * @return {Number} - Returns the converted seconds.
  */
-function dateToSeconds (startTime: string | number | Date, backupStartTime?: string | number | Date): number {
+function dateToSeconds (startTime: string | Date, backupStartTime?: string | Date): number {
   // startTime in MS from epoch.
   let parsedStartTime: number
 
   if (isInstanceOf<Date>(startTime, Date)) {
     parsedStartTime = startTime.getTime()
-  } else if (isNum(startTime)) {
-    parsedStartTime = new Date(startTime).getTime()
   } else if (isStr(startTime)) {
     const error = new Error(
       'The provided date is not in the right format or is incorrect.\n' +
       'Expected a string in the format: YYYY-MM-DD[ HH:MM[:SS]].\n' +
       '(year)-(month)-(day) (hour):(minute):(second(s))\n' +
-      'Time is optional as is seconds.\n' +
+      'Time is optional and seconds is optional if time provided.\n' +
       `You passed: "${startTime}"`
     )
 
     try {
-      // @ts-expect-error try catch will catch nullpointer and parseint failure
+      // @ts-expect-error try catch will catch nullpointer failure
       const [year, month, ...rest] = startTime
         .match(/^(\d{4})-(\d{2})-(\d{2})(?: (\d{2}):(\d{2})(?::(\d{2}))?)?$/i)
         .slice(1)
@@ -47,7 +56,7 @@ function dateToSeconds (startTime: string | number | Date, backupStartTime?: str
       throw error
     }
   } else {
-    throw new Error(`Expected startTime to be a string, number or Date object, instead got: ${checkType(startTime)}`)
+    throw new Error(`Expected startTime to be a string or Date object, instead got: ${checkType(startTime)}`)
   }
 
   const dateNow = new Date()
@@ -57,7 +66,7 @@ function dateToSeconds (startTime: string | number | Date, backupStartTime?: str
 
   if (startTimeInSeconds < 0) {
     if (exists(backupStartTime)) {
-      return dateToSeconds(backupStartTime as string | number)
+      return dateToSeconds(backupStartTime)
     }
 
     throw new Error(

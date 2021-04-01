@@ -128,7 +128,7 @@ describe('Create Store Function', () => {
     store.removeFromStore(timer)
 
     expect(store.getAll()).toHaveLength(0)
-    expect(timer.removeFromStore).toBeUndefined()
+    expect(timer.removeFromStore).toBeNull()
   })
 
   test('A timr is able to remove itself from the a store.', () => {
@@ -142,7 +142,7 @@ describe('Create Store Function', () => {
 
     timer1.destroy()
 
-    expect(timer1.removeFromStore).toBeUndefined()
+    expect(timer1.removeFromStore).toBeNull()
     expect(store.getAll()).toHaveLength(2)
     expect(store.getAll().includes(timer1)).toBe(false)
   })
@@ -158,7 +158,7 @@ describe('Create Store Function', () => {
 
     expect(store.getAll()).toHaveLength(0)
 
-    expect(timer1.removeFromStore).toBeUndefined()
-    expect(timer2.removeFromStore).toBeUndefined()
+    expect(timer1.removeFromStore).toBeNull()
+    expect(timer2.removeFromStore).toBeNull()
   })
 })

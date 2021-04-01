@@ -21,7 +21,7 @@ import { OptionalOptions } from './types'
 function create (startTime: string | number | Date | OptionalOptions, options?: OptionalOptions): Timr {
   if (isObj<OptionalOptions>(startTime)) {
     if (exists(startTime.startTime)) {
-      return new Timr(startTime.startTime as string | number, startTime)
+      return new Timr(startTime.startTime, startTime)
     }
 
     throw new Error('When providing only an object when creating a timer, it must have a startTime property.')

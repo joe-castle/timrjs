@@ -37,7 +37,7 @@ export default function createStore (...args: Timr[]): Store {
     // Instanceof check required as it's exposed as a store method.
     if (timr instanceof Timr) {
       timrs = timrs.filter(x => x !== timr)
-      timr.removeFromStore = undefined
+      timr.removeFromStore = null
     }
   }
 

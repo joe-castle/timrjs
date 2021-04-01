@@ -19,17 +19,10 @@ describe('Date to Seconds function', () => {
 
   test('When passed just a date, it returns the seconds to that point in time', () => {
     const year = new Date().getFullYear() + 1
-    const dateToCheck = Date.parse(`${year}-12-15`)
-    const testStartTime = Math.ceil((dateToCheck - Date.now()) / 1000)
+    const dateToCheck = new Date(`${year}-12-15`)
+    const testStartTime = Math.ceil((dateToCheck.getTime() - Date.now()) / 1000)
 
     expect(dateToSeconds(dateToCheck)).toBe(testStartTime)
-  })
-
-  test('When passed a unix time, it returns the seconds to that point in time', () => {
-    const testTime = Date.now() + 36000
-    const testStartTime = Math.ceil((testTime - Date.now()) / 1000)
-
-    expect(dateToSeconds(testTime)).toBe(testStartTime)
   })
 
   test('Formats backup date if provided date is in the past', () => {
@@ -44,7 +37,7 @@ describe('Date to Seconds function', () => {
       'The provided date is not in the right format or is incorrect.\n' +
       'Expected a string in the format: YYYY-MM-DD[ HH:MM[:SS]].\n' +
       '(year)-(month)-(day) (hour):(minute):(second(s))\n' +
-      'Time is optional as is seconds.\n' +
+      'Time is optional and seconds is optional if time provided.\n' +
       'You passed: "not a date string"'
     )
   })
@@ -54,14 +47,14 @@ describe('Date to Seconds function', () => {
       'The provided date is not in the right format or is incorrect.\n' +
       'Expected a string in the format: YYYY-MM-DD[ HH:MM[:SS]].\n' +
       '(year)-(month)-(day) (hour):(minute):(second(s))\n' +
-      'Time is optional as is seconds.\n' +
+      'Time is optional and seconds is optional if time provided.\n' +
       'You passed: "0000-00-00"'
     )
   })
 
-  test('Throws an error if the passed value is not a string, number or date', () => {
+  test('Throws an error if the passed value is not a string or date', () => {
     expect(() => dateToSeconds({})).toThrow(
-      'Expected startTime to be a string, number or Date object, instead got: object'
+      'Expected startTime to be a string or Date object, instead got: object'
     )
   })
 
