@@ -14,7 +14,8 @@ Improvments:
     ✔ createStore, timr instanceof Time necassary? It's already hcecked before adding to the array.
       Instanceof check required as it's exposed as a store method.
   Date To Seconds:
-    ☐ use dateToSeconds for all startTime creation?
+    ✘ use dateToSeconds for all startTime creation? @cancelled(21-04-01 11:18)
+    ☐ use statrtTime for both dates, but if contains a date pass to dateToseconds, remove furtureDate option
     ✔ comment epic regex in dateToSeconds @enhancement @done(21-03-30 13:15)
     ✔ refactor to definitley support locale dates / timeszones @done(21-03-29 15:54)
     ✔ don't use the new date as its platform independatnt @done(21-03-29 15:54)
@@ -68,16 +69,20 @@ Improvments:
     ✔ figure out how the validateStartTime method is displaying the correct type for the NaN, null Infinity test and make it better / comment it 
     ✔ move timeToSeconds out of validateStartTime and have validate just validate / move the validation into timeToSeconds as dateToSeconds has it's own validation and its slightly confusing.
   EventEmitter:
+    ☐ use enum for eventEmitter listeners
+    ☐ add remove(listener) and removeAll(name)
     ✔ Use Class syntax @done(21-03-26 15:53)
   Timr:
     ✔ Use Class syntax @done(21-03-26 15:53)
     ☐ force countdown to true if futureDate also set to true. @enhancement 
-    ☐ Pass function to start when running @feature
+    ✔ Pass function to start when running @feature @done(21-04-01 12:04)
       Provide an option to pass a function that runs 
       when start is called when the timer is already running, thus providing
       and easy hook to deal with that situation, otherwise just does nothing currently.
-    ☐ re-write future dates slightly to be slightly more forgiving than erroring @enhancement 
+      
+      Added a listener method called onAlreadyStarted
     ☐ if future date used, use more appropriate formatOutput @enhancement 
+    ✔ re-write future dates slightly to be slightly more forgiving than erroring @enhancement @done(21-04-01 08:52)
       Allowing people to set and forget it.
       allow user to provide a function to fire if a date becomes in the past they can handle it, 
       if no function is provided throw an error / console warn and set startTime to 0.
@@ -86,6 +91,7 @@ Improvments:
       } catch {
         throw new Error('Date in the past');
       }
+      ended up providing backuptime option
     ✔ remove the ability for 0 to setup a stopwatch. 
       Error if countdown: false hasn't been set and 0 is specified as the starttime, 
       to make it more clear and less presumptious. 
@@ -118,7 +124,7 @@ Tests:
     Babel adds too much unecassary overhead to class transpiling to make this worthwhile
 
 Build:
-  ☐ change yarn references to npm to make future collab easier
+  ✔ change yarn references to npm to make future collab easier @done(21-04-01 08:52)
   ✔ properly sort out different build states, maybe use rollup???? @done(21-03-30 13:12)
   ✔ setup a build pipeline with travis @done(18-11-13 13:38)
     ✔ builds and test @done(18-11-13 13:38)

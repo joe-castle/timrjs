@@ -95,6 +95,18 @@ describe('Timr Class', () => {
       expect(timer.getStatus(Status.started)).toBeTruthy()
     })
 
+    test('Emits onAlreadyStarted when start() called when timer has already started', (done) => {
+      const timer = new Timr(600)
+        .onAlreadyStarted((self) => {
+          expect(self).toBe(timer)
+          timer.destroy()
+          done()
+        })
+
+      timer.start()
+      timer.start()
+    })
+
     test('Throws an error if start is called with countdown set to true and startTime set to 0', () => {
       expect(() => new Timr(0).start()).toThrow(
         'Unable to start timer when countdown = true and startTime = 0. ' +

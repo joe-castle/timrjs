@@ -139,6 +139,8 @@ class Timr extends EventEmitter {
       }
 
       this.emit('onStart', this)
+    } else {
+      this.emit('onAlreadyStarted', this)
     }
 
     return this
@@ -217,6 +219,7 @@ class Timr extends EventEmitter {
    * Ticker: Called every second the timer ticks down.
    * Finish: Called once when the timer finishes.
    * onStart: Called when the timer starts.
+   * onAlreadyStarted: Called when the timer is already running and start is called
    * onPause: Called when the timer is paused.
    * onStop: Called when the timer is stopped.
    * onDestroy: Called when the timer is destroyed.
@@ -229,6 +232,7 @@ class Timr extends EventEmitter {
   ticker = makeEventListener('ticker')
   finish = makeEventListener('finish')
   onStart = makeEventListener('onStart')
+  onAlreadyStarted = makeEventListener('onAlreadyStarted')
   onPause = makeEventListener('onPause')
   onStop = makeEventListener('onStop')
   onDestroy = makeEventListener('onDestroy')
