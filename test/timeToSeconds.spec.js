@@ -8,6 +8,7 @@ describe('Time To Seconds function', () => {
     expect(timeToSeconds('02:40:00')).toBe(9600)
     expect(timeToSeconds('10m')).toBe(600)
     expect(timeToSeconds('10h')).toBe(36000)
+    expect(timeToSeconds('1d')).toBe(86400)
   })
 
   test('Rounds the converted number to avoid errors with floating point values', () => {

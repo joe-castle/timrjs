@@ -24,10 +24,13 @@ export default function timeToSeconds (time: string | number): number {
 
   let newTime = time
 
-  // Converts '25m' & '25h' into '25:00' & '25:00:00' respectivley.
-  if (isStr(newTime) && /^\d+[mh]$/i.test(newTime)) {
-    newTime = newTime.replace(/^(\d+)m$/i, '$1:00')
-    newTime = newTime.replace(/^(\d+)h$/i, '$1:00:00')
+  // Converts '25m', '25h' && '25d' into '25:00', '25:00:00' & '600:00:00' respectivley.
+  if (isStr(newTime) && /^\d+[mhd]$/i.test(newTime)) {
+    switch (newTime.slice(-1)) {
+      case 'm': newTime = newTime.replace(/^(\d+)m$/i, '$1:00'); break
+      case 'h': newTime = newTime.replace(/^(\d+)h$/i, '$1:00:00'); break
+      case 'd': newTime = newTime.replace(/^(\d+)d$/i, (m, g1) => `${parseInt(g1) * 24}:00:00`); break
+    }
   }
 
   if (isNotStr(newTime) && isNotNum(newTime)) {

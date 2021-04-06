@@ -77,7 +77,7 @@ class Timr extends EventEmitter {
     })
   }
 
-  _listener(this: Timr, name: string, listener: Listener): Timr {
+  _listener (this: Timr, name: string, listener: Listener): Timr {
     if (isNotFn(listener)) {
       throw new TypeError(`Expected ${name} to be a function, instead got: ${checkType(listener)}`)
     }
@@ -257,7 +257,7 @@ class Timr extends EventEmitter {
 
   /**
    * @description Called when the timer is paused.
-   * 
+   *
    * @throws If the argument is not of type function.
    *
    * @param {Function} listener - Function to added to events.
@@ -281,7 +281,7 @@ class Timr extends EventEmitter {
 
   /**
    * @description Called when the timer is destroyed.
-   * 
+   *
    * @throws If the argument is not of type function.
    *
    * @param {Function} listener - Function to added to events.
@@ -346,7 +346,7 @@ class Timr extends EventEmitter {
     let newStartTime: number
 
     if (isDateFormat(startTime)) {
-      newStartTime = dateToSeconds(startTime, backupStartTime || this.options.backupStartTime)
+      newStartTime = dateToSeconds(startTime, backupStartTime ?? this.options.backupStartTime)
       this.futureDate = startTime
     } else {
       newStartTime = timeToSeconds(startTime)
