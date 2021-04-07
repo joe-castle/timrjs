@@ -57,14 +57,13 @@ export default function formatTime (seconds: number, options?: OptionalOptions, 
    * Match returns empty strings for groups it can't find so filter them out.
    * Note: Regex will ALWAYS return a match of atleast one empty string, hence <string[]> cast
    */
-  const protectedValues = (stringToFormat
+  const protectedValues = stringToFormat
     .slice(leftBracketPosition, rightBracketPosition)
-    .match(/(DD)?(HH)?(MM)?(SS)?/gi) as string[])
-    .filter(match => match.length > 0)
+    .match(/DD|HH|MM|SS/gi)
 
   // If protectedValues exist, apply logic to removing them
   // otherwise, format string exactly as it appears
-  if (protectedValues.length > 0) {
+  if (protectedValues != null) {
     let lastValueAboveZero
     if (raw.DD > 0) lastValueAboveZero = 'DD'
     else if (raw.HH > 0) lastValueAboveZero = 'HH'
@@ -85,14 +84,9 @@ export default function formatTime (seconds: number, options?: OptionalOptions, 
   // Replaces all values in string with their respective number values
   const formattedTime = stringToFormat
     // Remove any remaining curly braces before formatting.
-    .replace(/\{?\}?/g, '')
-    .replace(/(DD)?(HH)?(MM)?(SS)?/gi, (match) => {
-      // removes whitespace caught in regex match
-      if (match.length === 0) return ''
-
-      // Apply specific function form formatValues to value.
-      return (formatValues[match] as FormatValueFn)(raw[match]) as string
-    })
+    .replace(/\{|\}/g, '')
+    // Apply specific function form formatValues to value.
+    .replace(/DD|HH|MM|SS/gi, (match) => (formatValues[match] as FormatValueFn)(raw[match]) as string)
 
   return { formattedTime, raw }
 }

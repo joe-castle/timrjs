@@ -38,6 +38,14 @@ describe('Format Time function', () => {
     ).toBe('01 days 03 hours 46 minutes 39 seconds')
   })
 
+  test('Returns the correct formatting with a mixture of different formatOutput strings and protectedValues', () => {
+    expect(formatTime(59, { formatOutput: 'DD hh:mm:ss' }).formattedTime).toBe('00 00:00:59')
+    expect(formatTime(59, { formatOutput: '{DD hh:mm:ss}' }).formattedTime).toBe('00 00:00:59')
+    expect(formatTime(59, { formatOutput: 'DD {hh:mm:ss}' }).formattedTime).toBe('00:00:59')
+    expect(formatTime(59, { formatOutput: 'DD hh:{mm:ss}' }).formattedTime).toBe('00:59')
+    expect(formatTime(59, { formatOutput: 'DD hh:mm:{ss}' }).formattedTime).toBe('59')
+  })
+
   test('Returns the correct formatting with a mixture of different formatValues and formatOutput strings', () => {
     expect(formatTime(5500, { formatOutput: '00:MM:ss', formatValues: i => i * 2 }).formattedTime).toBe('00:182:80')
     expect(formatTime(600, { formatValues: i => `0${i}0` }).formattedTime).toBe('0100:000')
