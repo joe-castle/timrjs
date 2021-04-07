@@ -1,5 +1,6 @@
 import createStore from '../src/createStore'
 import Timr from '../src/Timr'
+import { Status } from '../src/types'
 
 describe('Create Store Function', () => {
   test('Creates a new empty store.', () => {
@@ -109,6 +110,18 @@ describe('Create Store Function', () => {
     store.startAll()
   })
 
+  test('Returns an array of all timrs that match a status.', () => {
+    const timer1 = new Timr(600)
+    timer1.start().pause()
+    const timer2 = new Timr(600)
+    timer2.start().pause()
+    const timer3 = new Timr(600)
+    const timer4 = new Timr(600)
+    const store = createStore(timer1, timer2, timer3, timer4)
+
+    expect(store.getStatus(Status.paused)).toHaveLength(2)
+  })
+
   test('Returns an array of all the timrs that have started.', () => {
     const timer = new Timr(600)
     const store = createStore(timer)
@@ -116,6 +129,16 @@ describe('Create Store Function', () => {
     expect(store.started()).toHaveLength(0)
     store.startAll()
     expect(store.started()).toHaveLength(1)
+    store.stopAll()
+  })
+
+  test('Returns an array of all the timrs that have started using deprecated isRunning.', () => {
+    const timer = new Timr(600)
+    const store = createStore(timer)
+
+    expect(store.isRunning()).toHaveLength(0)
+    store.startAll()
+    expect(store.isRunning()).toHaveLength(1)
     store.stopAll()
   })
 

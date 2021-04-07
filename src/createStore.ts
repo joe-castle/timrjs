@@ -78,7 +78,8 @@ export default function createStore (...args: Timr[]): Store {
     startAll: () => timrs.forEach(timr => timr.start()),
     pauseAll: () => timrs.forEach(timr => timr.pause()),
     stopAll: () => timrs.forEach(timr => timr.stop()),
-    getStatus: (statusName?: Status) => timrs.filter(timr => timr.getStatus(statusName)),
+    getStatus: (statusName: Status) => timrs.filter(timr => timr.getStatus(statusName)),
+    // Deprecated in favour of .started()
     isRunning: () => timrs.filter(timr => timr.isRunning()),
     started: () => timrs.filter(timr => timr.started()),
     removeFromStore,

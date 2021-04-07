@@ -42,7 +42,7 @@ export interface Store {
   startAll: () => void
   pauseAll: () => void
   stopAll: () => void
-  getStatus: () => Timr[]
+  getStatus: (statusName: Status) => Timr[]
   /**
    * @deprecated Please use `started()` instead
    */
