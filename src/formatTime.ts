@@ -1,7 +1,7 @@
 import buildOptions from './buildOptions'
 import { isNotFn, isNotStr, isObj } from './validate'
 
-import { FormattedTime, FormatValueFn, OptionalOptions, OptionsFormatValues, Raw } from './types'
+import { FormattedTime, FormatValueFn, OptionalOptions, FormatValues, Raw } from './types'
 
 /**
  * @description Converts seconds to time format.
@@ -34,7 +34,7 @@ export default function formatTime (seconds: number, options?: OptionalOptions, 
     } else {
       return buildOptions()
     }
-  })() as { formatOutput: string, formatValues: OptionsFormatValues }
+  })() as { formatOutput: string, formatValues: FormatValues }
 
   // @ts-expect-error
   const raw: Raw = {}

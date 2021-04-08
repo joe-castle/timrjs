@@ -1,24 +1,23 @@
 import zeroPad from './zeroPad'
 import { isNotNum, isNotStr, isNotBool, isFn, isObj, exists, checkType } from './validate'
 
-import { FormatValueFn, OptionalOptions, Options, OptionsFormatValues } from './types'
+import { FormatValueFn, OptionalOptions, Options, FormatValues, OptionsFormatValues } from './types'
 
-const timeValues = ['ss', 'SS', 'mm', 'MM', 'hh', 'HH', 'dd', 'DD']
+const optionsFormatKeys = ['default', 'ss', 'SS', 'mm', 'MM', 'hh', 'HH', 'dd', 'DD']
+const timeValues = optionsFormatKeys.slice(1)
 
 /**
- * @description Creates an object using the provided function / object of functions
+ * @description Creates an object using the provided object of functions
  * and assigns it to all or their respective values.
  *
- * @param {Function|Object} fn - The function or object of functions to assign to the time values.
+ * @param {Object} formatValues - The object of functions to assign to the time values.
  *
  * @return {Object} - The created object of functions.
  */
-function makeValues (fn: OptionsFormatValues | FormatValueFn): OptionsFormatValues {
+function makeValues (formatValues: OptionsFormatValues): FormatValues {
   return timeValues.reduce((obj, item) => ({
     ...obj,
-    // If an object, check it's value is a function otherwise apply default (zeroPad).
-    // If not object apply provided fn to all values
-    [item]: isObj<OptionsFormatValues>(fn) ? (isFn(fn[item]) ? fn[item] : zeroPad) : fn
+    [item]: exists(formatValues[item]) ? formatValues[item] : exists(formatValues.default) ? formatValues.default : zeroPad
   }), {})
 }
 
@@ -46,17 +45,13 @@ function buildOptions (newOptions?: OptionalOptions, oldOptions?: Options): Opti
     }
 
     if (exists(formatValues)) {
-      if (isFn<FormatValueFn>(formatValues)) {
-        if (isNotNum(formatValues(5)) && isNotStr(formatValues(5))) {
-          throw new TypeError(`Expected the return value from formatValues function to be of type string or number; instead got: ${checkType(formatValues(5))}`)
-        }
-      } else if (isObj<OptionsFormatValues>(formatValues)) {
+      if (isObj<OptionsFormatValues>(formatValues)) {
         let toError = false
         let error = 'Expected formatValues to contain a list of keys with functions that return a string or number; instead got:\n'
 
         /**
          * Runs through each key to check that it:
-         *  - Is a valid property, see timeValues above.
+         *  - Is a valid property, see optionsFormatKeys above.
          *  - It's value is a function and it returns either a string or number.
          *
          * It will then create a string for all errors it finds,
@@ -65,8 +60,8 @@ function buildOptions (newOptions?: OptionalOptions, oldOptions?: Options): Opti
         Object.keys(formatValues).forEach((key) => {
           const value = formatValues[key]
 
-          if (!timeValues.includes(key)) {
-            error += ` '${key}': is not a recognised property, should be one of: ${timeValues.map(val => ` '${val}'`).toString().trim()}\n`
+          if (!optionsFormatKeys.includes(key)) {
+            error += ` '${key}': is not a recognised property, should be one of: ${optionsFormatKeys.map(val => ` '${val}'`).toString().trim()}\n`
             toError = true
           } else if (isFn<FormatValueFn>(value)) {
             if (isNotNum(value(5)) && isNotStr(value(5))) {
@@ -83,7 +78,7 @@ function buildOptions (newOptions?: OptionalOptions, oldOptions?: Options): Opti
           throw new Error(error)
         }
       } else {
-        throw new TypeError(`Expected formatValues to be a function or an object of functions; instead got: ${checkType(formatValues)}`)
+        throw new TypeError(`Expected formatValues to be a an object of functions; instead got: ${checkType(formatValues)}`)
       }
     }
   }
@@ -93,7 +88,7 @@ function buildOptions (newOptions?: OptionalOptions, oldOptions?: Options): Opti
     const { formatValues } = newOptions
 
     if (exists(formatValues)) {
-      let newFormatValues: OptionsFormatValues
+      let newFormatValues: FormatValues
 
       // If oldOptions provided, merge previous formatValues with new ones
       // Otherwise make new ones from newOptions.
@@ -112,8 +107,7 @@ function buildOptions (newOptions?: OptionalOptions, oldOptions?: Options): Opti
   return {
     formatOutput: 'DD hh:{mm:ss}',
     countdown: true,
-    // @ts-expect-error validation ensures formatValues will have the correct type
-    formatValues: makeValues(zeroPad),
+    formatValues: makeValues({ }),
     ...oldOptions,
     ...newOptions
   }

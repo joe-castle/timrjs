@@ -43,8 +43,25 @@ describe('Build Options Function', () => {
     )
   })
 
-  test('Returns an object with a function passed to formatValues', () => {
-    const obj = buildOptions({ formatValues: () => 5 })
+  test('Returns an object with defaultValues when the formatValues is empty object', () => {
+    const obj = buildOptions({ formatValues: { } })
+
+    expect(obj).toBeType('object')
+    expect(obj.formatOutput).toBe('DD hh:{mm:ss}')
+    expect(obj.countdown).toBe(true)
+
+    expect(Object.keys(obj.formatValues)).toEqual(timeValues)
+
+    Object.keys(obj.formatValues).forEach((key) => {
+      const value = obj.formatValues[key]
+
+      expect(value).toBeType('function')
+      expect(value(1)).toBe('01')
+    })
+  })
+
+  test('Returns an object with the default property set', () => {
+    const obj = buildOptions({ formatValues: { default: () => 5 } })
 
     expect(obj).toBeType('object')
     expect(obj.formatOutput).toBe('DD hh:{mm:ss}')
@@ -60,7 +77,7 @@ describe('Build Options Function', () => {
     })
   })
 
-  test('Returns an object with an object of functions passed to formatValues', () => {
+  test('Returns an object with an object of functions passed to formatValues and zeroPad used as default', () => {
     const obj = buildOptions({
       formatValues: {
         ss: i => i * 2,
@@ -79,6 +96,29 @@ describe('Build Options Function', () => {
     expect(obj.formatValues.mm(2)).toBe('yo-2-yo')
     expect(obj.formatValues.hh(2)).toBe(2)
     expect(obj.formatValues.HH(2)).toBe('02')
+  })
+
+  test('Returns an object with an object of functions passed to formatValues and zeroPad custom function used as default', () => {
+    const obj = buildOptions({
+      formatValues: {
+        default: i => `DEFAULT${i}`,
+        ss: i => i * 2,
+        mm: i => `yo-${i}-yo`,
+        hh: i => i
+      }
+    })
+
+    expect(obj).toBeType('object')
+    expect(obj.formatOutput).toBe('DD hh:{mm:ss}')
+    expect(obj.countdown).toBe(true)
+
+    expect(Object.keys(obj.formatValues)).toEqual(timeValues)
+
+    expect(obj.formatValues.ss(2)).toBe(4)
+    expect(obj.formatValues.mm(2)).toBe('yo-2-yo')
+    expect(obj.formatValues.hh(2)).toBe(2)
+    expect(obj.formatValues.HH(2)).toBe('DEFAULT2')
+    expect(obj.formatValues.SS(2)).toBe('DEFAULT2')
   })
 
   test('Returns an object with the formatValues changed and the correct mix of old and new options', () => {
@@ -107,22 +147,25 @@ describe('Build Options Function', () => {
     expect(newOptions.formatValues.HH(2)).toBe('02')
   })
 
-  test('Throws an error if formatValues is neither an object nor a function', () => {
+  test('Throws an error if formatValues is not an object', () => {
     expect(() => buildOptions({ formatValues: 'Not a function or object.' })).toThrow(
-      'Expected formatValues to be a function or an object of functions; instead got: string'
+      'Expected formatValues to be a an object of functions; instead got: string'
+    )
+    expect(() => buildOptions({ formatValues: () => {} })).toThrow(
+      'Expected formatValues to be a an object of functions; instead got: function'
     )
   })
 
-  test('Throws an error if formatValues is a function, but it\'s return type is neither a string nor a number', () => {
-    expect(() => buildOptions({ formatValues: () => null })).toThrow(
-      'Expected the return value from formatValues function to be of type string or number; instead got: null'
-    )
-  })
+  // test('Throws an error if formatValues is a function, but it\'s return type is neither a string nor a number', () => {
+  //   expect(() => buildOptions({ formatValues: () => null })).toThrow(
+  //     'Expected the return value from formatValues function to be of type string or number; instead got: null'
+  //   )
+  // })
 
   test('Throws an error if formatValues is an object, but one of it\'s keys are invalid', () => {
     expect(() => buildOptions({ formatValues: { invalidKey: 'wey' } })).toThrow(
       'Expected formatValues to contain a list of keys with functions that return a string or number; instead got:\n' +
-      ' \'invalidKey\': is not a recognised property, should be one of: \'ss\', \'SS\', \'mm\', \'MM\', \'hh\', \'HH\', \'dd\', \'DD\''
+      ' \'invalidKey\': is not a recognised property, should be one of: \'default\', \'ss\', \'SS\', \'mm\', \'MM\', \'hh\', \'HH\', \'dd\', \'DD\''
     )
   })
 

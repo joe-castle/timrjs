@@ -26,7 +26,8 @@ function flattenArray<T> (arr: T[]): T[] {
  * and perform functions on all of them.
  *
  * @param {Array} [args] - Optional timers to start the store with.
- * Can be any type, but will get filtered down to only timr objects.
+ * @throws If the provided timr is not a Timr object.
+ * @throws If the provided timr is already in a store.
  *
  * @return {Object} Returns a store object with methods.
  */

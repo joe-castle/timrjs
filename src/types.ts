@@ -6,7 +6,7 @@ import Timr from './Timr'
 export interface OptionalOptions {
   formatOutput?: string
   countdown?: boolean
-  formatValues?: OptionsFormatValues | FormatValueFn
+  formatValues?: OptionsFormatValues
   startTime?: string | number | Date
   backupStartTime?: string | Date
 }
@@ -14,12 +14,12 @@ export interface OptionalOptions {
 export interface Options {
   formatOutput: string
   countdown: boolean
-  formatValues: OptionsFormatValues
+  formatValues: FormatValues
   startTime?: string | number | Date
   backupStartTime?: string | Date
 }
 
-export interface OptionsFormatValues {
+export interface FormatValues {
   ss?: FormatValueFn
   SS?: FormatValueFn
   mm?: FormatValueFn
@@ -29,6 +29,10 @@ export interface OptionsFormatValues {
   dd?: FormatValueFn
   DD?: FormatValueFn
   [key: string]: FormatValueFn | undefined
+}
+
+export interface OptionsFormatValues extends FormatValues {
+  default?: FormatValueFn
 }
 
 export type FormatValueFn = (value: number) => string | number

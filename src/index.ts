@@ -34,6 +34,7 @@ function create (startTime: string | number | Date | OptionalOptions, options?: 
 export {
   OptionalOptions,
   Options,
+  FormatValues,
   OptionsFormatValues,
   FormatValueFn,
   Store,

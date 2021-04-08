@@ -47,8 +47,8 @@ describe('Format Time function', () => {
   })
 
   test('Returns the correct formatting with a mixture of different formatValues and formatOutput strings', () => {
-    expect(formatTime(5500, { formatOutput: '00:MM:ss', formatValues: i => i * 2 }).formattedTime).toBe('00:182:80')
-    expect(formatTime(600, { formatValues: i => `0${i}0` }).formattedTime).toBe('0100:000')
+    expect(formatTime(5500, { formatOutput: '00:MM:ss', formatValues: { default: i => i * 2 } }).formattedTime).toBe('00:182:80')
+    expect(formatTime(600, { formatValues: { default: i => `0${i}0` } }).formattedTime).toBe('0100:000')
     expect(formatTime(96000, { formatValues: { DD: i => i } }).formattedTime).toBe('1 02:40:00')
 
     expect(formatTime(96000, {
@@ -63,14 +63,14 @@ describe('Format Time function', () => {
   })
 
   test('Doesn\'t make a call to buildOptions when toBuild is set to false', () => {
-    formatTime(600, buildOptions.default({ formatOutput: '00:MM:ss', formatValues: i => i * 2 }), false)
+    formatTime(600, buildOptions.default({ formatOutput: '00:MM:ss', formatValues: { default: i => i * 2 } }), false)
 
     // Called above so the options object is correct, but shouldn't be called inside formatTime
     expect(buildOptionsSpy).toBeCalledTimes(1)
   })
 
   test('Does make a call to buildOptions when toBuild is set to true', () => {
-    formatTime(600, buildOptions.default({ formatOutput: '00:MM:ss', formatValues: i => i * 2 }), true)
+    formatTime(600, buildOptions.default({ formatOutput: '00:MM:ss', formatValues: { default: i => i * 2 } }), true)
 
     // Called above so the options object is correct
     expect(buildOptionsSpy).toBeCalledTimes(2)
@@ -89,6 +89,9 @@ describe('Format Time function', () => {
   })
 
   test('If formatOutput contains no valid formatting options, skip formatting', () => {
-    expect(() => formatTime(600, { formatOutput: 'no formatting', formatValues: (s) => s }, false)).not.toThrow()
+    const testFn = () => formatTime(600, { formatOutput: 'no formatting', formatValues: { default: (s) => s } }, false)
+
+    expect(testFn).not.toThrow()
+    expect(testFn().formattedTime).toBe('no formatting')
   })
 })
