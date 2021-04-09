@@ -1,6 +1,6 @@
 {
   "name": "timrjs",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Timr is a simple utility for creating timers in JavaScript.",
   "license": "MIT",
   "repository": "github:joesmith100/timrjs",
