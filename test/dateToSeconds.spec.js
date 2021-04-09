@@ -1,70 +1,73 @@
-import { expect } from 'chai';
+import dateToSeconds from '../src/dateToSeconds'
 
-import dateToSeconds from '../src/dateToSeconds';
-
-const zeroPad = number => (number < 10 ? `0${number}` : number);
+const zeroPad = number => (number < 10 ? `0${number}` : number)
 
 describe('Date to Seconds function', () => {
-  it('When passed a date and time, it returns an object with the parsed seconds and original date',
-  () => {
-    const year = new Date().getFullYear() + 1;
+  test('When passed a date and time string, it returns seconds to that time from now.', () => {
+    const year = new Date().getFullYear() + 1
+    const testStartTime = Math.ceil((Date.parse(`${year}-05-15 14:00:00`) - Date.now()) / 1000)
 
-    const testStartTime2 = Math.ceil((Date.parse(`${year}-05-15T14:00:00`) - Date.now()) / 1000);
-    expect(dateToSeconds(`${year}-05-15T14:00:00`).parsed).to.equal(testStartTime2);
-    expect(dateToSeconds(`${year}-05-15T14:00:00`).originalDate).to.equal(`${year}-05-15T14:00:00`);
-  });
+    expect(dateToSeconds(`${year}-05-15 14:00:00`)).toBe(testStartTime)
+  })
 
-  it('When passed just a date, it returns the seconds to that point in time', () => {
-    const year = new Date().getFullYear() + 1;
+  test('When passed just a date string, it returns the seconds to that point in time', () => {
+    const year = new Date().getFullYear() + 1
+    const testStartTime = Math.ceil((Date.parse(`${year}-12-15`) - Date.now()) / 1000)
 
-    const testStartTime2 = Math.ceil((Date.parse(`${year}-12-15`) - Date.now()) / 1000);
-    expect(dateToSeconds(`${year}-12-15`).parsed).to.equal(testStartTime2);
-  });
+    expect(dateToSeconds(`${year}-12-15`)).toBe(testStartTime)
+  })
 
-  it('When passed a unix time, it returns the seconds to that point in time', () => {
-    const testTime = Date.now() + 36000;
+  test('When passed just a date, it returns the seconds to that point in time', () => {
+    const year = new Date().getFullYear() + 1
+    const dateToCheck = new Date(`${year}-12-15`)
+    const testStartTime = Math.ceil((dateToCheck.getTime() - Date.now()) / 1000)
 
-    const testStartTime1 = Math.ceil((testTime - Date.now()) / 1000);
-    expect(dateToSeconds(testTime).parsed).to.equal(testStartTime1);
-  });
+    expect(dateToSeconds(dateToCheck)).toBe(testStartTime)
+  })
 
-  it('When passing a timezone offset, it returns the seconds to that point in time.', () => {
-    const year = new Date().getFullYear() + 1;
+  test('Formats backup date if provided date is in the past', () => {
+    const year = new Date().getFullYear() + 1
+    const testStartTime = Math.ceil((Date.parse(`${year}-12-15`) - Date.now()) / 1000)
 
-    expect(() => dateToSeconds(`${year}-12-25T10:00:00-05:00`)).to.not.throw();
-    expect(() => dateToSeconds(`${year}-12-25T10:00:00+05:00`)).to.not.throw();
-    expect(() => dateToSeconds(`${year}-12-25T10:00:00Z`)).to.not.throw();
-  });
+    expect(dateToSeconds('2020-12-15', `${year}-12-15`)).toBe(testStartTime)
+  })
 
-  it('Returns the original value if it does not match the regex', () => {
-    expect(dateToSeconds('howdo')).to.equal('howdo');
-    expect(dateToSeconds({})).to.be.a('object');
-  });
+  test('Throws an error if the passed string is incorrect format', () => {
+    expect(() => dateToSeconds('not a date string')).toThrow(
+      'The provided date is not in the right format or is incorrect.\n' +
+      'Expected a string in the format: YYYY-MM-DD[ HH:MM[:SS]].\n' +
+      '(year)-(month)-(day) (hour):(minute):(second(s))\n' +
+      'Time is optional and seconds is optional if time provided.\n' +
+      'You passed: "not a date string"'
+    )
+  })
 
-  it('Returns the original value if it\'s a number that is less than 2 years. Anythiung over ' +
-  'is assumed to be a unix time', () => {
-    expect(dateToSeconds(63071999999)).to.equal(63071999999);
-  });
+  test('Throws an error if the passed string is correct format but an invalid date', () => {
+    expect(() => dateToSeconds('0000-00-00')).toThrow(
+      'The provided date is not in the right format or is incorrect.\n' +
+      'Expected a string in the format: YYYY-MM-DD[ HH:MM[:SS]].\n' +
+      '(year)-(month)-(day) (hour):(minute):(second(s))\n' +
+      'Time is optional and seconds is optional if time provided.\n' +
+      'You passed: "0000-00-00"'
+    )
+  })
 
-  it('Throws an error if the format matches the regex but is not ISO format', () => {
-    const year = new Date().getFullYear() + 1;
+  test('Throws an error if the passed value is not a string or date', () => {
+    expect(() => dateToSeconds({})).toThrow(
+      'Expected startTime to be a string or Date object, instead got: object'
+    )
+  })
 
-    expect(() => dateToSeconds(`${year}-13-25`)).to.throw(
-      'The date/time you passed does not match ISO format. ' +
-      `You passed: "${year}-13-25".`
-    );
-  });
+  test('Throws an error if the passed date is in the past and no backup time provided', () => {
+    const dateNow = new Date()
 
-  it('Throws an error if the passed date is in the past', () => {
-    const dateNow = new Date();
-
-    expect(() => dateToSeconds('2015-12-25')).to.throw(
+    expect(() => dateToSeconds('2015-12-25')).toThrow(
       'When passing a date/time, it cannot be in the past. ' +
       'You passed: "2015-12-25". It\'s currently: "' +
       `${zeroPad(dateNow.getFullYear())}-${zeroPad(dateNow.getMonth() + 1)}-` +
       `${zeroPad(dateNow.getDate())} ` +
       `${zeroPad(dateNow.getHours())}:${zeroPad(dateNow.getMinutes())}:` +
       `${zeroPad(dateNow.getSeconds())}"`
-    );
-  });
-});
+    )
+  })
+})

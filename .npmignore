@@ -1,2 +1,10 @@
+.vscode
 node_modules
 test
+.bablerc
+.gitignore
+.travis.yml
+bower.json
+rollup.config.js
+tsconfig.json
+yarn.lock

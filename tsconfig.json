@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "declaration": true,
+    "declarationDir": "types",
+    "target": "ESNext",
+    "module": "ESNext",
+    "importHelpers": true,
+    "skipLibCheck": true,
+    // Rules
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "noImplicitReturns": true,
+    "noImplicitAny": true,
+    "noUnusedLocals": true,
+    "strict": true,
+    "strictPropertyInitialization": false
+  },
+  "include": ["./src/**/*.ts"],
+  "exclude": ["node_modules", "**/spec.js"]
+}
