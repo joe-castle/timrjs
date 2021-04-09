@@ -1,7 +1,7 @@
 .vscode
 node_modules
 test
-.bablerc
+.babelrc
 .gitignore
 .travis.yml
 bower.json
