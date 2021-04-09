@@ -299,7 +299,7 @@ class Timr extends EventEmitter {
    *
    * @return {Object} The formatted time and raw values.
    */
-  formatTime (time: string = 'currentTime'): FormattedTime {
+  formatTime (time: 'currentTime' | 'startTime' = 'currentTime'): FormattedTime {
     return formatTimeFn(this[time], this.options, false)
   }
 
@@ -362,14 +362,14 @@ class Timr extends EventEmitter {
   /**
    * @description Shorthand for this.formatTime(time).formattedTime
    */
-  getFt (time: string = 'currentTime'): string {
+  getFt (time: 'currentTime' | 'startTime' = 'currentTime'): string {
     return this.formatTime(time).formattedTime
   }
 
   /**
    * @description Shorthand for this.formatTime(time).raw
    */
-  getRaw (time: string = 'currentTime'): Raw {
+  getRaw (time: 'currentTime' | 'startTime' = 'currentTime'): Raw {
     return this.formatTime(time).raw
   }
 

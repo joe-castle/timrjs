@@ -6,6 +6,5 @@ test
 .travis.yml
 bower.json
 rollup.config.js
-TODO
 tsconfig.json
 yarn.lock

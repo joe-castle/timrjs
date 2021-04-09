@@ -4,24 +4,6 @@ import { isNotFn } from './validate'
 import { Status, Store } from './types'
 
 /**
- * @description Flattens arrays to their base values
- * Example: [[1], 2, [[[3]]]] - [1, 2, 3]
- *
- * @param {Array} arr - The array to flatten
- *
- * @return {Array} The flattened array
- */
-function flattenArray<T> (arr: T[]): T[] {
-  return arr.reduce((prev: T[], curr: T) => {
-    if (Array.isArray(curr)) {
-      return prev.concat(flattenArray(curr))
-    }
-
-    return prev.concat(curr)
-  }, [])
-}
-
-/**
  * @description Creates a store that can hold multiple timr objects
  * and perform functions on all of them.
  *
@@ -71,7 +53,7 @@ export default function createStore (...args: Timr[]): Store {
 
   // Flatten args down to their values and add them to the store
   // if they pass validation.
-  flattenArray(args).forEach(add)
+  args.forEach(add)
 
   return {
     add,
