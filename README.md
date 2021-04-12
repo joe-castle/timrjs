@@ -3,14 +3,14 @@
 Timr is a simple utility for creating timers in JavaScript.  
 It can create a simple countdown timer, a stopwatch style counter and a dynamic timer that counts down to a specific day that will be up to date no matter when you start it.
 
-Compatible with Browsers and Node.js.  
-Additionally, the CDN versions support RequireJS.
+Compatible with Browsers and Node.js.
 
 [![build status](https://img.shields.io/travis/joesmith100/timrjs.svg?style=flat-square)](https://travis-ci.org/joesmith100/timrjs)
 [![coverage status](https://img.shields.io/coveralls/joesmith100/timrjs/master.svg?style=flat-square)](https://coveralls.io/github/joesmith100/timrjs?branch=master)
 [![npm version](https://img.shields.io/npm/v/timrjs.svg?style=flat-square)](https://www.npmjs.com/package/timrjs)
 [![npm downloads](https://img.shields.io/npm/dm/timrjs.svg?style=flat-square)](https://www.npmjs.com/package/timrjs)
 [![npm license](https://img.shields.io/npm/l/timrjs.svg?style=flat-square)](https://www.npmjs.com/package/timrjs)
+[![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](http://commitizen.github.io/cz-cli/)
 
 <!-- ## Important
 Version 1.0 has had some substantial changes made to it (some of which are breaking), if you've been using previous versions, go [here](https://github.com/joesmith100/timrjs/releases/tag/v1.0.0) to see whats changed. -->
@@ -41,8 +41,7 @@ You can also include the following CDN:
 > [https://unpkg.com/timrjs@latest/dist/timr.js](https://unpkg.com/timrjs@latest/dist/timr.js)  
 > [https://unpkg.com/timrjs@latest/dist/timr.min.js](https://unpkg.com/timrjs@latest/dist/timr.min.js)
 
-These versions will expose a single global method: `Timr`.  
-Alternatively, they will define a module if you are using RequireJS: `require(['Timr'])`.
+These versions will expose a single global method: `Timr`.
 
 ## Syntax
 ```
@@ -309,12 +308,12 @@ The following methods are available on all timrs. Unless they return a specific 
  - `setStartTime(newStartTime[, backupStartTime]): Timr`
  
    Changes the `startTime` to the one provided. Will stop the timer if its already started. It's also subject to validation, so will throw an error if the provided time is invalid. Optionally accepts a `backupStartTime` for futureDates, will default to the one provided by options if omitted.
- - `getFt(time): string`
+ - `getFt(time: 'currentTime' | 'startTime' [default='currentTime']): string`
  
-   Shorthand for `formatTime().formattedTime`.
- - `getRaw(time): Raw`
+   Shorthand for `formatTime(time).formattedTime`.
+ - `getRaw(time: 'currentTime' | 'startTime' [default='currentTime']): Raw`
  
-   Shorthand for `formatTime().raw`.
+   Shorthand for `formatTime(time).raw`.
  - `getStartTime(): number`
  
    Returns the startTime in seconds.
