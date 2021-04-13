@@ -14,10 +14,9 @@ branches:
 jobs:
   include:
     - stage: test-build
-      script:
-        - npm run lint
-        - npm run coveralls
-        - npm run build
+      script: npm run lint
+      script: npm run coveralls
+      script: npm run build
     - stage: release
       script: npm run build
       deploy:
