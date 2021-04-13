@@ -1,6 +1,6 @@
 {
   "name": "timrjs",
-  "version": "2.0.1",
+  "version": "0.0.0-development",
   "description": "Timr is a simple utility for creating timers in JavaScript.",
   "license": "MIT",
   "repository": "github:joesmith100/timrjs",
@@ -30,7 +30,8 @@
     "build": "rollup -c",
     "cm": "cz",
     "prepublish": "npm run clean && npm run check:src && npm run build",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "semantic-release": "semantic-release"
   },
   "devDependencies": {
     "@babel/core": "^7.13.13",
@@ -48,6 +49,7 @@
     "rollup": "^2.44.0",
     "rollup-plugin-terser": "^7.0.2",
     "rollup-plugin-typescript2": "^0.30.0",
+    "semantic-release": "^17.4.2",
     "ts-loader": "^8.1.0",
     "ts-standard": "^10.0.0",
     "typescript": "^4.2.3"

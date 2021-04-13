@@ -4,8 +4,8 @@ node_js:
   - node
 
 script:
-  - yarn run prepublish
-  - yarn run coveralls
+  - npm run prepublish
+  - npm run coveralls
 
 branches:
   only:
@@ -16,10 +16,9 @@ branches:
     - /^fix-.*$/
 
 deploy:
-  provider: npm
-  email: joesmith0488@gmail.com
-  api_key:
-    secure: n6FGWTDiDTg2yb/KcevV4f/Hisv1yMPZ2TS5wTEjPZAX0VSJhF+O48feodjuoG6oEVVhyvROn38wqnr+e99d+pI5VIF/bgzNoD/JWwRpFlj9OAbRxvb6YaPjOvltMQv2UQXKHkR8ku4hrX3e9vs4HsFtOwSHziWWyZjFW1kPq7iknjdwfqwINeDMn43Mu+bHGJQCGUvjy+bHmGwN7+qg73OYS59sGBgkJsTN99CStSoYnzeKCd1yBT50k/RKiWo2Nd1hgCoYFZLf2uIth/PFE3VUSliw+++25QFy6mRnWMP6+aBvpuBDoGbz9UOvjo7HI2niHK2W/mzpiCfWHhZXN5zJsgqToguVDnMpvkCoWs8lEIEPnx+cWXwjZVfMBX+bC7u22HEXEPwy6+tV2CGmh8y3eAPJdm3z3OlfzzgxyAxhfgP5iZEnC7HtCyZz/ft+mrVdYuljbOFqGqJujzQvjwj7qIavCejR0t38ofQ3YzIRp5M/JR8JGnX2DZk28VnE+E49rcpvp4xP83aQPTGQLqi0/10c4Eg5DEOt309ffN9w8UCNcysjdbX0qF8X5y0riusa7Y0KQJKsfDKpa511QSBfIAVEFV3j0q2ZtTItdr0issXDixGpKZqzU1n1SNAFUlKtSRYMBNX2Rrk0AsTNz0TTEzhj02XT6QPCycJWhwA=
+  provider: script
+  skip_cleanup: true
+  script:
+    - npx semantic-release
   on:
     branch: master
-  skip_cleanup: true
