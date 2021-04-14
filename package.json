@@ -29,7 +29,7 @@
     "check:coverage": "npm test -- --coverage",
     "build": "rollup -c",
     "cm": "cz",
-    "prepublishOnly": "npm run build",
+    "prepublishOnly": "npm run clean && npm run check:src && npm run build",
     "prepare": "husky install"
   },
   "devDependencies": {

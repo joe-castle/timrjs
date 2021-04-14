@@ -13,14 +13,14 @@ branches:
 
 jobs:
   include:
-    - stage: test
+    - stage: Test
       script: npm run lint
       name: 'Lint'
     - script: npm run coveralls
-      name: 'Unit tests and Coverage'
+      name: 'Unit Tests and Coverage'
     - script: npm run build
-      name: 'Build'
-    - stage: deploy
+      name: 'Build Source'
+    - stage: Release
       if: branch = master
       deploy:
         provider: script
