@@ -15,8 +15,11 @@ jobs:
   include:
     - stage: test
       script: npm run lint
-      script: npm run coveralls
-      script: npm run build
+      name: 'Lint'
+    - script: npm run coveralls
+      name: 'Unit tests and Coverage'
+    - script: npm run build
+      name: 'Build'
     - stage: deploy
       if: branch = master
       deploy:
