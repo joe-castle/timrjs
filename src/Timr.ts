@@ -56,8 +56,13 @@ class Timr extends EventEmitter {
     })
 
     if (this.currentTime <= 0) {
-      this.stop()
+      this.clear()
+
+      this.currentTime = this.startTime
+
       this.emit('finish', this)
+
+      this.status = Status.finished
     }
   }
 

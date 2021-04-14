@@ -93,5 +93,6 @@ export enum Status {
   started = 'started',
   paused = 'paused',
   stopped = 'stopped',
+  finished = 'finished',
   destroyed = 'destroyed'
 }

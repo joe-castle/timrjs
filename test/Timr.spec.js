@@ -357,7 +357,12 @@ describe('Timr Class', () => {
       const timer = new Timr(1).start()
       timer.finish((self) => {
         expect(self).toBe(timer)
-        done()
+
+        setTimeout(() => {
+          expect(self.getStatus()).toBe(Status.finished)
+          done()
+        })
+
       })
     })
 
