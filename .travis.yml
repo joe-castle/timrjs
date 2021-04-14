@@ -3,10 +3,6 @@ language: node_js
 node_js:
   - node
 
-script:
-  - npm run prepublish
-  - npm run coveralls
-
 branches:
   only:
     - master
@@ -15,10 +11,19 @@ branches:
     - /^release-.*$/
     - /^fix-.*$/
 
-deploy:
-  provider: script
-  skip_cleanup: true
-  script:
-    - npx semantic-release
-  on:
-    branch: master
+jobs:
+  include:
+    - stage: Test
+      script: npm run lint
+      name: 'Lint'
+    - script: npm run coveralls
+      name: 'Unit Tests and Coverage'
+    - script: npm run build
+      name: 'Build Source'
+    - stage: Release
+      if: branch = master
+      deploy:
+        provider: script
+        skip_cleanup: true
+        script:
+          - npx semantic-release
