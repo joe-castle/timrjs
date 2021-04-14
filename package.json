@@ -29,6 +29,7 @@
     "check:coverage": "npm test -- --coverage",
     "build": "rollup -c",
     "cm": "cz",
+    "prepublishOnly": "npm run build",
     "prepare": "husky install"
   },
   "devDependencies": {

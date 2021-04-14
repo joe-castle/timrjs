@@ -13,16 +13,14 @@ branches:
 
 jobs:
   include:
-    - stage: test-build
+    - stage: test
       script: npm run lint
       script: npm run coveralls
       script: npm run build
-    - stage: release
-      script: npm run build
+    - stage: deploy
+      if: branch = master
       deploy:
         provider: script
         skip_cleanup: true
         script:
           - npx semantic-release
-        on:
-          branch: master
