@@ -223,11 +223,11 @@ timer.finish((self) => {
 });
 ```
 
-Four other events are provided, all of them emit the original timr object as the first argument and are called after their operation:
+Five other events are provided, all of them emit the original Timr object as the first argument and are called after their operation:
  - `onStart`
  
-   If the timer has already been started and `start()` is called again, this won't emit. Instead use, `eded`
- - `eded`
+   If the timer has already been started and `start()` is called again, this won't emit. Instead use, `onAlreadyStarted`
+ - `onAlreadyStarted`
 
    If the timer has started and `start()` is called again this will emit.
  - `onPause`
@@ -327,6 +327,7 @@ The following methods are available on all timrs. Unless they return a specific 
    - `Status.started` - Status representing when the Timr has started.
    - `Status.paused` - Status representing when the Timr has been paused.
    - `Status.stopped` - Status representing when the Timr has stopped.
+   - `Status.finished` - Status representing when the Timr has finished.
    - `Status.destroyed` - Status representing when the Timr has been destroyed.
    
    Alternatively if a `Status` argument is provided, will return a boolean confirming if the current status matches the provided one.
