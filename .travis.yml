@@ -4,7 +4,7 @@ node_js:
   - node
 
 branches:
-  only:
+  except:
     - master
     - develop
     - /^feature-.*$/
