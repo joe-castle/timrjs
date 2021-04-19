@@ -31,11 +31,12 @@ jobs:
         run: npm run build
       - uses: actions/upload-artifact@v2
         if: ${{ success() && github.ref == 'refs/heads/master' }}
-        path: |
-          dist/**
-          lib/**
-          es/**
-          types/**
+        with:
+          path: |
+            dist/**
+            lib/**
+            es/**
+            types/**
       - name: Coveralls report
         uses: coverallsapp/github-action@v1.1.2
         with:
