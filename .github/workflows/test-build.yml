@@ -30,7 +30,7 @@ jobs:
       - name: Build source files
         run: npm run build
       - uses: actions/upload-artifact@v2
-        if: ${{ github.ref == 'refs/heads/master' }}
+        if: ${{ success() && github.ref == 'refs/heads/master' }}
         path: |
           dist/**
           lib/**
@@ -41,5 +41,3 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           path-to-lcov: ./coverage/lcov.info
-          parallel: true
-          parallel-finished: true
