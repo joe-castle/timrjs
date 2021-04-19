@@ -1,17 +1,15 @@
 name: Release
 
 on:
-  pull_request:
-    types: [ closed ]
-    branches: [ master ]
+  push:
+    branches:
+      - master
 
 jobs:
   release:
     name: Release
 
     runs-on: ubuntu-latest
-
-    if: ${{ github.event.pull_request.merged }}
 
     steps:
       - name: Checkout
