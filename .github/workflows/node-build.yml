@@ -2,7 +2,7 @@ name: Build
 
 on:
   push:
-    branches: [ master, deploy, feature-**, fix-**, release* ]
+    branches: [ master, deploy, feature-**, fix-**, release-** ]
   pull_request:
     branches: [ master, deploy ]
 
@@ -54,7 +54,7 @@ jobs:
       - name: Build source files
         run: npm run build
       - uses: actions/upload-artifact@v2
-        if: ${{ success() && github.ref == 'refs/heads/master' }}
+        if: ${{ success() && github.ref == 'refs/heads/master' && github.event_name == 'push' }}
         with:
           path: |
             dist/**
