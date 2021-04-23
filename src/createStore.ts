@@ -10,7 +10,7 @@ import { ITimr } from './types/ITimr'
  * and perform functions on all of them.
  *
  * @param {Array} [args] - Optional timers to start the store with.
- * 
+ *
  * @throws If the provided Timr is not a Timr object.
  * @throws If the provided Timr is already in a store.
  *
