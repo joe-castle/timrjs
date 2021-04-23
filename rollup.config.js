@@ -1,7 +1,7 @@
 import typescript from 'rollup-plugin-typescript2'
 import { terser } from 'rollup-plugin-terser'
 
-const { version } = require('./package.json')
+const version = process.env.RELEASE_VERSION
 
 const devBanner = `/**
 * TimrJS v${version}

@@ -25,8 +25,10 @@
     "test": "jest",
     "test:watch": "npm run test -- --watch",
     "test:coverage": "npm test -- --coverage",
+    "check:src": "npm run clean && npm run lint && npm run test && npm run build",
     "build": "rollup -c",
-    "cm": "cz",
+    "commit": "cz",
+    "release": "semantic-release",
     "prepare": "husky install"
   },
   "devDependencies": {
@@ -36,6 +38,7 @@
     "@babel/preset-typescript": "^7.13.0",
     "@commitlint/cli": "^12.1.1",
     "@commitlint/config-conventional": "^12.1.1",
+    "@semantic-release/exec": "^5.0.0",
     "@types/jest": "^26.0.22",
     "commitizen": "^4.2.3",
     "cz-conventional-changelog": "^3.3.0",
@@ -76,6 +79,17 @@
   "commitlint": {
     "extends": [
       "@commitlint/config-conventional"
+    ]
+  },
+  "release": {
+    "plugins": [
+      "@semantic-release/commit-analyzer",
+      "@semantic-release/release-notes-generator",
+      ["@semantic-release/exec", {
+        "publishCmd": "npm run build -- --environment RELEASE_VERSION:${nextRelease.version}"
+      }],
+      "@semantic-release/npm",
+      "@semantic-release/github"
     ]
   }
 }

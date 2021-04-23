@@ -404,7 +404,7 @@ class Timr extends EventEmitter implements ITimr {
    *
    * @return {Number} Current time in seconds.
    */
-  getCurrentTime (): number { 
+  getCurrentTime (): number {
     return this.currentTime
   }
 
@@ -417,7 +417,7 @@ class Timr extends EventEmitter implements ITimr {
    * @return Either the current status, or a boolean confirming the current status if
    * a statusName is provided. Will check `statusName === this.status`
    */
-  getStatus(statusName?: Status): boolean | Status {
+  getStatus (statusName?: Status): boolean | Status {
     return exists(statusName)
       ? this.status === statusName
       : this.status
