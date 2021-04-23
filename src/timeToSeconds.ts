@@ -1,24 +1,53 @@
 import { isNum, isNotNum, isNotStr, checkType, isStr } from './validate'
 
 /**
- * @description Converts time format (HH:MM:SS) into seconds.
+ * Converts time format (HH:MM:SS) into seconds.
  *
  * Automatically rounds the returned number to avoid errors
  * with floating point values.
  *
- * If a pattern is provided (25h / 25m), than
+ * If a pattern is provided (25h / 25m / 25d), than
  * it is converted before being validated and processed.
  *
- * @param {String|Number} time - The time to be converted.
+ * @param time The time to be converted.
+ *
+ * @throws If the provided time is not a string.
+ * @throws If the provided time is not in the correct format HH:MM:SS.
+ *
+ * @return The time in seconds.
+ */
+function timeToSeconds (time: string): number
+
+/**
+ * Converts time format (HH:MM:SS) into seconds.
+ *
+ * @param time The time to be converted
+ *
+ * @throws If the provided time is a negative number.
+ *
+ * @return The provided number, rounded.
+ */
+function timeToSeconds (time: number): number
+
+/**
+ * Converts time format (HH:MM:SS) into seconds.
+ *
+ * Automatically rounds the returned number to avoid errors
+ * with floating point values.
+ *
+ * If a pattern is provided (25h / 25m / 25d), than
+ * it is converted before being validated and processed.
+ *
+ * @param {string|number} time The time to be converted.
  * If a number is provided it will simply return that number.
  *
  * @throws If the provided time is neither a number nor a string.
  * @throws If the provided time is a negative number.
  * @throws If the provided time is not in the correct format HH:MM:SS.
  *
- * @return {Number} - The time in seconds.
+ * @return {number} The time in seconds.
  */
-export default function timeToSeconds (time: string | number): number {
+function timeToSeconds (time: string | number): number {
   // If a positive number, skip processing and just return the rounded number.
   if (isNum(time) && time >= 0) return Math.round(time)
 
@@ -66,3 +95,5 @@ export default function timeToSeconds (time: string | number): number {
     }, 0)
   )
 }
+
+export default timeToSeconds

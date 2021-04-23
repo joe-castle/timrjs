@@ -1,28 +1,134 @@
-
 import zeroPad from './zeroPad'
 import { checkType, exists, isStr, isInstanceOf } from './validate'
 
 /**
- * @description Confirms if provided startTime is a futureDate parseable by dateToSeconds
+ * Confirms if provided startTime is a futureDate parsable by dateToSeconds
  *
  * @param startTime the startTime
  *
- * @returns True if it is, false otherwise
+ * @return True if it is, false otherwise
  */
 export function isDateFormat (startTime: string | number | Date): startTime is string | Date {
   return isInstanceOf<Date>(startTime, Date) || (isStr(startTime) && /^\d{4}-\d{2}-\d{2}/.test(startTime))
 }
 
 /**
- * @description Converts a date object or date string into seconds until that date/time.
+ * Converts a date string into seconds until that date/time.
  *
- * @param {string|number} startTime - The date object or date string.
- * @param {string|number} backupStartTime - startTime to use if provided startTime is in the past.
+ * @param startTime The date string.
  *
- * @throws If the date matches the regex but is not the correct format.
- * @throws If the date is in the past.
+ * Format should be: `((year)-(month)-(day) [[(hour)]:(minute):(second(s))]`.
  *
- * @return {Number} - Returns the converted seconds.
+ * @throws If the date string is not in the correct format.
+ * @throws If the date string is in the correct format but can't be parsed, for example by using `13` for the month.
+ * @throws If the date is in the past (unless provided `backupStartTime` is not in the past).
+ *
+ * @return Returns the converted seconds.
+ */
+function dateToSeconds (startTime: string): number
+
+/**
+ * Converts a date object into seconds until that date/time.
+ *
+ * @param startTime The date object.
+ *
+ * Format should be: `((year)-(month)-(day) [[(hour)]:(minute):(second(s))]`.
+ *
+ * @throws If the date is in the past (unless provided `backupStartTime` is not in the past).
+ *
+ * @return Returns the converted seconds.
+ */
+function dateToSeconds (startTime: Date): number
+
+/**
+ * Converts a date string into seconds until that date/time.
+ *
+ * @param startTime The date string.
+ *
+ * Format should be: `((year)-(month)-(day) [[(hour)]:(minute):(second(s))]`.
+ * @param backupStartTime startTime to use if provided startTime is in the past.
+ *
+ * @throws If the date string is not in the correct format.
+ * @throws If the date string is in the correct format but can't be parsed, for example by using `13` for the month.
+ * @throws If the date is in the past (unless provided `backupStartTime` is not in the past).
+ *
+ * @return Returns the converted seconds.
+ */
+function dateToSeconds (startTime: string, backupStartTime: string): number
+
+/**
+ * Converts a date string into seconds until that date/time.
+ *
+ * @param startTime The date string.
+ *
+ * Format should be: `((year)-(month)-(day) [[(hour)]:(minute):(second(s))]`.
+ * @param backupStartTime startTime to use if provided startTime is in the past.
+ *
+ * @throws If the date string is not in the correct format.
+ * @throws If the date string is in the correct format but can't be parsed, for example by using `13` for the month.
+ * @throws If the date is in the past (unless provided `backupStartTime` is not in the past).
+ *
+ * @return Returns the converted seconds.
+ */
+function dateToSeconds (startTime: string, backupStartTime: Date): number
+
+/**
+ * Converts a date object into seconds until that date/time.
+ *
+ * @param startTime The date object.
+ *
+ * Format should be: `((year)-(month)-(day) [[(hour)]:(minute):(second(s))]`.
+ *
+ * @throws If the date is in the past (unless provided `backupStartTime` is not in the past).
+ *
+ * @return Returns the converted seconds.
+ */
+function dateToSeconds (startTime: Date, backupStartTime: string): number
+
+/**
+ * Converts a date object into seconds until that date/time.
+ *
+ * @param startTime The date object.
+ *
+ * Format should be: `((year)-(month)-(day) [[(hour)]:(minute):(second(s))]`.
+ *
+ * @throws If the date is in the past (unless provided `backupStartTime` is not in the past).
+ *
+ * @return Returns the converted seconds.
+ */
+function dateToSeconds (startTime: Date, backupStartTime: Date): number
+
+/**
+ * Converts a date object or date string into seconds until that date/time.
+ *
+ * @param startTime The date object or date string.
+ *
+ * Format should be: `((year)-(month)-(day) [[(hour)]:(minute):(second(s))]`.
+ * @param backupStartTime startTime to use if provided startTime is in the past.
+ *
+ * @throws If the date string is not in the correct format.
+ * @throws If the date string is in the correct format but can't be parsed, for example by using `13` for the month.
+ * @throws If the date is in the past (unless provided `backupStartTime` is not in the past).
+ * @throws If the date is neither a `string` or `Date`.
+ *
+ * @return Returns the converted seconds.
+ */
+function dateToSeconds (startTime: string | Date, backupStartTime?: string | Date): number
+
+/**
+ * Converts a date object or date string into seconds until that date/time.
+ *
+ * @param {string|Date} startTime The date object or date string.
+ *
+ * Format should be: `((year)-(month)-(day) [[(hour)]:(minute):(second(s))]`.
+ * @param {string|Date} backupStartTime startTime to use if provided startTime is in the past.
+ *
+ * @throws If the date string is not in the correct format.
+ * @throws If the date string is in the correct format but can't be parsed, for example by using `13` for the month.
+ * @throws If the date is in the past (unless provided `backupStartTime` is not in the past).
+ * @throws If the date is neither a `string` or `Date`.
+ *
+ * @return {Number} Returns the converted seconds.
  */
 function dateToSeconds (startTime: string | Date, backupStartTime?: string | Date): number {
   // startTime in MS from epoch.

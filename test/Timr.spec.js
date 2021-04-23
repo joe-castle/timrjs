@@ -3,7 +3,7 @@ import createStore from '../src/createStore'
 import * as buildOptions from '../src/buildOptions'
 import * as dateToSeconds from '../src/dateToSeconds'
 import * as timeToSeconds from '../src/timeToSeconds'
-import { Status } from '../src/types'
+import { Status } from '../src/types/enums'
 
 describe('Timr Class', () => {
   const dateToSecondsSpy = jest.spyOn(dateToSeconds, 'default')
@@ -362,7 +362,6 @@ describe('Timr Class', () => {
           expect(self.getStatus()).toBe(Status.finished)
           done()
         })
-
       })
     })
 

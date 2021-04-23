@@ -1,9 +1,8 @@
+import { Events, Listener } from './types/common'
 import { exists, notExists } from './validate'
 
-import { Events, Listener } from './types'
-
 /**
- * @description Creates an EventEmitter.
+ * Creates an EventEmitter.
  *
  * This is a super slimmed down version of nodes EventEmitter.
  *
@@ -18,10 +17,10 @@ class EventEmitter {
   }
 
   /**
-   * @description Registers a listener to an event array.
+   * Registers a listener to an event array.
    *
-   * @param {String} event - The event to attach to.
-   * @param {Function} listener - The event listener.
+   * @param event The event to attach to.
+   * @param listener The event listener.
    */
   on (event: string, listener: Listener): void {
     if (notExists(this.events[event])) {
@@ -32,11 +31,11 @@ class EventEmitter {
   }
 
   /**
-   * @description Emits an event, calling all listeners store
+   * Emits an event, calling all listeners store
    * against the provided event.
    *
-   * @param {String} event - The event to emit.
-   * @param {Array} args - The functions to run against the event.
+   * @param event The event to emit.
+   * @param args The functions to run against the event.
    */
   emit (event: string, ...args: any[]): void {
     if (exists(this.events[event])) {
@@ -47,7 +46,7 @@ class EventEmitter {
   }
 
   /**
-   * @description Removes all listeners.
+   * Removes all listeners.
    */
   removeAllListeners (): void {
     this.events = {}

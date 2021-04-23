@@ -1,21 +1,21 @@
 import typescript from 'rollup-plugin-typescript2'
 import { terser } from 'rollup-plugin-terser'
 
-const { version } = require('./package.json')
+const version = process.env.RELEASE_VERSION
 
 const devBanner = `/**
 * TimrJS v${version}
-* https://github.com/joesmith100/timrjs
+* https://github.com/joe-castle/timrjs
 * https://www.npmjs.com/package/timrjs
 *
-* Compatible with Browsers, Node.js (CommonJS) and RequireJS.
+* Compatible with Browsers and Node.js (CommonJS).
 *
 * Copyright (c) ${new Date().getFullYear()} Joe Castle
 * Released under the MIT license
-* https://github.com/joesmith100/timrjs/blob/master/LICENSE.md
+* https://github.com/joe-castle/timrjs/blob/master/LICENSE.md
 */`
 
-const prodBanner = `/* TimrJS v${version} | (c) ${new Date().getFullYear()} Joe Castle | https://github.com/joesmith100/timrjs */`
+const prodBanner = `/* TimrJS v${version} | (c) ${new Date().getFullYear()} Joe Castle | https://github.com/joe-castle/timrjs */`
 
 export default [
   {
