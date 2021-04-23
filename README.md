@@ -5,15 +5,15 @@ It can create a simple countdown timer, a stopwatch style counter and a dynamic 
 
 Compatible with Browsers and Node.js.
 
-[![build status](https://img.shields.io/travis/joesmith100/timrjs.svg?style=flat-square)](https://travis-ci.org/joesmith100/timrjs)
-[![coverage status](https://img.shields.io/coveralls/joesmith100/timrjs/master.svg?style=flat-square)](https://coveralls.io/github/joesmith100/timrjs?branch=master)
+[![build status](https://github.com/joe-castle/timrjs/workflows/Build/badge.svg)](https://github.com/joe-castle/timrjs/actions/workflows/node-build.yml)
+[![coverage status](https://img.shields.io/coveralls/joe-castle/timrjs/master.svg?style=flat-square)](https://coveralls.io/github/joe-castle/timrjs?branch=master)
 [![npm version](https://img.shields.io/npm/v/timrjs.svg?style=flat-square)](https://www.npmjs.com/package/timrjs)
 [![npm downloads](https://img.shields.io/npm/dm/timrjs.svg?style=flat-square)](https://www.npmjs.com/package/timrjs)
 [![npm license](https://img.shields.io/npm/l/timrjs.svg?style=flat-square)](https://www.npmjs.com/package/timrjs)
 [![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](http://commitizen.github.io/cz-cli/)
 
 <!-- ## Important
-Version 1.0 has had some substantial changes made to it (some of which are breaking), if you've been using previous versions, go [here](https://github.com/joesmith100/timrjs/releases/tag/v1.0.0) to see whats changed. -->
+Version 1.0 has had some substantial changes made to it (some of which are breaking), if you've been using previous versions, go [here](https://github.com/joe-castle/timrjs/releases/tag/v1.0.0) to see whats changed. -->
 
 ## Examples
 Here are a few different ways you could use Timr.
@@ -435,7 +435,7 @@ import {
    ```
 
 ### Bugs
-If you find any and fancy helping me out, [create an issue](https://github.com/joesmith100/timrjs/issues), or [submit a pull request](https://github.com/joesmith100/timrjs/pulls).
+If you find any and fancy helping me out, [create an issue](https://github.com/joe-castle/timrjs/issues), or [submit a pull request](https://github.com/joe-castle/timrjs/pulls).
 
 ### License
 MIT
