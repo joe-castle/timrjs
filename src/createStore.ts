@@ -1,41 +1,49 @@
 import Timr from './Timr'
-import { isNotFn } from './validate'
+import { isInstanceOf, isNotFn } from './validate'
 
-import { Status, Store } from './types'
+import { Store } from './types/common'
+import { Status } from './types/enums'
+import { ITimr } from './types/ITimr'
 
 /**
- * @description Creates a store that can hold multiple timr objects
+ * Creates a store that can hold multiple Timr objects
  * and perform functions on all of them.
  *
  * @param {Array} [args] - Optional timers to start the store with.
- * @throws If the provided timr is not a Timr object.
- * @throws If the provided timr is already in a store.
+ * 
+ * @throws If the provided Timr is not a Timr object.
+ * @throws If the provided Timr is already in a store.
  *
  * @return {Object} Returns a store object with methods.
  */
-export default function createStore (...args: Timr[]): Store {
-  let timrs: Timr[] = []
+function createStore (...args: ITimr[]): Store {
+  let timrs: ITimr[] = []
 
-  function removeFromStore (timr: Timr): void {
+  /**
+   * Removes the provided Timr from the store
+   *
+   * @param {Object} timr The Timr to remove
+   */
+  function removeFromStore (timr: ITimr): void {
     // Instanceof check required as it's exposed as a store method.
-    if (timr instanceof Timr) {
+    if (isInstanceOf(timr, Timr)) {
       timrs = timrs.filter(x => x !== timr)
       timr.removeFromStore = null
     }
   }
 
   /**
-   * @description Adds the provided timr to the store.
+   * Adds the provided Timr to the store.
    *
-   * @param {Object} timr - A timr object.
+   * @param {Object} timr A Timr object.
    *
-   * @throws If the provided timr is not a Timr object.
-   * @throws If the provided timr is already in a store.
+   * @throws If the provided Timr is not a Timr object.
+   * @throws If the provided timer is already in a store.
    *
-   * @return {Object} The provided timr object.
+   * @return {Object} The provided Timr object.
    */
-  function add (timr: Timr): Timr {
-    if (timr instanceof Timr && isNotFn(timr.removeFromStore)) {
+  function add (timr: ITimr): ITimr {
+    if (isInstanceOf(timr, Timr) && isNotFn(timr.removeFromStore)) {
       timrs.push(timr)
 
       timr.removeFromStore = (): void => {
@@ -51,24 +59,83 @@ export default function createStore (...args: Timr[]): Store {
     return timr
   }
 
-  // Flatten args down to their values and add them to the store
-  // if they pass validation.
   args.forEach(add)
 
   return {
     add,
-    getAll: () => timrs,
-    startAll: () => timrs.forEach(timr => timr.start()),
-    pauseAll: () => timrs.forEach(timr => timr.pause()),
-    stopAll: () => timrs.forEach(timr => timr.stop()),
-    getStatus: (statusName: Status) => timrs.filter(timr => timr.getStatus(statusName)),
-    // Deprecated in favour of .started()
-    isRunning: () => timrs.filter(timr => timr.isRunning()),
-    started: () => timrs.filter(timr => timr.started()),
+
+    /**
+     * Returns an array of all the timers in the store.
+     *
+     * @return {Array} The array of Timrs.
+     */
+    getAll () {
+      return timrs
+    },
+
+    /**
+     * Starts all the timers in the store.
+     */
+    startAll () {
+      timrs.forEach(timr => timr.start())
+    },
+
+    /**
+     * Pauses all the timers in the store.
+     */
+    pauseAll () {
+      timrs.forEach(timr => timr.pause())
+    },
+
+    /**
+     * Stops all the timers in the store.
+     */
+    stopAll () {
+      timrs.forEach(timr => timr.stop())
+    },
+
+    /**
+     * Returns an array of all the timers that are in the same status
+     * as the one provided.
+     *
+     * @param {string} statusName The status to check.
+     *
+     * @return {Array} An array of timers that are in a state matched by the provided `statusName`
+     */
+    getStatus (statusName: Status) {
+      return timrs.filter(timr => timr.getStatus(statusName))
+    },
+
+    /**
+     * Returns an array of timers that are currently running.
+     *
+     * @deprecated Please use `started()` instead
+     *
+     * @return {Array} The array of running Timrs
+     */
+    isRunning () {
+      return timrs.filter(timr => timr.isRunning())
+    },
+
+    /**
+     * Returns an array of timers that have started.
+     *
+     * @return {Array} The array of Timrs that have started
+     */
+    started () {
+      return timrs.filter(timr => timr.started())
+    },
+
     removeFromStore,
-    destroyAll: () => {
+
+    /**
+     * Destroys all Timrs in the store
+     */
+    destroyAll () {
       timrs.forEach(timr => timr.destroy())
       timrs = []
     }
   }
 }
+
+export default createStore

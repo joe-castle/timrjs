@@ -1,13 +1,13 @@
 import zeroPad from './zeroPad'
 import { isNotNum, isNotStr, isNotBool, isFn, isObj, exists, checkType } from './validate'
 
-import { FormatValueFn, OptionalOptions, Options, FormatValues, OptionsFormatValues } from './types'
+import { FormatValueFn, FormatValues, OptionalOptions, Options, OptionsFormatValues } from './types/common'
 
 const optionsFormatKeys = ['default', 'ss', 'SS', 'mm', 'MM', 'hh', 'HH', 'dd', 'DD']
 const timeValues = optionsFormatKeys.slice(1)
 
 /**
- * @description Creates an object using the provided object of functions
+ * Creates an object using the provided object of functions
  * and assigns it to all or their respective values.
  *
  * @param {Object} formatValues - The object of functions to assign to the time values.
@@ -22,7 +22,7 @@ function makeValues (formatValues: OptionsFormatValues): FormatValues {
 }
 
 /**
- * @description Builds an options object from default and custom options.
+ * Builds an options object from default and custom options.
  *
  * @param {Object} [newOptions] - Optional custom options.
  * @param {Object} [oldOptions] - Optional previous options.

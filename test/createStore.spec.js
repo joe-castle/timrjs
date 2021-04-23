@@ -1,6 +1,6 @@
 import createStore from '../src/createStore'
 import Timr from '../src/Timr'
-import { Status } from '../src/types'
+import { Status } from '../src/types/enums'
 
 describe('Create Store Function', () => {
   test('Creates a new empty store.', () => {

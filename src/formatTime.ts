@@ -1,24 +1,68 @@
 import buildOptions from './buildOptions'
 import { isNotFn, isNotStr, isObj } from './validate'
 
-import { FormattedTime, FormatValueFn, OptionalOptions, FormatValues, Raw } from './types'
+import { FormattedTime, FormatValueFn, FormatValues, OptionalOptions } from './types/common'
 
 /**
- * @description Converts seconds to time format.
+ * Converts seconds to time format.
  *
- * @param {Number} seconds - The seconds to convert.
- * @param {Object} [options] - The options to build the string.
- * @param {Boolean} [toBuild=true] - Specifies wether to run the buildOptions function or not.
+ * @param seconds The seconds to convert.
+ *
+ * @return An object that that contains the `formattedTime` and the
+ * `raw` values used to calculate the time.
+ */
+function formatTime (seconds: number): FormattedTime
+
+/**
+ * Converts seconds to time format.
+ *
+ * @param seconds The seconds to convert.
+ * @param options The options to build the string.
+ *
+ * Accepts a full options object passed into `create` but only uses `formatOuput` and `formatValues`
+ *
+ * @return {Object} An object that that contains the `formattedTime` and the
+ * `raw` values used to calculate the time.
+ */
+function formatTime (seconds: number, options: OptionalOptions): FormattedTime
+
+/**
+ * Converts seconds to time format.
+ *
+ * @param seconds The seconds to convert.
+ * @param options The options to build the string.
+ *
+ * Accepts a full options object passed into `create` but only uses `formatOuput` and `formatValues`
+ * @param toBuild Specifies wether to run the buildOptions function or not.
  *
  * For example, if you don't have a fully formed options object to pass in, or none at all.
- * Primarily used in Timr.formatTime to avoid making unecassary calls to buildOptions on every tick.
+ * Primarily used in `Timr#formatTime` to avoid making unnecessary calls to buildOptions on every tick.
  *
  * Setting to false will require `options.formatOuput` and `options.formatValues` to exist
  *
- * @return {Object} An object that that contains the formattedTime and the
- * raw values used to calculate the time.
+ * @return An object that that contains the `formattedTime` and the
+ * `raw` values used to calculate the time.
  */
-export default function formatTime (seconds: number, options?: OptionalOptions, toBuild: boolean = true): FormattedTime {
+function formatTime (seconds: number, options: OptionalOptions, toBuild: boolean): FormattedTime
+
+/**
+ * Converts seconds to time format.
+ *
+ * @param {Number} seconds The seconds to convert.
+ * @param {Object} [options] The options to build the string.
+ *
+ * Accepts a full options object passed into `create` but only uses `formatOuput` and `formatValues`
+ * @param {Boolean} [toBuild=true] Specifies wether to run the buildOptions function or not.
+ *
+ * For example, if you don't have a fully formed options object to pass in, or none at all.
+ * Primarily used in `Timr#formatTime` to avoid making unnecessary calls to buildOptions on every tick.
+ *
+ * Setting to false will require `options.formatOuput` and `options.formatValues` to exist
+ *
+ * @return {Object} An object that that contains the `formattedTime` and the
+ * `raw` values used to calculate the time.
+ */
+function formatTime (seconds: number, options?: OptionalOptions, toBuild: boolean = true): FormattedTime {
   /**
    * If options doesn't exist, build regardless.
    * If it does and toBuild = true, run buildOptions
@@ -53,9 +97,8 @@ export default function formatTime (seconds: number, options?: OptionalOptions, 
   const rightBracketPosition = stringToFormat.indexOf('}')
 
   /**
-   * Get values sitting inbetween { } (protectedValues)
+   * Get values sitting in-between { } (protectedValues)
    * Match returns empty strings for groups it can't find so filter them out.
-   * Note: Regex will ALWAYS return a match of atleast one empty string, hence <string[]> cast
    */
   const protectedValues = stringToFormat
     .slice(leftBracketPosition, rightBracketPosition)
@@ -90,3 +133,5 @@ export default function formatTime (seconds: number, options?: OptionalOptions, 
 
   return { formattedTime, raw }
 }
+
+export default formatTime

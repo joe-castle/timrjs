@@ -6,9 +6,11 @@ import formatTimeFn from './formatTime'
 import dateToSeconds, { isDateFormat } from './dateToSeconds'
 import { isFn, isNotFn, notExists, exists, isNotNum, checkType } from './validate'
 
-import { FormattedTime, Listener, OptionalOptions, Options, Raw, Status } from './types'
+import { FormattedTime, Listener, OptionalOptions, Options, Raw } from './types/common'
+import { Status } from './types/enums'
+import { ITimr } from './types/ITimr'
 
-class Timr extends EventEmitter {
+class Timr extends EventEmitter implements ITimr {
   timer: NodeJS.Timeout
   delayTimer: NodeJS.Timeout
   currentTime: number
@@ -20,10 +22,10 @@ class Timr extends EventEmitter {
   [key: string]: any
 
   /**
-   * @description Creates a Timr.
+   * Creates a Timr.
    *
-   * @param {String|Number} startTime - The starting time for the timr object.
-   * @param {Object} [options] - Options to customise the timer.
+   * @param {String|Number} startTime The starting time for the Timr object.
+   * @param {Object} [options] Options to customise the timer.
    *
    * @throws If the provided startTime is neither a number or a string,
    * or, incorrect format.
@@ -40,11 +42,11 @@ class Timr extends EventEmitter {
   }
 
   /**
-   * @description Countdown function.
+   * Countdown function.
    *
    * Bound to a setInterval when start() is called.
    */
-  _countdown (): void {
+  private _countdown (): void {
     this.currentTime -= 1
 
     this.emit('ticker', {
@@ -67,11 +69,11 @@ class Timr extends EventEmitter {
   }
 
   /**
-   * @description Stopwatch function.
+   * Stopwatch function.
    *
    * Bound to a setInterval when start() is called.
    */
-  _stopwatch (): void {
+  private _stopwatch (): void {
     this.currentTime += 1
 
     this.emit('ticker', {
@@ -82,7 +84,7 @@ class Timr extends EventEmitter {
     })
   }
 
-  _listener (this: Timr, name: string, listener: Listener): Timr {
+  private _listener (name: string, listener: Listener): this {
     if (isNotFn(listener)) {
       throw new TypeError(`Expected ${name} to be a function, instead got: ${checkType(listener)}`)
     }
@@ -93,13 +95,13 @@ class Timr extends EventEmitter {
   }
 
   /**
-   * @description Starts the timr.
+   * Starts the Timr.
    *
-   * @param {Number} [delay] - Optional delay in ms to start the timer
+   * @param {Number} [delay] Optional delay in ms to start the timer.
    *
    * @return {Object} Returns a reference to the Timr so calls can be chained.
    */
-  start (delay?: number): Timr {
+  start (delay?: number): this {
     if (!this.started()) {
       if (this.options.countdown && this.startTime === 0) {
         throw new Error(
@@ -146,11 +148,11 @@ class Timr extends EventEmitter {
   }
 
   /**
-   * @description Pauses the timr.
+   * Pauses the Timr.
    *
    * @return {Object} Returns a reference to the Timr so calls can be chained.
    */
-  pause (): Timr {
+  pause (): this {
     this.clear()
 
     this.emit('onPause', this)
@@ -161,11 +163,11 @@ class Timr extends EventEmitter {
   }
 
   /**
-   * @description Stops the timr.
+   * Stops the Timr, resetting the `currentTime` to the `startTime`.
    *
    * @return {Object} Returns a reference to the Timr so calls can be chained.
    */
-  stop (): Timr {
+  stop (): this {
     this.clear()
 
     this.currentTime = this.startTime
@@ -178,11 +180,12 @@ class Timr extends EventEmitter {
   }
 
   /**
-   * @description Clears the timr.
+   * Clears the Timr, clearing the internal timer for both the `delayTimer`
+   * and general `timer`.
    *
    * @return {Object} Returns a reference to the Timr so calls can be chained.
    */
-  clear (): Timr {
+  clear (): this {
     clearInterval(this.timer)
     clearTimeout(this.delayTimer)
 
@@ -190,13 +193,12 @@ class Timr extends EventEmitter {
   }
 
   /**
-   * @description Destroys the timr,
-   * clearing the interval, removing all event listeners and removing,
+   * Destroys the Timr, clearing the intervals (as in `clear()), removing all event listeners and removing,
    * from the store (if it's in one).
    *
    * @return {Object} Returns a reference to the Timr so calls can be chained.
    */
-  destroy (): Timr {
+  destroy (): this {
     this.emit('onDestroy', this)
 
     this.clear().removeAllListeners()
@@ -213,103 +215,106 @@ class Timr extends EventEmitter {
   }
 
   /**
-   * @description Called every second the timer ticks down.
+   * Called every second the timer ticks down.
    *
    * @throws If the argument is not of type function.
    *
-   * @param {Function} listener - Function to added to events.
+   * @param {Function} listener Function to added to events.
    * @return {Object} Returns a reference to the Timr so calls can be chained.
    */
-  ticker (listener: Listener): Timr {
+  ticker (listener: Listener): this {
     return this._listener('ticker', listener)
   }
 
   /**
-   * @description Called once when the timer finishes.
+   * Called once when the timer finishes.
+   *
+   * This will never be called when using a stopwatch.
    *
    * @throws If the argument is not of type function.
    *
-   * @param {Function} listener - Function to added to events.
+   * @param {Function} listener Function to added to events.
    * @return {Object} Returns a reference to the Timr so calls can be chained.
    */
-  finish (listener: Listener): Timr {
+  finish (listener: Listener): this {
     return this._listener('finish', listener)
   }
 
   /**
-   * @description Called when the timer starts.
+   * Called when the timer starts.
    *
    * @throws If the argument is not of type function.
    *
-   * @param {Function} listener - Function to added to events.
+   * @param {Function} listener Function to added to events.
    * @return {Object} Returns a reference to the Timr so calls can be chained.
    */
-  onStart (listener: Listener): Timr {
+  onStart (listener: Listener): this {
     return this._listener('onStart', listener)
   }
 
   /**
-  * @description Called when the timer is already running and start is called
+  * Called when the timer is already running and start is called
   *
   * @throws If the argument is not of type function.
   *
-  * @param {Function} listener - Function to added to events.
+  * @param {Function} listener Function to added to events.
   * @return {Object} Returns a reference to the Timr so calls can be chained.
   */
-  onAlreadyStarted (listener: Listener): Timr {
+  onAlreadyStarted (listener: Listener): this {
     return this._listener('onAlreadyStarted', listener)
   }
 
   /**
-   * @description Called when the timer is paused.
+   * Called when the timer is paused.
    *
    * @throws If the argument is not of type function.
    *
-   * @param {Function} listener - Function to added to events.
+   * @param {Function} listener Function to added to events.
    * @return {Object} Returns a reference to the Timr so calls can be chained.
    */
-  onPause (listener: Listener): Timr {
+  onPause (listener: Listener): this {
     return this._listener('onPause', listener)
   }
 
   /**
-   * @description Called when the timer is stopped.
+   * Called when the timer is stopped.
    *
    * @throws If the argument is not of type function.
    *
-   * @param {Function} listener - Function to added to events.
+   * @param {Function} listener Function to added to events.
    * @return {Object} Returns a reference to the Timr so calls can be chained.
    */
-  onStop (listener: Listener): Timr {
+  onStop (listener: Listener): this {
     return this._listener('onStop', listener)
   }
 
   /**
-   * @description Called when the timer is destroyed.
+   * Called when the timer is destroyed.
    *
    * @throws If the argument is not of type function.
    *
-   * @param {Function} listener - Function to added to events.
+   * @param {Function} listener Function to added to events.
    * @return {Object} Returns a reference to the Timr so calls can be chained.
    */
-  onDestroy (listener: Listener): Timr {
+  onDestroy (listener: Listener): this {
     return this._listener('onDestroy', listener)
   }
 
   /**
-   * @description Converts seconds to time format.
-   * This is provided to the ticker.
+   * Converts seconds to time format.
    *
-   * @param {String} [time=currentTime] - option to format the startTime
+   * This is provided to the ticker function.
    *
-   * @return {Object} The formatted time and raw values.
+   * @param {String} [time=currentTime] optionally format the startTime
+   *
+   * @return {Object} The `formattedTime` and `raw` values.
    */
   formatTime (time: 'currentTime' | 'startTime' = 'currentTime'): FormattedTime {
     return formatTimeFn(this[time], this.options, false)
   }
 
   /**
-   * @description Returns the time elapsed in percent.
+   * Returns the time elapsed in percent.
    * This is provided to the ticker.
    *
    * @return {Number} Time elapsed in percent.
@@ -319,29 +324,36 @@ class Timr extends EventEmitter {
   }
 
   /**
-   * @description Creates / changes options for a Timr.
+   * Creates / changes `options` object.
+   *
    * Merges with existing or default options.
    *
-   * @param {Object} options - The options to create / change.
+   * @param {Object} options The options to create / change.
    * @return {Object} Returns a reference to the Timr so calls can be chained.
    */
-  changeOptions (options?: OptionalOptions): Timr {
+  changeOptions (options?: OptionalOptions): this {
     this.options = buildOptions(options, this.options)
 
     return this
   }
 
   /**
-   * @description Sets new startTime after Timr has been created.
-   * Will clear currentTime and reset to new startTime.
+   * Sets new `startTime` after Timr has been created.
    *
-   * @param {String|Number} startTime - The new start time.
+   * Will clear `currentTime` and reset to new `startTime`.
+   *
+   * @param {String|Number} startTime The new `startTime`.
    *
    * @throws If no startTime is provided.
+   * @throws If the provided time is not a string.
+   * @throws If the provided time is not in the correct format HH:MM:SS.
+   * @throws If the date string is not in the correct format.
+   * @throws If the date string is in the correct format but can't be parsed, for example by using `13` for the month.
+   * @throws If the date is in the past (unless provided `backupStartTime` is not in the past).
    *
-   * @return {Object} The original Timr object.
+   * @return {Object} Returns a reference to the Timr so calls can be chained.
    */
-  setStartTime (startTime: string | number | Date, backupStartTime?: string | Date): Timr {
+  setStartTime (startTime: string | number | Date, backupStartTime?: string | Date): this {
     this.clear()
 
     if (notExists(startTime)) {
@@ -365,21 +377,21 @@ class Timr extends EventEmitter {
   }
 
   /**
-   * @description Shorthand for this.formatTime(time).formattedTime
+   * Shorthand for `this.formatTime(time).formattedTime`
    */
   getFt (time: 'currentTime' | 'startTime' = 'currentTime'): string {
     return this.formatTime(time).formattedTime
   }
 
   /**
-   * @description Shorthand for this.formatTime(time).raw
+   * Shorthand for `this.formatTime(time).raw`
    */
   getRaw (time: 'currentTime' | 'startTime' = 'currentTime'): Raw {
     return this.formatTime(time).raw
   }
 
   /**
-   * @description Gets the Timrs startTime.
+   * Gets the Timrs `startTime`.
    *
    * @return {Number} Start time in seconds.
    */
@@ -388,32 +400,31 @@ class Timr extends EventEmitter {
   }
 
   /**
-   * @description Gets the Timrs currentTime.
+   * Gets the Timrs currentTime.
    *
    * @return {Number} Current time in seconds.
    */
-  getCurrentTime (): number {
+  getCurrentTime (): number { 
     return this.currentTime
   }
 
   /**
-   * @description Returns the current status. Or returns
-   * a boolean comparing the provided statusName to the current
-   * status.
+   * Returns the current status. Or returns a boolean comparing
+   * the provided statusName to the current status.
    *
-   * @param {Status} [statusName] optional statusname to check
+   * @param {Object} [statusName] Optional `Status` to check
    *
-   * @returns either the current status, or a boolean confirming the current status if
+   * @return Either the current status, or a boolean confirming the current status if
    * a statusName is provided. Will check `statusName === this.status`
    */
-  getStatus (statusName?: Status): boolean | string {
+  getStatus(statusName?: Status): boolean | Status {
     return exists(statusName)
       ? this.status === statusName
       : this.status
   }
 
   /**
-   * @description Gets the Timrs running value.
+   * Returns true if the Timr has started
    *
    * @deprecated please use `this.started()` instead
    *
@@ -424,7 +435,7 @@ class Timr extends EventEmitter {
   }
 
   /**
-   * @description Checks whether the timer has been started or not
+   * Checks whether the timer has been started or not
    *
    * @return {Boolean} True if running, false if not.
    */
