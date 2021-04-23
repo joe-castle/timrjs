@@ -3,8 +3,8 @@
   "version": "0.0.0-development",
   "description": "Timr is a simple utility for creating timers in JavaScript.",
   "license": "MIT",
-  "repository": "github:joesmith100/timrjs",
-  "bugs": "https://github.com/joesmith100/timrjs/issues",
+  "repository": "github:joe-castle/timrjs",
+  "bugs": "https://github.com/joe-castle/timrjs/issues",
   "keywords": [
     "timr",
     "timer",
@@ -14,7 +14,7 @@
     "counbtdown",
     "date"
   ],
-  "author": "Joe Smith <joesmith0488@gmail.com>",
+  "author": "Joe Castle <joecastle100@gmail.com>",
   "main": "lib/timr.js",
   "unpkg": "dist/timr.js",
   "module": "es/timr.js",
