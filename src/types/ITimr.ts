@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/method-signature-style */
+/* stop ts-standard from "fixing" the rule from @typescript-eslint/method-signature-style and allowing method shorthand syntax */
+
 import { FormattedTime, Listener, OptionalOptions, Options, Raw } from './common'
 import { Status } from './enums'
 
@@ -17,21 +20,30 @@ export interface ITimr {
    *
    * @return Returns a reference to the Timr so calls can be chained.
    */
-  start: (() => this) & ((delay: number) => this)
+  start (): this
+
+  /**
+   * Starts the Timr.
+   *
+   * @param delay Delay in ms to start the timer.
+   *
+   * @return Returns a reference to the Timr so calls can be chained.
+   */
+  start (delay: number): this
 
   /**
    * Pauses the Timr.
    *
    * @return Returns a reference to the Timr so calls can be chained.
    */
-  pause: () => this
+  pause (): this
 
   /**
    * Stops the Timr, resetting the `currentTime` to the `startTime`.
    *
    * @return Returns a reference to the Timr so calls can be chained.
    */
-  stop: () => this
+  stop (): this
 
   /**
    * Clears the Timr, clearing the internal timer for both the `delayTimer`
@@ -39,7 +51,7 @@ export interface ITimr {
    *
    * @return Returns a reference to the Timr so calls can be chained.
    */
-  clear: () => this
+  clear (): this
 
   /**
    * Destroys the Timr, clearing the intervals (as in `clear()), removing all event listeners and removing,
@@ -47,7 +59,7 @@ export interface ITimr {
    *
    * @return Returns a reference to the Timr so calls can be chained.
    */
-  destroy: () => this
+  destroy (): this
 
   /**
    * Called every second the timer ticks down.
@@ -57,7 +69,7 @@ export interface ITimr {
    * @param listener Function to added to events.
    * @return Returns a reference to the Timr so calls can be chained.
    */
-  ticker: (listener: Listener) => this
+  ticker (listener: Listener): this
 
   /**
    * Called once when the timer finishes, when it reaches 0.
@@ -69,7 +81,7 @@ export interface ITimr {
    * @param listener Function to added to events.
    * @return Returns a reference to the Timr so calls can be chained.
    */
-  finish: (listener: Listener) => this
+  finish (listener: Listener): this
 
   /**
    * Called when the timer starts.
@@ -79,7 +91,7 @@ export interface ITimr {
    * @param listener Function to added to events.
    * @return Returns a reference to the Timr so calls can be chained.
    */
-  onStart: (listener: Listener) => this
+  onStart (listener: Listener): this
 
   /**
   * Called when the timer is already running and start is called
@@ -89,7 +101,7 @@ export interface ITimr {
   * @param listener Function to added to events.
   * @return Returns a reference to the Timr so calls can be chained.
   */
-  onAlreadyStarted: (listener: Listener) => this
+  onAlreadyStarted (listener: Listener): this
 
   /**
    * Called when the timer is paused.
@@ -99,7 +111,7 @@ export interface ITimr {
    * @param listener Function to added to events.
    * @return Returns a reference to the Timr so calls can be chained.
    */
-  onPause: (listener: Listener) => this
+  onPause (listener: Listener): this
 
   /**
    * Called when the timer is stopped.
@@ -109,7 +121,7 @@ export interface ITimr {
    * @param listener Function to added to events.
    * @return Returns a reference to the Timr so calls can be chained.
    */
-  onStop: (listener: Listener) => this
+  onStop (listener: Listener): this
 
   /**
    * Called when the timer is destroyed.
@@ -119,16 +131,34 @@ export interface ITimr {
    * @param listener Function to added to events.
    * @return Returns a reference to the Timr so calls can be chained.
    */
-  onDestroy: (listener: Listener) => this
+  onDestroy (listener: Listener): this
 
   /**
    * Converts `currentTime` to time format.
    *
-    * This is provided to the ticker function.
+   * This is provided to the ticker function.
    *
    * @return The `formattedTime` and `raw` values.
    */
-  formatTime: (() => FormattedTime) & ((time: 'currentTime') => FormattedTime) & ((time: 'startTime') => FormattedTime)
+  formatTime (): FormattedTime
+
+  /**
+   * Converts `currentTime` to time format.
+   *
+   * This is provided to the ticker function.
+   *
+   * @return The `formattedTime` and `raw` values.
+   */
+  formatTime (time: 'currentTime'): FormattedTime
+
+  /**
+   * Converts `startTime` to time format.
+   *
+   * This is provided to the ticker function.
+   *
+   * @return The `formattedTime` and `raw` values.
+   */
+  formatTime (time: 'startTime'): FormattedTime
 
   /**
    * Returns the time elapsed in percent.
@@ -137,14 +167,24 @@ export interface ITimr {
    *
    * @return Time elapsed in percent.
    */
-  percentDone: () => number
+  percentDone (): number
 
   /**
    * Creates / Re-builds the `options` object using existing and default.
    *
    * @return Returns a reference to the Timr so calls can be chained.
    */
-  changeOptions: (() => this) & ((options: OptionalOptions) => this)
+  changeOptions (): this
+
+  /**
+   * Creates / changes `options` object.
+   *
+   * Merges with existing or default options.
+   *
+   * @param options The options to create / change.
+   * @return Returns a reference to the Timr so calls can be chained.
+   */
+  changeOptions (options: OptionalOptions): this
 
   /**
    * Sets new `startTime` after Timr has been created.
@@ -168,35 +208,184 @@ export interface ITimr {
    * @throws If the provided time is not in the correct format HH:MM:SS.
    * @throws If the date string is not in the correct format.
    * @throws If the date string is in the correct format but can't be parsed, for example by using `13` for the month.
+   * @throws If the date is in the past.
+   *
+   * @return Returns a reference to the Timr so calls can be chained.
+   */
+  setStartTime (startTime: string): this
+
+  /**
+   * Sets new `startTime` after Timr has been created.
+   *
+   * Will clear `currentTime` and reset to new `startTime`.
+   *
+   * @param startTime The new `startTime` in seconds.
+
+   * @throws If no `startTime` is provided.
+   *
+   * @return Returns a reference to the Timr so calls can be chained.
+   */
+  setStartTime (startTime: number): this
+
+  /**
+   * Sets new `startTime` after Timr has been created.
+   *
+   * Will clear `currentTime` and reset to new `startTime`.
+   *
+   * @param startTime The new `startTime` as a Date
+   * The timer will countdown to the point in time specified by the date.
+   *
+   * @throws If no `startTime` is provided.
+   * @throws If the date is in the past.
+   *
+   * @return Returns a reference to the Timr so calls can be chained.
+   */
+  setStartTime (startTime: Date): this
+
+  /**
+   * Sets new `startTime` after Timr has been created.
+   *
+   * Will clear `currentTime` and reset to new `startTime`.
+   *
+   * @param startTime The new `startTime` in string format.
+   *
+   * Examples of accepted format:
+   *  - `'2021-12-25'` A countdown timer to midnight on Christmas Day.
+   *  - `'2021-12-25 10:00'` A countdown timer to 10am on Christmas Day.
+   * @param backupStartTime A backupStartTime for timers that countdown to a futureDate, in case that time is in the past.
+   *
+   * Adheres to the same format restrictions as `startTime`
+   *
+   * @throws If no `startTime` is provided.
+   * @throws If the date string is not in the correct format.
+   * @throws If the date string is in the correct format but can't be parsed, for example by using `13` for the month.
    * @throws If the date is in the past (unless provided `backupStartTime` is not in the past).
    *
    * @return Returns a reference to the Timr so calls can be chained.
    */
-  setStartTime: ((startTime: string) => this) & ((startTime: number) => this) & ((startTime: Date) => this) & ((startTime: string, backupStartTime: string) => this) & ((startTime: Date, backupStartTime: string) => this) & ((startTime: string, backupStartTime: Date) => this) & ((startTime: Date, backupStartTime: Date) => this)
+  setStartTime (startTime: string, backupStartTime: string): this
+
+  /**
+   * Sets new `startTime` after Timr has been created.
+   *
+   * Will clear `currentTime` and reset to new `startTime`.
+   *
+   * @param startTime The new `startTime` as a Date
+   * The timer will countdown to the point in time specified by the date.
+   *
+   * @param backupStartTime A backupStartTime for timers that countdown to a futureDate, in case that time is in the past.
+   *
+   * Examples of accepted format:
+   *  - `'2021-12-25'` A countdown timer to midnight on Christmas Day.
+   *  - `'2021-12-25 10:00'` A countdown timer to 10am on Christmas Day.
+   *
+   * @throws If no `startTime` is provided.
+   * @throws If the date string is not in the correct format.
+   * @throws If the date string is in the correct format but can't be parsed, for example by using `13` for the month.
+   * @throws If the date is in the past (unless provided `backupStartTime` is not in the past).
+   *
+   * @return Returns a reference to the Timr so calls can be chained.
+   */
+  setStartTime (startTime: Date, backupStartTime: string): this
+
+  /**
+   * Sets new `startTime` after Timr has been created.
+   *
+   * Will clear `currentTime` and reset to new `startTime`.
+   *
+   * @param startTime The new `startTime` in string format.
+   *
+   * Examples of accepted format:
+   *  - `'2021-12-25'` A countdown timer to midnight on Christmas Day.
+   *  - `'2021-12-25 10:00'` A countdown timer to 10am on Christmas Day.
+   * @param backupStartTime A backupStartTime for timers that countdown to a futureDate, in case that time is in the past.
+   *
+   * @throws If no `startTime` is provided.
+   * @throws If the date string is not in the correct format.
+   * @throws If the date string is in the correct format but can't be parsed, for example by using `13` for the month.
+   * @throws If the date is in the past (unless provided `backupStartTime` is not in the past).
+   *
+   * @return Returns a reference to the Timr so calls can be chained.
+   */
+  setStartTime (startTime: string, backupStartTime: Date): this
+
+  /**
+   * Sets new `startTime` after Timr has been created.
+   *
+   * Will clear `currentTime` and reset to new `startTime`.
+   *
+   * @param startTime The new `startTime` as a Date
+   * The timer will countdown to the point in time specified by the date.
+   * @param backupStartTime A backupStartTime for timers that countdown to a futureDate, in case that time is in the past.
+   *
+   * @throws If no `startTime` is provided.
+   * @throws If the date is in the past (unless provided `backupStartTime` is not in the past).
+   *
+   * @return Returns a reference to the Timr so calls can be chained.
+   */
+  setStartTime (startTime: Date, backupStartTime: Date): this
+
+  /**
+   * Sets new `startTime` after Timr has been created.
+   *
+   * Will clear `currentTime` and reset to new `startTime`.
+   *
+   * @param startTime The new `startTime`.
+   *
+   * @throws If no startTime is provided.
+   * @throws If the provided time is not a string.
+   * @throws If the provided time is not in the correct format HH:MM:SS.
+   * @throws If the date string is not in the correct format.
+   * @throws If the date string is in the correct format but can't be parsed, for example by using `13` for the month.
+   * @throws If the date is in the past (unless provided `backupStartTime` is not in the past).
+   *
+   * @return Returns a reference to the Timr so calls can be chained.
+   */
+  setStartTime (startTime: string | number | Date, backupStartTime?: string | Date): this
 
   /**
    * Shorthand for `this.formatTime('currentTime').formattedTime`
    */
-  getFt: (() => string) & ((time: 'currentTime') => string) & ((time: 'startTime') => string)
+  getFt (): string
+
+  /**
+   * Shorthand for `this.formatTime('currentTime').formattedTime`
+   */
+  getFt (time: 'currentTime'): string
+
+  /**
+   * Shorthand for `this.formatTime('startTime').formattedTime`
+   */
+  getFt (time: 'startTime'): string
 
   /**
    * Shorthand for `this.formatTime('currentTime').raw`
    */
-  getRaw: (() => Raw) & ((time: 'currentTime') => Raw) & ((time: 'startTime') => Raw)
+  getRaw (): Raw
+
+  /**
+   * Shorthand for `this.formatTime('currentTime').raw`
+   */
+  getRaw (time: 'currentTime'): Raw
+
+  /**
+   * Shorthand for `this.formatTime('startTime').raw`
+   */
+  getRaw (time: 'startTime'): Raw
 
   /**
    * Gets the Timrs `startTime`.
    *
    * @return Start time in seconds.
    */
-  getStartTime: () => number
+  getStartTime (): number
 
   /**
    * Gets the Timrs `currentTime`.
    *
    * @return Current time in seconds.
    */
-  getCurrentTime: () => number
+  getCurrentTime (): number
 
   /**
    * Returns the current status. Or returns a boolean comparing
@@ -207,7 +396,7 @@ export interface ITimr {
    * @return Either the current status, or a boolean confirming the current status if
    * a statusName is provided. Will check `statusName === this.status`
    */
-  getStatus: (statusName?: Status) => boolean | Status
+  getStatus (statusName?: Status): boolean | Status
 
   /**
    * Returns true if the Timr has started
@@ -216,12 +405,12 @@ export interface ITimr {
    *
    * @return True if running, false if not.
    */
-  isRunning: () => boolean
+  isRunning (): boolean
 
   /**
    * Checks whether the timer has been started or not
    *
    * @return True if running, false if not.
    */
-  started: () => boolean
+  started (): boolean
 }

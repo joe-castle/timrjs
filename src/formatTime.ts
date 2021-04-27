@@ -30,10 +30,10 @@ function formatTime (seconds: number, options: OptionalOptions): FormattedTime
  * Converts seconds to time format.
  *
  * @param seconds The seconds to convert.
- * @param options The options to build the string.
+ * @param [options] The options to build the string.
  *
  * Accepts a full options object passed into `create` but only uses `formatOuput` and `formatValues`
- * @param toBuild Specifies wether to run the buildOptions function or not.
+ * @param [toBuild=true] Specifies wether to run the buildOptions function or not.
  *
  * For example, if you don't have a fully formed options object to pass in, or none at all.
  * Primarily used in `Timr#formatTime` to avoid making unnecessary calls to buildOptions on every tick.
@@ -43,7 +43,7 @@ function formatTime (seconds: number, options: OptionalOptions): FormattedTime
  * @return An object that that contains the `formattedTime` and the
  * `raw` values used to calculate the time.
  */
-function formatTime (seconds: number, options: OptionalOptions, toBuild: boolean): FormattedTime
+function formatTime (seconds: number, options?: OptionalOptions, toBuild?: boolean): FormattedTime
 
 /**
  * Converts seconds to time format.
