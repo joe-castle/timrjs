@@ -38,6 +38,26 @@ function timeToSeconds (time: number): number
  * If a pattern is provided (25h / 25m / 25d), than
  * it is converted before being validated and processed.
  *
+ * @param time The time to be converted.
+ * If a number is provided it will simply return that number.
+ *
+ * @throws If the provided time is neither a number nor a string.
+ * @throws If the provided time is a negative number.
+ * @throws If the provided time is not in the correct format HH:MM:SS.
+ *
+ * @return The time in seconds.
+ */
+function timeToSeconds (time: string | number): number
+
+/**
+ * Converts time format (HH:MM:SS) into seconds.
+ *
+ * Automatically rounds the returned number to avoid errors
+ * with floating point values.
+ *
+ * If a pattern is provided (25h / 25m / 25d), than
+ * it is converted before being validated and processed.
+ *
  * @param {string|number} time The time to be converted.
  * If a number is provided it will simply return that number.
  *

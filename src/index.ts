@@ -145,6 +145,41 @@ function create (options: OptionalOptionsWithStartTime): ITimr
  *
  * **Note**: If an `object` is provided to `startTime` the `options` argument will be ignored.
  *
+ * @param [options] Options to customise the timer.
+ *
+ * Accepts the following properties, see `README.md` for further details:
+ * - `formatOutput` How the time should be formatted as a string.
+ * - `countdown` Whether the timer should count down or up.
+ * - `formatValues` An object of functions to format each part of the formatted string individually.
+ * - `backupStartTime` A backupStartTime for timers that countdown to a futureDate, in case that time is in the past.
+ *
+ * @return A new Timr object.
+ */
+function create (startTime: string | number | Date | OptionalOptionsWithStartTime, options?: OptionalOptions): ITimr
+
+/**
+ * Creates a new Timr object.
+ *
+ * @param {string|number|Date|object} startTime The starting time. Or an object with startTime and options.
+ *
+ * `string` Examples of accepted format:
+ *  - `'10:00:00'` A 10 hour timer.
+ *  - `'10:00'` A 10 minute timer.
+ *  - `'10'` A 10 second timer.
+ *  - `'10m'` A 10 minute timer.
+ *  - `'10h'` A 10 hour timer.
+ *  - `'10d'` A 10 day timer.
+ *  - `'2021-12-25'` Creates a countdown timer to midnight on Christmas Day.
+ *  - `'2021-12-25 10:00'` Creates a countdown timer to 10am on Christmas Day.
+ *
+ * `number` In seconds.
+ *
+ * `Date` The timer will countdown to the point in time specified by the date.
+ *
+ * `object` Options to customise the timer with a `startTime` property. See below.
+ *
+ * **Note**: If an `object` is provided to `startTime` the `options` argument will be ignored.
+ *
  * @param {Object} [options] Options to customise the timer.
  *
  * Accepts the following properties, see `README.md` for further details:
@@ -170,6 +205,7 @@ function create (startTime: string | number | Date | OptionalOptionsWithStartTim
 // type exports
 export {
   OptionalOptions,
+  OptionalOptionsWithStartTime,
   Options,
   FormatValues,
   OptionsFormatValues,
