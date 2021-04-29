@@ -101,7 +101,7 @@ export interface Events {
 /**
  * A listener function used by methods that listen for a particular event
  */
-export type Listener<T = any, U = any, V = any, W = any, X = any> = (arg1?: T, arg2?: U, arg3?: V, arg4?: W, arg5?: X, ...args: any[]) => void
+export type Listener<T = any, U = any, V = any, W = any, X = any> = (arg1: T, arg2?: U, arg3?: V, arg4?: W, arg5?: X, ...args: any[]) => void
 
 /**
  * A store holds multiple timers and can execute methods on all of them at the same time.
