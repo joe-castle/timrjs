@@ -4,6 +4,37 @@
 import { FormattedTime, Listener, OptionalOptions, Options, Raw } from './common'
 import { Status } from './enums'
 
+export interface ITicker extends FormattedTime {
+  /**
+   * The time elapsed in percent.
+   *
+   * Only emitted when `options.countdown = true`
+   */
+  percentDone?: number
+
+  /**
+   * The Timrs `currentTime`.
+   */
+  currentTime: number
+
+  /**
+   * The Timrs `startTime`.
+   */
+  startTime: number
+
+  /**
+   * A reference to the Timr object
+   */
+  self: ITimr
+}
+
+export interface DefaultListener {
+  /**
+   * A reference to the Timr object
+   */
+  self: ITimr
+}
+
 export interface ITimr {
   timer: NodeJS.Timeout
   delayTimer: NodeJS.Timeout
@@ -69,7 +100,7 @@ export interface ITimr {
    * @param listener Function to added to events.
    * @return Returns a reference to the Timr so calls can be chained.
    */
-  ticker (listener: Listener): this
+  ticker (listener: Listener<ITicker>): this
 
   /**
    * Called once when the timer finishes, when it reaches 0.
@@ -81,7 +112,7 @@ export interface ITimr {
    * @param listener Function to added to events.
    * @return Returns a reference to the Timr so calls can be chained.
    */
-  finish (listener: Listener): this
+  finish (listener: Listener<DefaultListener>): this
 
   /**
    * Called when the timer starts.
@@ -91,7 +122,7 @@ export interface ITimr {
    * @param listener Function to added to events.
    * @return Returns a reference to the Timr so calls can be chained.
    */
-  onStart (listener: Listener): this
+  onStart (listener: Listener<DefaultListener>): this
 
   /**
   * Called when the timer is already running and start is called
@@ -101,7 +132,7 @@ export interface ITimr {
   * @param listener Function to added to events.
   * @return Returns a reference to the Timr so calls can be chained.
   */
-  onAlreadyStarted (listener: Listener): this
+  onAlreadyStarted (listener: Listener<DefaultListener>): this
 
   /**
    * Called when the timer is paused.
@@ -111,7 +142,7 @@ export interface ITimr {
    * @param listener Function to added to events.
    * @return Returns a reference to the Timr so calls can be chained.
    */
-  onPause (listener: Listener): this
+  onPause (listener: Listener<DefaultListener>): this
 
   /**
    * Called when the timer is stopped.
@@ -121,7 +152,7 @@ export interface ITimr {
    * @param listener Function to added to events.
    * @return Returns a reference to the Timr so calls can be chained.
    */
-  onStop (listener: Listener): this
+  onStop (listener: Listener<DefaultListener>): this
 
   /**
    * Called when the timer is destroyed.
@@ -131,7 +162,7 @@ export interface ITimr {
    * @param listener Function to added to events.
    * @return Returns a reference to the Timr so calls can be chained.
    */
-  onDestroy (listener: Listener): this
+  onDestroy (listener: Listener<DefaultListener>): this
 
   /**
    * Converts `currentTime` to time format.

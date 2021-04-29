@@ -222,7 +222,9 @@ export {
 } from './types/enums'
 
 export {
-  ITimr
+  ITimr,
+  DefaultListener,
+  ITicker
 } from './types/ITimr'
 
 export {
