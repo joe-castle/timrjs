@@ -8,7 +8,7 @@ import { isFn, isNotFn, notExists, exists, isNotNum, checkType } from './validat
 
 import { FormattedTime, Listener, OptionalOptions, Options, Raw } from './types/common'
 import { Status } from './types/enums'
-import { DefaultListener, ITicker, ITimr } from './types/ITimr'
+import { ITimr } from './types/ITimr'
 
 class Timr extends EventEmitter implements ITimr {
   timer: NodeJS.Timeout
@@ -222,7 +222,7 @@ class Timr extends EventEmitter implements ITimr {
    * @param {Function} listener Function to added to events.
    * @return {Object} Returns a reference to the Timr so calls can be chained.
    */
-  ticker (listener: Listener<ITicker>): this {
+  ticker (listener: Listener): this {
     return this._listener('ticker', listener)
   }
 
@@ -236,7 +236,7 @@ class Timr extends EventEmitter implements ITimr {
    * @param {Function} listener Function to added to events.
    * @return {Object} Returns a reference to the Timr so calls can be chained.
    */
-  finish (listener: Listener<DefaultListener>): this {
+  finish (listener: Listener): this {
     return this._listener('finish', listener)
   }
 
@@ -248,7 +248,7 @@ class Timr extends EventEmitter implements ITimr {
    * @param {Function} listener Function to added to events.
    * @return {Object} Returns a reference to the Timr so calls can be chained.
    */
-  onStart (listener: Listener<DefaultListener>): this {
+  onStart (listener: Listener): this {
     return this._listener('onStart', listener)
   }
 
@@ -260,7 +260,7 @@ class Timr extends EventEmitter implements ITimr {
   * @param {Function} listener Function to added to events.
   * @return {Object} Returns a reference to the Timr so calls can be chained.
   */
-  onAlreadyStarted (listener: Listener<DefaultListener>): this {
+  onAlreadyStarted (listener: Listener): this {
     return this._listener('onAlreadyStarted', listener)
   }
 
@@ -272,7 +272,7 @@ class Timr extends EventEmitter implements ITimr {
    * @param {Function} listener Function to added to events.
    * @return {Object} Returns a reference to the Timr so calls can be chained.
    */
-  onPause (listener: Listener<DefaultListener>): this {
+  onPause (listener: Listener): this {
     return this._listener('onPause', listener)
   }
 
@@ -284,7 +284,7 @@ class Timr extends EventEmitter implements ITimr {
    * @param {Function} listener Function to added to events.
    * @return {Object} Returns a reference to the Timr so calls can be chained.
    */
-  onStop (listener: Listener<DefaultListener>): this {
+  onStop (listener: Listener): this {
     return this._listener('onStop', listener)
   }
 
@@ -296,7 +296,7 @@ class Timr extends EventEmitter implements ITimr {
    * @param {Function} listener Function to added to events.
    * @return {Object} Returns a reference to the Timr so calls can be chained.
    */
-  onDestroy (listener: Listener<DefaultListener>): this {
+  onDestroy (listener: Listener): this {
     return this._listener('onDestroy', listener)
   }
 
