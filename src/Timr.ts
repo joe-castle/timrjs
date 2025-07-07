@@ -428,17 +428,6 @@ class Timr extends EventEmitter implements ITimr {
   }
 
   /**
-   * Returns true if the Timr has started
-   *
-   * @deprecated please use `this.started()` instead
-   *
-   * @return {Boolean} True if running, false if not.
-   */
-  isRunning (): boolean {
-    return this.started()
-  }
-
-  /**
    * Checks whether the timer has been started or not
    *
    * @return {Boolean} True if running, false if not.

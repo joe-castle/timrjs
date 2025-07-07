@@ -393,15 +393,6 @@ export interface ITimr {
   getStatus (statusName?: Status): boolean | Status
 
   /**
-   * Returns true if the Timr has started
-   *
-   * @deprecated please use `this.started()` instead
-   *
-   * @return True if running, false if not.
-   */
-  isRunning (): boolean
-
-  /**
    * Checks whether the timer has been started or not
    *
    * @return True if running, false if not.

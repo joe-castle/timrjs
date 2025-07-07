@@ -217,7 +217,7 @@ export type {
   Raw
 } from './types/common'
 
-export type {
+export {
   Status
 } from './types/enums'
 
