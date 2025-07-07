@@ -5,10 +5,10 @@ import timeToSeconds from './timeToSeconds'
 import formatTimeFn from './formatTime'
 import dateToSeconds, { isDateFormat } from './dateToSeconds'
 import { isFn, isNotFn, notExists, exists, isNotNum, checkType } from './validate'
-
-import { FormattedTime, Listener, OptionalOptions, Options, Raw } from './types/common'
 import { Status } from './types/enums'
-import { ITimr } from './types/ITimr'
+
+import type { FormattedTime, Listener, OptionalOptions, Options, Raw } from './types/common'
+import type { ITimr } from './types/ITimr'
 
 class Timr extends EventEmitter implements ITimr {
   timer: NodeJS.Timeout

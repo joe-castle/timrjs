@@ -1,7 +1,7 @@
 import zeroPad from './zeroPad'
 import { isNotNum, isNotStr, isNotBool, isFn, isObj, exists, checkType } from './validate'
 
-import { FormatValueFn, FormatValues, OptionalOptions, Options, OptionsFormatValues } from './types/common'
+import type { FormatValueFn, FormatValues, OptionalOptions, Options, OptionsFormatValues } from './types/common'
 
 const optionsFormatKeys = ['default', 'ss', 'SS', 'mm', 'MM', 'hh', 'HH', 'dd', 'DD']
 const timeValues = optionsFormatKeys.slice(1)

@@ -6,8 +6,8 @@ import zeroPad from './zeroPad'
 import Timr from './Timr'
 import { isObj, exists } from './validate'
 
-import { OptionalOptions, OptionalOptionsWithStartTime } from './types/common'
-import { ITimr } from './types/ITimr'
+import type { OptionalOptions, OptionalOptionsWithStartTime } from './types/common'
+import type { ITimr } from './types/ITimr'
 
 /**
  * Creates a new Timr object.
@@ -203,7 +203,7 @@ function create (startTime: string | number | Date | OptionalOptionsWithStartTim
 }
 
 // type exports
-export {
+export type {
   OptionalOptions,
   OptionalOptionsWithStartTime,
   Options,
@@ -217,11 +217,11 @@ export {
   Raw
 } from './types/common'
 
-export {
+export type {
   Status
 } from './types/enums'
 
-export {
+export type {
   ITimr
 } from './types/ITimr'
 

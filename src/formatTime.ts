@@ -1,7 +1,7 @@
 import buildOptions from './buildOptions'
 import { isNotFn, isNotStr, isObj } from './validate'
 
-import { FormattedTime, FormatValueFn, FormatValues, OptionalOptions } from './types/common'
+import type { FormattedTime, FormatValueFn, FormatValues, OptionalOptions } from './types/common'
 
 /**
  * Converts seconds to time format.

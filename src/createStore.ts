@@ -1,9 +1,9 @@
 import Timr from './Timr'
 import { isInstanceOf, isNotFn } from './validate'
 
-import { Store } from './types/common'
-import { Status } from './types/enums'
-import { ITimr } from './types/ITimr'
+import type { Store } from './types/common'
+import type { Status } from './types/enums'
+import type { ITimr } from './types/ITimr'
 
 /**
  * Creates a store that can hold multiple Timr objects

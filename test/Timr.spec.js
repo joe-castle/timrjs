@@ -25,14 +25,14 @@ describe('Timr Class', () => {
       const timer = new Timr(`${(new Date()).getFullYear()}-12-31`)
 
       expect(timer.startTime).toBeTruthy()
-      expect(dateToSecondsSpy).toBeCalledTimes(1)
+      expect(dateToSecondsSpy).toHaveBeenCalledTimes(1)
     })
 
     test('Calls timetoSeconds if startTime passed with time string', () => {
       const timer = new Timr('10:00')
 
       expect(timer.startTime).toBeTruthy()
-      expect(timeToSecondsSpy).toBeCalledTimes(1)
+      expect(timeToSecondsSpy).toHaveBeenCalledTimes(1)
     })
 
     test('Status is set to initialised when Timr created', () => {
@@ -117,6 +117,8 @@ describe('Timr Class', () => {
         .start()
 
       expect(timer.getStatus(Status.started)).toBeTruthy()
+
+      timer.destroy()
     })
 
     test('Emits onAlreadyStarted when start() called when timer has already started', (done) => {
@@ -412,7 +414,7 @@ describe('Timr Class', () => {
       new Timr(60).ticker(({ currentTime, self }) => {
         if (currentTime <= 58) {
           // Called once when Timr created
-          expect(buildOptionsSpy).toBeCalledTimes(1)
+          expect(buildOptionsSpy).toHaveBeenCalledTimes(1)
           self.stop()
           done()
         }

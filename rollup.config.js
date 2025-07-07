@@ -1,6 +1,5 @@
 import typescript from 'rollup-plugin-typescript2'
-import { terser } from 'rollup-plugin-terser'
-
+import terser from '@rollup/plugin-terser'
 const version = process.env.RELEASE_VERSION
 
 const devBanner = `/**
@@ -26,7 +25,7 @@ export default [
       banner: devBanner
     },
     plugins: [
-      typescript({ useTsconfigDeclarationDir: true })
+      typescript({ useTsconfigDeclarationDir: true }),
     ]
   },
   {
@@ -51,7 +50,7 @@ export default [
       typescript({ useTsconfigDeclarationDir: true }),
       terser({
         format: {
-          comments: /TimrJS v\d+\.\d+\.\d+/g
+          comments: /TimrJS/g
         },
         compress: {
           unsafe: true,
