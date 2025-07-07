@@ -207,8 +207,7 @@ export interface ITimr {
    * @throws If the provided time is not a string.
    * @throws If the provided time is not in the correct format HH:MM:SS.
    * @throws If the date string is not in the correct format.
-   * @throws If the date string is in the correct format but can't be parsed, for example by using `13` for the month.
-   * @throws If the date is in the past.
+   * @throws If the date string is in the correct format but can't be parsed, for example, by using `13` for the month.
    *
    * @return Returns a reference to the Timr so calls can be chained.
    */
@@ -236,7 +235,6 @@ export interface ITimr {
    * The timer will countdown to the point in time specified by the date.
    *
    * @throws If no `startTime` is provided.
-   * @throws If the date is in the past.
    *
    * @return Returns a reference to the Timr so calls can be chained.
    */
@@ -259,7 +257,6 @@ export interface ITimr {
    * @throws If no `startTime` is provided.
    * @throws If the date string is not in the correct format.
    * @throws If the date string is in the correct format but can't be parsed, for example by using `13` for the month.
-   * @throws If the date is in the past (unless provided `backupStartTime` is not in the past).
    *
    * @return Returns a reference to the Timr so calls can be chained.
    */
@@ -282,7 +279,6 @@ export interface ITimr {
    * @throws If no `startTime` is provided.
    * @throws If the date string is not in the correct format.
    * @throws If the date string is in the correct format but can't be parsed, for example by using `13` for the month.
-   * @throws If the date is in the past (unless provided `backupStartTime` is not in the past).
    *
    * @return Returns a reference to the Timr so calls can be chained.
    */
@@ -303,7 +299,6 @@ export interface ITimr {
    * @throws If no `startTime` is provided.
    * @throws If the date string is not in the correct format.
    * @throws If the date string is in the correct format but can't be parsed, for example by using `13` for the month.
-   * @throws If the date is in the past (unless provided `backupStartTime` is not in the past).
    *
    * @return Returns a reference to the Timr so calls can be chained.
    */
@@ -319,7 +314,6 @@ export interface ITimr {
    * @param backupStartTime A backupStartTime for timers that countdown to a futureDate, in case that time is in the past.
    *
    * @throws If no `startTime` is provided.
-   * @throws If the date is in the past (unless provided `backupStartTime` is not in the past).
    *
    * @return Returns a reference to the Timr so calls can be chained.
    */
@@ -337,7 +331,7 @@ export interface ITimr {
    * @throws If the provided time is not in the correct format HH:MM:SS.
    * @throws If the date string is not in the correct format.
    * @throws If the date string is in the correct format but can't be parsed, for example by using `13` for the month.
-   * @throws If the date is in the past (unless provided `backupStartTime` is not in the past).
+   * @param {String|Number} backupStartTime startTime to use if provided startTime is in the past.
    *
    * @return Returns a reference to the Timr so calls can be chained.
    */

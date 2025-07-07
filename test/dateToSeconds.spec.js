@@ -1,7 +1,5 @@
 import dateToSeconds from '../src/dateToSeconds'
 
-const zeroPad = number => (number < 10 ? `0${number}` : number)
-
 describe('Date to Seconds function', () => {
   test('When passed a date and time string, it returns seconds to that time from now.', () => {
     const year = new Date().getFullYear() + 1
@@ -32,6 +30,10 @@ describe('Date to Seconds function', () => {
     expect(dateToSeconds('2020-12-15', `${year}-12-15`)).toBe(testStartTime)
   })
 
+  test('Returns 0 if date is in the past', () => {
+    expect(dateToSeconds('2015-12-25')).toBe(0)
+  })
+
   test('Throws an error if the passed string is incorrect format', () => {
     expect(() => dateToSeconds('not a date string')).toThrow(
       'The provided date is not in the right format or is incorrect.\n' +
@@ -55,19 +57,6 @@ describe('Date to Seconds function', () => {
   test('Throws an error if the passed value is not a string or date', () => {
     expect(() => dateToSeconds({})).toThrow(
       'Expected startTime to be a string or Date object, instead got: object'
-    )
-  })
-
-  test('Throws an error if the passed date is in the past and no backup time provided', () => {
-    const dateNow = new Date()
-
-    expect(() => dateToSeconds('2015-12-25')).toThrow(
-      'When passing a date/time, it cannot be in the past. ' +
-      'You passed: "2015-12-25". It\'s currently: "' +
-      `${zeroPad(dateNow.getFullYear())}-${zeroPad(dateNow.getMonth() + 1)}-` +
-      `${zeroPad(dateNow.getDate())} ` +
-      `${zeroPad(dateNow.getHours())}:${zeroPad(dateNow.getMinutes())}:` +
-      `${zeroPad(dateNow.getSeconds())}"`
     )
   })
 })

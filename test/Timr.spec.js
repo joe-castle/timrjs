@@ -133,12 +133,22 @@ describe('Timr Class', () => {
       timer.start()
     })
 
-    test('Throws an error if start is called with countdown set to true and startTime set to 0', () => {
-      expect(() => new Timr(0).start()).toThrow(
-        'Unable to start timer when countdown = true and startTime = 0. ' +
-        'This would cause the timer to count into negative numbers and never stop. ' +
-        'Try setting countdown to false or amending the startTime'
-      )
+    test('Immediatley finishes the timer if start is called and startTime or currentTime are 0 when countdown is true', (done) => {
+      const timer = new Timr(0)
+        .finish(() => {
+          done()
+        })
+
+      timer.start()
+    })
+
+    test('Immediatley finishes the timer if start is called with a date from the past', (done) => {
+      const timer = new Timr('2015-12-25')
+        .finish(() => {
+          done()
+        })
+
+      timer.start()
     })
 
     test('Throws an error if start is called with a delay argument that isn\'t a number', () => {
