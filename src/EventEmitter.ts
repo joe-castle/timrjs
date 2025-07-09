@@ -1,5 +1,6 @@
-import { Events, Listener } from './types/common'
 import { exists, notExists } from './validate'
+
+import type { Events, Listener } from './types/common'
 
 /**
  * Creates an EventEmitter.

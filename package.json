@@ -11,10 +11,11 @@
     "timrjs",
     "utility",
     "stopwatch",
-    "counbtdown",
+    "countdown",
     "date"
   ],
   "author": "Joe Castle <joecastle100@gmail.com>",
+  "type": "module",
   "main": "lib/timr.js",
   "unpkg": "dist/timr.js",
   "module": "es/timr.js",
@@ -29,29 +30,34 @@
     "build": "rollup -c",
     "commit": "cz",
     "release": "semantic-release",
-    "prepare": "husky install"
+    "prepare": "husky"
+  },
+  "dependencies": {
+    "date-fns": "^4.1.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.13.13",
-    "@babel/plugin-proposal-class-properties": "^7.13.0",
-    "@babel/preset-env": "^7.13.12",
-    "@babel/preset-typescript": "^7.13.0",
-    "@commitlint/cli": "^12.1.1",
-    "@commitlint/config-conventional": "^12.1.1",
-    "@semantic-release/exec": "^5.0.0",
-    "@types/jest": "^26.0.22",
-    "commitizen": "^4.2.3",
+    "@babel/core": "^7.28.0",
+    "@babel/plugin-proposal-class-properties": "^7.18.6",
+    "@babel/preset-env": "^7.28.0",
+    "@babel/preset-typescript": "^7.27.1",
+    "@commitlint/cli": "^19.8.1",
+    "@commitlint/config-conventional": "^19.8.1",
+    "@rollup/plugin-commonjs": "^28.0.6",
+    "@rollup/plugin-node-resolve": "^16.0.1",
+    "@rollup/plugin-terser": "^0.4.4",
+    "@semantic-release/exec": "^7.1.0",
+    "@types/jest": "^30.0.0",
+    "commitizen": "^4.3.1",
     "cz-conventional-changelog": "^3.3.0",
-    "husky": "^6.0.0",
-    "jest": "^26.6.3",
-    "rimraf": "^3.0.2",
-    "rollup": "^2.44.0",
-    "rollup-plugin-terser": "^7.0.2",
-    "rollup-plugin-typescript2": "^0.30.0",
-    "semantic-release": "^17.4.2",
-    "ts-loader": "^8.1.0",
-    "ts-standard": "^10.0.0",
-    "typescript": "^4.2.3"
+    "husky": "^9.1.7",
+    "jest": "^30.0.4",
+    "rimraf": "^6.0.1",
+    "rollup": "^4.44.2",
+    "rollup-plugin-typescript2": "^0.36.0",
+    "semantic-release": "^24.2.6",
+    "ts-loader": "^9.5.2",
+    "ts-standard": "^12.0.2",
+    "typescript": "5.1.6"
   },
   "ts-standard": {
     "globals": [
@@ -85,9 +91,12 @@
     "plugins": [
       "@semantic-release/commit-analyzer",
       "@semantic-release/release-notes-generator",
-      ["@semantic-release/exec", {
-        "publishCmd": "npm run build -- --environment RELEASE_VERSION:${nextRelease.version}"
-      }],
+      [
+        "@semantic-release/exec",
+        {
+          "publishCmd": "npm run build -- --environment RELEASE_VERSION:${nextRelease.version}"
+        }
+      ],
       "@semantic-release/npm",
       "@semantic-release/github"
     ]
