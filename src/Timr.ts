@@ -5,10 +5,10 @@ import timeToSeconds from './timeToSeconds'
 import formatTimeFn from './formatTime'
 import dateToSeconds, { isDateFormat } from './dateToSeconds'
 import { isFn, isNotFn, notExists, exists, isNotNum, checkType } from './validate'
-
-import { FormattedTime, Listener, OptionalOptions, Options, Raw } from './types/common'
 import { Status } from './types/enums'
-import { ITimr } from './types/ITimr'
+
+import type { FormattedTime, Listener, OptionalOptions, Options, Raw } from './types/common'
+import type { ITimr } from './types/ITimr'
 
 class Timr extends EventEmitter implements ITimr {
   timer: NodeJS.Timeout
@@ -16,7 +16,7 @@ class Timr extends EventEmitter implements ITimr {
   currentTime: number
   startTime: number
   options: Options
-  futureDate: string | number | Date | null
+  futureDate: string | Date | null
   status: Status
   removeFromStore?: null | (() => void)
   [key: string]: any
@@ -58,13 +58,7 @@ class Timr extends EventEmitter implements ITimr {
     })
 
     if (this.currentTime <= 0) {
-      this.clear()
-
-      this.currentTime = this.startTime
-
-      this.emit('finish', this)
-
-      this.status = Status.finished
+      this._finish()
     }
   }
 
@@ -94,8 +88,20 @@ class Timr extends EventEmitter implements ITimr {
     return this
   }
 
+  private _finish (): void {
+    this.clear()
+
+    this.currentTime = this.startTime
+
+    this.emit('finish', this)
+
+    this.status = Status.finished
+  }
+
   /**
    * Starts the Timr.
+   *
+   * If startTime or currentTime are equal to 0, the timer is immediately finished, the delay is ignored.
    *
    * @param {Number} [delay] Optional delay in ms to start the timer.
    *
@@ -103,12 +109,10 @@ class Timr extends EventEmitter implements ITimr {
    */
   start (delay?: number): this {
     if (!this.started()) {
-      if (this.options.countdown && this.startTime === 0) {
-        throw new Error(
-          'Unable to start timer when countdown = true and startTime = 0. ' +
-          'This would cause the timer to count into negative numbers and never stop. ' +
-          'Try setting countdown to false or amending the startTime.'
-        )
+      if (this.options.countdown && ((exists(this.futureDate) && dateToSeconds(this.futureDate, this.options.backupStartTime) === 0) || this.startTime === 0 || this.currentTime === 0)) {
+        this._finish()
+
+        return this
       }
 
       const startFn = (): void => {
@@ -343,13 +347,13 @@ class Timr extends EventEmitter implements ITimr {
    * Will clear `currentTime` and reset to new `startTime`.
    *
    * @param {String|Number} startTime The new `startTime`.
+   * @param {String|Number} backupStartTime startTime to use if provided startTime is in the past.
    *
    * @throws If no startTime is provided.
    * @throws If the provided time is not a string.
    * @throws If the provided time is not in the correct format HH:MM:SS.
    * @throws If the date string is not in the correct format.
    * @throws If the date string is in the correct format but can't be parsed, for example by using `13` for the month.
-   * @throws If the date is in the past (unless provided `backupStartTime` is not in the past).
    *
    * @return {Object} Returns a reference to the Timr so calls can be chained.
    */
@@ -421,17 +425,6 @@ class Timr extends EventEmitter implements ITimr {
     return exists(statusName)
       ? this.status === statusName
       : this.status
-  }
-
-  /**
-   * Returns true if the Timr has started
-   *
-   * @deprecated please use `this.started()` instead
-   *
-   * @return {Boolean} True if running, false if not.
-   */
-  isRunning (): boolean {
-    return this.started()
   }
 
   /**

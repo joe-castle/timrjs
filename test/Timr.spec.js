@@ -25,14 +25,14 @@ describe('Timr Class', () => {
       const timer = new Timr(`${(new Date()).getFullYear()}-12-31`)
 
       expect(timer.startTime).toBeTruthy()
-      expect(dateToSecondsSpy).toBeCalledTimes(1)
+      expect(dateToSecondsSpy).toHaveBeenCalledTimes(1)
     })
 
     test('Calls timetoSeconds if startTime passed with time string', () => {
       const timer = new Timr('10:00')
 
       expect(timer.startTime).toBeTruthy()
-      expect(timeToSecondsSpy).toBeCalledTimes(1)
+      expect(timeToSecondsSpy).toHaveBeenCalledTimes(1)
     })
 
     test('Status is set to initialised when Timr created', () => {
@@ -44,6 +44,12 @@ describe('Timr Class', () => {
     test('Throws an error if startTime is not a string or a number', () => {
       expect(() => new Timr({})).toThrow(
         'Expected time to be a string or number, instead got: object'
+      )
+    })
+
+    test('Throws an error if startTime is not a valid date', () => {
+      expect(() => new Timr('0000-00-00')).toThrow(
+        'Expected time to be in (hh:mm:ss) format, instead got: 0000-00-00'
       )
     })
   })
@@ -117,6 +123,8 @@ describe('Timr Class', () => {
         .start()
 
       expect(timer.getStatus(Status.started)).toBeTruthy()
+
+      timer.destroy()
     })
 
     test('Emits onAlreadyStarted when start() called when timer has already started', (done) => {
@@ -131,12 +139,22 @@ describe('Timr Class', () => {
       timer.start()
     })
 
-    test('Throws an error if start is called with countdown set to true and startTime set to 0', () => {
-      expect(() => new Timr(0).start()).toThrow(
-        'Unable to start timer when countdown = true and startTime = 0. ' +
-        'This would cause the timer to count into negative numbers and never stop. ' +
-        'Try setting countdown to false or amending the startTime'
-      )
+    test('Immediatley finishes the timer if start is called and startTime or currentTime are 0 when countdown is true', (done) => {
+      const timer = new Timr(0)
+        .finish(() => {
+          done()
+        })
+
+      timer.start()
+    })
+
+    test('Immediatley finishes the timer if start is called with a date from the past', (done) => {
+      const timer = new Timr('2015-12-25')
+        .finish(() => {
+          done()
+        })
+
+      timer.start()
     })
 
     test('Throws an error if start is called with a delay argument that isn\'t a number', () => {
@@ -412,7 +430,7 @@ describe('Timr Class', () => {
       new Timr(60).ticker(({ currentTime, self }) => {
         if (currentTime <= 58) {
           // Called once when Timr created
-          expect(buildOptionsSpy).toBeCalledTimes(1)
+          expect(buildOptionsSpy).toHaveBeenCalledTimes(1)
           self.stop()
           done()
         }

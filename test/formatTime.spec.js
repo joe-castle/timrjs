@@ -66,21 +66,21 @@ describe('Format Time function', () => {
     formatTime(600, buildOptions.default({ formatOutput: '00:MM:ss', formatValues: { default: i => i * 2 } }), false)
 
     // Called above so the options object is correct, but shouldn't be called inside formatTime
-    expect(buildOptionsSpy).toBeCalledTimes(1)
+    expect(buildOptionsSpy).toHaveBeenCalledTimes(1)
   })
 
   test('Does make a call to buildOptions when toBuild is set to true', () => {
     formatTime(600, buildOptions.default({ formatOutput: '00:MM:ss', formatValues: { default: i => i * 2 } }), true)
 
     // Called above so the options object is correct
-    expect(buildOptionsSpy).toBeCalledTimes(2)
+    expect(buildOptionsSpy).toHaveBeenCalledTimes(2)
   })
 
   test('If options doesn\'t exist, build regardless of toBuild being set to false', () => {
     formatTime(600, null, false)
     formatTime(600, undefined, false)
 
-    expect(buildOptionsSpy).toBeCalledTimes(2)
+    expect(buildOptionsSpy).toHaveBeenCalledTimes(2)
   })
 
   test(`If toBuild set to false and options exist, ensure options contains formatOutput 

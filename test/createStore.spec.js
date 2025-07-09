@@ -132,16 +132,6 @@ describe('Create Store Function', () => {
     store.stopAll()
   })
 
-  test('Returns an array of all the timrs that have started using deprecated isRunning.', () => {
-    const timer = new Timr(600)
-    const store = createStore(timer)
-
-    expect(store.isRunning()).toHaveLength(0)
-    store.startAll()
-    expect(store.isRunning()).toHaveLength(1)
-    store.stopAll()
-  })
-
   test('Removes provided Timr from the store.', () => {
     const timer = new Timr(600)
     const store = createStore(timer)

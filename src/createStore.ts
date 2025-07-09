@@ -1,9 +1,9 @@
 import Timr from './Timr'
 import { isInstanceOf, isNotFn } from './validate'
 
-import { Store } from './types/common'
-import { Status } from './types/enums'
-import { ITimr } from './types/ITimr'
+import type { Store } from './types/common'
+import type { Status } from './types/enums'
+import type { ITimr } from './types/ITimr'
 
 /**
  * Creates a store that can hold multiple Timr objects
@@ -69,7 +69,7 @@ function createStore (...args: ITimr[]): Store {
      *
      * @return {Array} The array of Timrs.
      */
-    getAll () {
+    getAll (): ITimr[] {
       return timrs
     },
 
@@ -102,19 +102,8 @@ function createStore (...args: ITimr[]): Store {
      *
      * @return {Array} An array of timers that are in a state matched by the provided `statusName`
      */
-    getStatus (statusName: Status) {
+    getStatus (statusName: Status): ITimr[] {
       return timrs.filter(timr => timr.getStatus(statusName))
-    },
-
-    /**
-     * Returns an array of timers that are currently running.
-     *
-     * @deprecated Please use `started()` instead
-     *
-     * @return {Array} The array of running Timrs
-     */
-    isRunning () {
-      return timrs.filter(timr => timr.isRunning())
     },
 
     /**
@@ -122,7 +111,7 @@ function createStore (...args: ITimr[]): Store {
      *
      * @return {Array} The array of Timrs that have started
      */
-    started () {
+    started (): ITimr[] {
       return timrs.filter(timr => timr.started())
     },
 

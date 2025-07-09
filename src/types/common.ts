@@ -153,15 +153,6 @@ export interface Store {
   getStatus: (statusName: Status) => ITimr[]
 
   /**
-   * Returns an array of timers that are currently running.
-   *
-   * @deprecated Please use `started()` instead
-   *
-   * @return The array of running Timrs
-   */
-  isRunning: () => ITimr[]
-
-  /**
    * Returns an array of timers that have started.
    *
    * @return The array of Timrs that have started

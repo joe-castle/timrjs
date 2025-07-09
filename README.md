@@ -12,9 +12,6 @@ Compatible with Browsers and Node.js.
 [![npm license](https://img.shields.io/npm/l/timrjs.svg?style=flat-square)](https://www.npmjs.com/package/timrjs)
 [![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](http://commitizen.github.io/cz-cli/)
 
-<!-- ## Important
-Version 1.0 has had some substantial changes made to it (some of which are breaking), if you've been using previous versions, go [here](https://github.com/joe-castle/timrjs/releases/tag/v1.0.0) to see whats changed. -->
-
 ## Examples
 Here are a few different ways you could use Timr.
 

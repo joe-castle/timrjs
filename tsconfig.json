@@ -4,6 +4,7 @@
     "declarationDir": "types",
     "target": "ESNext",
     "module": "ESNext",
+    "moduleResolution": "node",
     "importHelpers": true,
     "skipLibCheck": true,
     // Rules
