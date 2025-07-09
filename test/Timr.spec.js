@@ -46,6 +46,12 @@ describe('Timr Class', () => {
         'Expected time to be a string or number, instead got: object'
       )
     })
+
+    test('Throws an error if startTime is not a valid date', () => {
+      expect(() => new Timr('0000-00-00')).toThrow(
+        'Expected time to be in (hh:mm:ss) format, instead got: 0000-00-00'
+      )
+    })
   })
 
   describe('start method', () => {

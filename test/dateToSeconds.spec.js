@@ -36,21 +36,13 @@ describe('Date to Seconds function', () => {
 
   test('Throws an error if the passed string is incorrect format', () => {
     expect(() => dateToSeconds('not a date string')).toThrow(
-      'The provided date is not in the right format or is incorrect.\n' +
-      'Expected a string in the format: YYYY-MM-DD[ HH:MM[:SS]].\n' +
-      '(year)-(month)-(day) (hour):(minute):(second(s))\n' +
-      'Time is optional and seconds is optional if time provided.\n' +
-      'You passed: "not a date string"'
+      'Provided startTime is not parseable by "date-fns/parseISO"'
     )
   })
 
   test('Throws an error if the passed string is correct format but an invalid date', () => {
     expect(() => dateToSeconds('0000-00-00')).toThrow(
-      'The provided date is not in the right format or is incorrect.\n' +
-      'Expected a string in the format: YYYY-MM-DD[ HH:MM[:SS]].\n' +
-      '(year)-(month)-(day) (hour):(minute):(second(s))\n' +
-      'Time is optional and seconds is optional if time provided.\n' +
-      'You passed: "0000-00-00"'
+      'Provided startTime is not parseable by "date-fns/parseISO"'
     )
   })
 

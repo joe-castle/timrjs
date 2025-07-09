@@ -1,4 +1,5 @@
 import { checkType, exists, isStr, isInstanceOf } from './validate'
+import { parseISO } from 'date-fns/parseISO'
 
 /**
  * Confirms if provided startTime is a futureDate parseable by dateToSeconds
@@ -8,7 +9,7 @@ import { checkType, exists, isStr, isInstanceOf } from './validate'
  * @return True if it is, false otherwise
  */
 export function isDateFormat (startTime: string | number | Date): startTime is string | Date {
-  return isInstanceOf<Date>(startTime, Date) || (isStr(startTime) && /^\d{4}-\d{2}-\d{2}/.test(startTime))
+  return isInstanceOf<Date>(startTime, Date) || (isStr(startTime) && parseISO(startTime).toString() !== 'Invalid Date')
 }
 
 /**
@@ -16,7 +17,7 @@ export function isDateFormat (startTime: string | number | Date): startTime is s
  *
  * @param startTime The date string.
  *
- * The format should be: `((year)-(month)-(day) [[(hour)]:(minute):(second(s))]`.
+ * The string should be in ISO8601 format, be parseable by `date-fns/parseISO`. See {@link https://date-fns.org/v4.1.0/docs/parseISO}
  *
  * @throws If the date string is not in the correct format.
  * @throws If the date string is in the correct format but can't be parsed, for example, by using `13` for the month.
@@ -30,7 +31,7 @@ function dateToSeconds (startTime: string): number
  *
  * @param startTime The date object.
  *
- * The format should be: `((year)-(month)-(day) [[(hour)]:(minute):(second(s))]`.
+ * The string should be in ISO8601 format, be parseable by `date-fns/parseISO`. See {@link https://date-fns.org/v4.1.0/docs/parseISO}
  *
  * @return Returns the converted seconds.
  */
@@ -41,7 +42,7 @@ function dateToSeconds (startTime: Date): number
  *
  * @param startTime The date string.
  *
- * The format should be: `((year)-(month)-(day) [[(hour)]:(minute):(second(s))]`.
+ * The string should be in ISO8601 format, be parseable by `date-fns/parseISO`. See {@link https://date-fns.org/v4.1.0/docs/parseISO}
  * @param backupStartTime startTime to use if provided startTime is in the past.
  *
  * @throws If the date string is not in the correct format.
@@ -56,7 +57,7 @@ function dateToSeconds (startTime: string, backupStartTime: string): number
  *
  * @param startTime The date string.
  *
- * The format should be: `((year)-(month)-(day) [[(hour)]:(minute):(second(s))]`.
+ * The string should be in ISO8601 format, be parseable by `date-fns/parseISO`. See {@link https://date-fns.org/v4.1.0/docs/parseISO}
  * @param backupStartTime date to use if provided startTime is in the past.
  *
  * @throws If the date string is not in the correct format.
@@ -72,7 +73,7 @@ function dateToSeconds (startTime: string, backupStartTime: Date): number
  * @param startTime The date object.
  * @param backupStartTime startTime to use if provided startTime is in the past.
  *
- * The format should be: `((year)-(month)-(day) [[(hour)]:(minute):(second(s))]`.
+ * The string should be in ISO8601 format, be parseable by `date-fns/parseISO`. See {@link https://date-fns.org/v4.1.0/docs/parseISO}
  *
  * @return Returns the converted seconds.
  */
@@ -84,7 +85,7 @@ function dateToSeconds (startTime: Date, backupStartTime: string): number
  * @param startTime The startTime as a date object.
  * @param backupStartTime date to use if provided startTime is in the past.
  *
- * The format should be: `((year)-(month)-(day) [[(hour)]:(minute):(second(s))]`.
+ * The string should be in ISO8601 format, be parseable by `date-fns/parseISO`. See {@link https://date-fns.org/v4.1.0/docs/parseISO}
  *
  * @return Returns the converted seconds.
  */
@@ -95,7 +96,7 @@ function dateToSeconds (startTime: Date, backupStartTime: Date): number
  *
  * @param startTime The date object or date string.
  *
- * The format should be: `((year)-(month)-(day) [[(hour)]:(minute):(second(s))]`.
+ * The string should be in ISO8601 format, be parseable by `date-fns/parseISO`. See {@link https://date-fns.org/v4.1.0/docs/parseISO}
  * @param backupStartTime startTime string or date to use if provided startTime is in the past.
  *
  * @throws If the date string is not in the correct format.
@@ -111,7 +112,7 @@ function dateToSeconds (startTime: string | Date, backupStartTime?: string | Dat
  *
  * @param {string|Date} startTime The date object or date string.
  *
- * The format should be: `((year)-(month)-(day) [[(hour)]:(minute):(second(s))]`.
+ * The string should be in ISO8601 format, be parseable by `date-fns/parseISO`. See {@link https://date-fns.org/v4.1.0/docs/parseISO}
  * @param {string|Date} backupStartTime startTime to use if provided startTime is in the past.
  *
  * @throws If the date string is not in the correct format.
@@ -127,30 +128,13 @@ function dateToSeconds (startTime: string | Date, backupStartTime?: string | Dat
   if (isInstanceOf<Date>(startTime, Date)) {
     parsedStartTime = startTime.getTime()
   } else if (isStr(startTime)) {
-    const error = new Error(
-      'The provided date is not in the right format or is incorrect.\n' +
-      'Expected a string in the format: YYYY-MM-DD[ HH:MM[:SS]].\n' +
-      '(year)-(month)-(day) (hour):(minute):(second(s))\n' +
-      'Time is optional and seconds is optional if time provided.\n' +
-      `You passed: "${startTime}"`
-    )
+    const date = parseISO(startTime)
 
-    try {
-      // @ts-expect-error try catch will catch nullpointer failure
-      const [year, month, ...rest] = startTime
-        .match(/^(\d{4})-(\d{2})-(\d{2})(?: (\d{2}):(\d{2})(?::(\d{2}))?)?$/i)
-        .slice(1)
-        .map((value) => parseInt(value))
-        .filter(Boolean)
-
-      parsedStartTime = new Date(year, month - 1, ...rest).getTime()
-
-      if (isNaN(parsedStartTime)) {
-        throw error
-      }
-    } catch (err) {
-      throw error
+    if (date.toString() === 'Invalid Date') {
+      throw new Error('Provided startTime is not parseable by "date-fns/parseISO"')
     }
+
+    parsedStartTime = date.getTime()
   } else {
     throw new Error(`Expected startTime to be a string or Date object, instead got: ${checkType(startTime)}`)
   }

@@ -1,5 +1,8 @@
 import typescript from 'rollup-plugin-typescript2'
 import terser from '@rollup/plugin-terser'
+import resolve from '@rollup/plugin-node-resolve'
+import commonjs from "@rollup/plugin-commonjs";
+
 const version = process.env.RELEASE_VERSION
 
 const devBanner = `/**
@@ -38,6 +41,8 @@ export default [
       },
     ],
     plugins: [
+      resolve(),
+      commonjs(),
       typescript({ useTsconfigDeclarationDir: true }),
     ]
   },
@@ -53,10 +58,12 @@ export default [
         file: 'dist/timr.min.js',
         format: 'umd',
         name: 'Timr',
-        banner: prodBanner,
+        banner: prodBanner
       },
     ],
     plugins: [
+      resolve(),
+      commonjs(),
       typescript({ useTsconfigDeclarationDir: true }),
       terser({
         format: {
